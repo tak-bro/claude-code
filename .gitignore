@@ -1,0 +1,28 @@
+# Ignore everything by default
+*
+
+# But include these files and directories
+!.gitignore
+!agents/
+!backups/
+!commands/
+!CLAUDE.md
+!hooks/
+!output-styles/
+!plugins/
+!settings.json
+
+# Include contents of these directories
+!agents/**
+!commands/**
+!hooks/**
+!output-styles/**
+!plugins/**
+!backups/**
+
+# Exclude backup folder
+backups/superclaude_backup_20250721_105911/
+
+# Exclude all .DS_Store files
+**/.DS_Store
+.DS_Store
