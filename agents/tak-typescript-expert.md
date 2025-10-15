@@ -17,7 +17,7 @@ When touching existing files, be paranoid about adding complexity.
 
 ```typescript
 // ❌ BAD: Bloating existing function
-function getUserData(id: string) {
+const getUserData = async (id: string) => {
   // Original 30 lines
   const user = await db.findUser(id);
   
@@ -30,12 +30,12 @@ function getUserData(id: string) {
 
 // ✅ GOOD: Extract to new module
 // userTransformations.ts
-export function transformPremiumUser(user: User): PremiumUser {
+export const transformPremiumUser = (user: User): PremiumUser => {
   // All the complex logic isolated here
 }
 
 // users.ts
-function getUserData(id: string) {
+const getUserData = async (id: string) => {
   const user = await db.findUser(id);
   return user.type === 'premium' 
     ? transformPremiumUser(user)
@@ -82,17 +82,17 @@ const legacyData: any = oldLibrary.getData();
 
 ```typescript
 // ❌ BAD: Assuming data exists
-function getUserName(user: User) {
+const getUserName = (user: User) => {
   return user.profile.name.toUpperCase();
 }
 
 // ✅ GOOD: Defensive coding
-function getUserName(user: User | null): string {
+const getUserName = (user: User | null): string => {
   return user?.profile?.name?.toUpperCase() ?? 'Unknown';
 }
 
-// ✅ BETTER: Type guards
-function getUserName(user: User | null): string {
+// ✅ BETTER: Type guards with early return
+const getUserName = (user: User | null): string => {
   if (!user?.profile?.name) {
     return 'Unknown';
   }
@@ -100,7 +100,45 @@ function getUserName(user: User | null): string {
 }
 ```
 
-### Use discriminated unions
+### Use early returns to reduce nesting
+
+```typescript
+// ❌ BAD: Deep nesting
+const processUser = (user: User | null): string => {
+  if (user) {
+    if (user.isActive) {
+      if (user.hasPermission) {
+        return 'Access granted';
+      } else {
+        return 'No permission';
+      }
+    } else {
+      return 'User inactive';
+    }
+  } else {
+    return 'User not found';
+  }
+}
+
+// ✅ GOOD: Early returns, flat structure
+const processUser = (user: User | null): string => {
+  if (!user) {
+    return 'User not found';
+  }
+  
+  if (!user.isActive) {
+    return 'User inactive';
+  }
+  
+  if (!user.hasPermission) {
+    return 'No permission';
+  }
+  
+  return 'Access granted';
+}
+```
+
+### Use discriminated unions or Interface
 
 ```typescript
 // ✅ Type-safe result handling
@@ -108,7 +146,7 @@ type Result<T> =
   | { success: true; data: T }
   | { success: false; error: string };
 
-function handleResult<T>(result: Result<T>) {
+const handleResult = <T>(result: Result<T>) => {
   if (result.success) {
     console.log(result.data); // TypeScript knows data exists
   } else {
@@ -117,9 +155,76 @@ function handleResult<T>(result: Result<T>) {
 }
 ```
 
+### Extract complex conditions to named variables
+
+```typescript
+// ❌ BAD: Complex condition inline
+if (user.age >= 18 && user.hasVerifiedEmail && user.subscription.status === 'active' && !user.isBanned) {
+  // Allow access
+}
+
+// ✅ GOOD: Readable condition with named variable
+const isEligibleUser = 
+  user.age >= 18 && 
+  user.hasVerifiedEmail && 
+  user.subscription.status === 'active' && 
+  !user.isBanned;
+
+if (isEligibleUser) {
+  // Allow access
+}
+
+// ✅ EVEN BETTER: Break down further for clarity
+const isAdult = user.age >= 18;
+const hasActiveSubscription = user.subscription.status === 'active';
+const canAccess = isAdult && user.hasVerifiedEmail && hasActiveSubscription && !user.isBanned;
+
+if (canAccess) {
+  // Allow access
+}
+```
+
 ---
 
-## 4. TESTABILITY AS QUALITY MEASURE
+## 4. STATE MANAGEMENT & EXPORTS
+
+### Use barrel exports (index.ts)
+```typescript
+// ✅ GOOD: Create index.ts in each folder
+// components/index.ts
+export { UserCard } from './UserCard';
+export { UserList } from './UserList';
+
+// Then import from folder
+import { UserCard, UserList } from '@/components';
+```
+
+### useState only for local component state
+```typescript
+// ❌ BAD: useState for shared state
+function UserProfile() {
+  const [user, setUser] = useState<User | null>(null);
+}
+
+// ✅ GOOD: Zustand for shared state
+export const useUserStore = create<UserStore>((set) => ({
+  user: null,
+  setUser: (user) => set({ user })
+}));
+```
+
+### Never pass setState as props
+```typescript
+// ❌ BAD
+<Child setData={setData} />
+
+// ✅ GOOD
+<Child onAddItem={handleAddItem} />
+```
+
+---
+
+## 5. TESTABILITY AS QUALITY MEASURE
 
 **Before writing complex logic, ask:**
 - "How would I test this?"
@@ -129,30 +234,30 @@ function handleResult<T>(result: Result<T>) {
 
 ```typescript
 // ❌ BAD: Untestable - too many dependencies
-async function processOrder(userId: string, orderId: string) {
+const processOrder = async (userId: string, orderId: string) => {
   const user = await db.users.findOne(userId);
   const order = await db.orders.findOne(orderId);
   const discount = user.tier === 'gold' ? 0.2 : 0.1;
   const tax = order.state === 'CA' ? 0.0725 : 0.05;
   const total = order.amount * (1 - discount) * (1 + tax);
-  await emailService.send(user.email, `Total: $${total}`);
+  await emailService.send(user.email, `Total: ${total}`);
   await db.orders.update(orderId, { processed: true });
 }
 
 // ✅ GOOD: Testable - pure functions + orchestration
 // pricing.ts - Easy to test, no dependencies
-export function calculateOrderTotal(
+export const calculateOrderTotal = (
   amount: number,
   tier: 'gold' | 'silver',
   state: string
-): number {
+): number => {
   const discount = tier === 'gold' ? 0.2 : 0.1;
   const taxRate = state === 'CA' ? 0.0725 : 0.05;
   return amount * (1 - discount) * (1 + taxRate);
 }
 
 // orders.ts - Simple orchestration
-async function processOrder(userId: string, orderId: string) {
+const processOrder = async (userId: string, orderId: string) => {
   const [user, order] = await Promise.all([
     getUser(userId),
     getOrder(orderId)
@@ -169,7 +274,7 @@ async function processOrder(userId: string, orderId: string) {
 
 ---
 
-## 5. DELETIONS - VERIFY BEFORE REMOVING
+## 6. DELETIONS - VERIFY BEFORE REMOVING
 
 Before deleting ANY code:
 - [ ] Search codebase for all usages
@@ -190,7 +295,7 @@ Before deleting ANY code:
 
 ---
 
-## 6. NAMING - THE 5-SECOND RULE
+## 7. NAMING - THE 5-SECOND RULE
 
 **Can someone understand what this does in 5 seconds? No? Rename it.**
 
@@ -202,9 +307,9 @@ function process() { }
 const result = getData();
 
 // ✅ PASS: Self-documenting names
-function validateUserEmail(email: string): boolean { }
-function fetchUserProfile(userId: string): Promise<UserProfile> { }
-function transformApiResponse(raw: RawApiData): User { }
+const validateUserEmail = (email: string): boolean => { }
+const fetchUserProfile = (userId: string): Promise<UserProfile> => { }
+const transformApiResponse = (raw: RawApiData): User => { }
 const userProfile = getUserProfile(userId);
 
 // Component naming
@@ -219,7 +324,7 @@ const userProfile = getUserProfile(userId);
 
 ---
 
-## 7. WHEN TO EXTRACT TO NEW MODULE
+## 8. WHEN TO EXTRACT TO NEW MODULE
 
 Extract when you see **2 or more** of these signals:
 
@@ -249,30 +354,8 @@ export function UserProfile() {
 
 ---
 
-## 8. IMPORT ORGANIZATION
+## 9. IMPORT preferences
 
-Always organize in this order:
-
-```typescript
-// 1. External libraries (React, third-party)
-import React, { useState, useEffect } from 'react';
-import { z } from 'zod';
-import axios from 'axios';
-
-// 2. Internal modules (your code)
-import { fetchUser, createUser } from '@/api/users';
-import { UserCard } from '@/components/UserCard';
-import { formatDate } from '@/utils/dates';
-
-// 3. Types
-import type { User, UserProfile, ApiResponse } from '@/types';
-
-// 4. Styles/assets
-import styles from './UserProfile.module.css';
-import logo from '@/assets/logo.png';
-```
-
-### Import preferences:
 - ✅ Named imports: `import { UserCard } from './UserCard'`
 - ❌ Default imports: `import UserCard from './UserCard'`
 - ❌ Wildcard: `import * as Utils from './utils'`
@@ -281,7 +364,7 @@ import logo from '@/assets/logo.png';
 
 ---
 
-## 9. MODERN TYPESCRIPT PATTERNS
+## 10. MODERN TYPESCRIPT PATTERNS
 
 Use modern ES6+ and TypeScript features:
 
@@ -311,6 +394,11 @@ const total = prices.reduce((sum, p) => sum + p, 0);
 const user = await fetchUser(id);
 // Not: fetchUser(id).then(user => ...)
 
+// ✅ Arrow functions with const
+const calculateTotal = (items: Item[]): number => {
+  return items.reduce((sum, item) => sum + item.price, 0);
+}
+
 // ✅ satisfies operator (TS 4.9+)
 const config = {
   apiUrl: '/api',
@@ -318,16 +406,16 @@ const config = {
 } satisfies ApiConfig;
 
 // ✅ const type parameters (TS 5.0+)
-function createTuple<const T extends readonly unknown[]>(
+const createTuple = <const T extends readonly unknown[]>(
   ...args: T
-): T {
+): T => {
   return args;
 }
 ```
 
 ---
 
-## 10. CORE PHILOSOPHY
+## 11. CORE PHILOSOPHY
 
 ### Duplication > Complexity
 
@@ -335,11 +423,11 @@ function createTuple<const T extends readonly unknown[]>(
 
 ```typescript
 // ✅ GOOD: Duplicated but simple
-function validateUserEmail(email: string): boolean {
+const validateUserEmail = (email: string): boolean => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-function validateAdminEmail(email: string): boolean {
+const validateAdminEmail = (email: string): boolean => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) 
     && email.endsWith('@company.com');
 }
@@ -378,6 +466,9 @@ Before submitting code:
 - [ ] Imports organized correctly
 - [ ] Used modern TypeScript patterns
 - [ ] Chose simplicity over cleverness
+- [ ] No barrel exports (no index.ts)
+- [ ] useState only for local state
+- [ ] No setState passed as props
 
 ---
 

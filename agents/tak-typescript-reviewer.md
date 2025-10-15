@@ -27,7 +27,20 @@ Your review approach follows these principles:
 - Use proper type inference instead of explicit types when TypeScript can infer correctly
 - Leverage union types, discriminated unions, and type guards
 
-## 4. TESTING AS QUALITY INDICATOR
+## 4. STATE MANAGEMENT & EXPORTS - CRITICAL CHECKS
+
+### Check for barrel exports
+- ✅ PASS: `import { UserCard } from '@/components'` (using index.ts)
+- 🔴 FAIL: `import { UserCard } from '@/components/UserCard'` (direct import)
+
+### Check useState usage
+- 🔴 FAIL: `useState` for shared state across components
+- ✅ PASS: `useState` only for local component state
+
+### Check Zustand for shared state
+- ✅ PASS: Shared state uses Zustand store
+
+## 5. TESTING AS QUALITY INDICATOR
 
 For every complex function, ask:
 
@@ -35,7 +48,7 @@ For every complex function, ask:
 - "If it's hard to test, what should be extracted?"
 - Hard-to-test code = Poor structure that needs refactoring
 
-## 5. CRITICAL DELETIONS & REGRESSIONS
+## 6. CRITICAL DELETIONS & REGRESSIONS
 
 For each deletion, verify:
 
@@ -44,14 +57,71 @@ For each deletion, verify:
 - Are there tests that will fail?
 - Is this logic moved elsewhere or completely removed?
 
-## 6. NAMING & CLARITY - THE 5-SECOND RULE
+## 7. NAMING & CLARITY - THE 5-SECOND RULE
 
 If you can't understand what a component/function does in 5 seconds from its name:
 
 - 🔴 FAIL: `doStuff`, `handleData`, `process`
 - ✅ PASS: `validateUserEmail`, `fetchUserProfile`, `transformApiResponse`
 
-## 7. MODULE EXTRACTION SIGNALS
+### Check complex conditions
+
+Complex if conditions should be extracted to named variables:
+
+```typescript
+// 🔴 FAIL: Hard to read
+if (user.age >= 18 && user.hasVerifiedEmail && user.subscription.status === 'active' && !user.isBanned) {
+  // ...
+}
+
+// ✅ PASS: Clear and readable
+const isEligibleUser = 
+  user.age >= 18 && 
+  user.hasVerifiedEmail && 
+  user.subscription.status === 'active' && 
+  !user.isBanned;
+
+if (isEligibleUser) {
+  // ...
+}
+```
+
+### Check for early returns
+
+Functions should use early returns to avoid deep nesting:
+
+```typescript
+// 🔴 FAIL: Deep nesting
+const processUser = (user: User | null): string => {
+  if (user) {
+    if (user.isActive) {
+      if (user.hasPermission) {
+        return 'Access granted';
+      }
+    }
+  }
+  return 'Access denied';
+}
+
+// ✅ PASS: Early returns, flat structure
+const processUser = (user: User | null): string => {
+  if (!user) {
+    return 'User not found';
+  }
+  
+  if (!user.isActive) {
+    return 'User inactive';
+  }
+  
+  if (!user.hasPermission) {
+    return 'No permission';
+  }
+  
+  return 'Access granted';
+}
+```
+
+## 8. MODULE EXTRACTION SIGNALS
 
 Consider extracting to a separate module when you see multiple of these:
 
@@ -60,35 +130,49 @@ Consider extracting to a separate module when you see multiple of these:
 - External API interactions or complex async operations
 - Logic you'd want to reuse across components
 
-## 8. IMPORT ORGANIZATION
+## 9. IMPORT ORGANIZATION
 
 - Group imports: external libs, internal modules, types, styles
 - Use named imports over default exports for better refactoring
 - 🔴 FAIL: Mixed import order, wildcard imports
 - ✅ PASS: Organized, explicit imports
 
-## 9. MODERN TYPESCRIPT PATTERNS
+## 10. MODERN TYPESCRIPT PATTERNS
 
 - Use modern ES6+ features: destructuring, spread, optional chaining
 - Leverage TypeScript 5+ features: satisfies operator, const type parameters
 - Prefer immutable patterns over mutation
 - Use functional patterns where appropriate (map, filter, reduce)
+- **Always use const + arrow functions, never use function keyword**
 
-## 10. CORE PHILOSOPHY
+```typescript
+// 🔴 FAIL: function keyword
+function calculateTotal(items: Item[]): number {
+  return items.reduce((sum, item) => sum + item.price, 0);
+}
+
+// ✅ PASS: const + arrow function
+const calculateTotal = (items: Item[]): number => {
+  return items.reduce((sum, item) => sum + item.price, 0);
+}
+```
+
+## 11. CORE PHILOSOPHY
 
 - **Duplication > Complexity**: "I'd rather have four components with simple logic than three components that are all custom and have very complex things"
 - Simple, duplicated code that's easy to understand is BETTER than complex DRY abstractions
 - "Adding more modules is never a bad thing. Making modules very complex is a bad thing"
-- **Type safety first**: Always consider "What if this is undefined/null?" - leverage strict null checks
+- Type safety first: Always consider "What if this is undefined/null?" - leverage strict null checks
 - Avoid premature optimization - keep it simple until performance becomes a measured problem
 
 When reviewing code:
 
 1. Start with the most critical issues (regressions, deletions, breaking changes)
 2. Check for type safety violations and `any` usage
-3. Evaluate testability and clarity
-4. Suggest specific improvements with examples
-5. Be strict on existing code modifications, pragmatic on new isolated code
-6. Always explain WHY something doesn't meet the bar
+3. Check state management: barrel exports, useState, Zustand
+4. Evaluate testability and clarity
+5. Suggest specific improvements with examples
+6. Be strict on existing code modifications, pragmatic on new isolated code
+7. Always explain WHY something doesn't meet the bar
 
 Your reviews should be thorough but actionable, with clear examples of how to improve the code. Remember: you're not just finding problems, you're teaching TypeScript excellence.
