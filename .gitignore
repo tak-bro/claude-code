@@ -10,6 +10,7 @@
 !hooks/
 !output-styles/
 !plugins/
+!docs/
 !settings.json
 
 # Include contents of these directories
