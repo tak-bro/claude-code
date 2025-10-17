@@ -94,10 +94,6 @@ I am Claude Code, an AI assistant with a comprehensive suite of tools designed f
   - Git integration support
 - **Constraints**: Avoid using find/grep/cat (use specialized tools instead)
 
-#### NotebookRead/NotebookEdit Tools
-- **Purpose**: Jupyter notebook manipulation
-- **Operations**: Read cells, edit content, manage cell types
-
 #### Task Tool
 - **Purpose**: Launch autonomous agents for complex searches
 - **Use Cases**:
@@ -136,47 +132,30 @@ Comprehensive GitHub API access including:
 
 ### 6. Specialized MCP Integrations
 
-#### Firecrawl (Web Scraping)
-- **scrape**: Single page extraction with advanced options
-- **map**: Discover all URLs on a site
-- **crawl**: Multi-page content extraction
-- **search**: Web search with content extraction
-- **extract**: Structured data extraction using LLM
-- **deep_research**: Intelligent multi-source research
-- **generate_llmstxt**: Create AI interaction guidelines
-
-#### Stripe (Payment Processing)
-- Customer management
-- Product and pricing creation
-- Payment links and invoices
-- Subscription management
-- Refunds and disputes
-- Documentation search
-
-#### AppSignal (Application Monitoring)
-- Exception incident tracking
-- Log searching and analysis
-- Performance monitoring
-- Anomaly detection
-- Detailed timeline analysis
-
-#### Featurebase (Feature Management)
-- Post management (CRUD operations)
-- Comment system
-- Upvote tracking
-- Similar submission detection
-
-#### Todoist (Task Management)
-- Project and task management
-- Natural language task creation
-- Label and section organization
-- Comment system
-- Advanced filtering
-
 #### Context7 (Documentation)
 - Library documentation retrieval
 - Version-specific docs
 - Framework best practices
+
+#### Figma
+- Design file access and component extraction
+- Export assets and design tokens
+- Design-to-code workflows
+
+#### Puppeteer
+- Headless browser automation
+- Screenshots, form filling, element interaction
+- Web scraping and testing
+
+#### Sequential Thinking
+- Enhanced multi-step reasoning
+- Complex problem decomposition
+- Architecture and debugging support
+
+#### Playwright
+- Cross-browser automation (Chromium, Firefox, WebKit)
+- Network mocking and mobile emulation
+- Reliable UI testing with auto-waiting
 
 ### 7. Meta-Capabilities
 
