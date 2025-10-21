@@ -27,11 +27,50 @@ Your review approach follows these principles:
 - Use proper type inference instead of explicit types when TypeScript can infer correctly
 - Leverage union types, discriminated unions, and type guards
 
-## 4. STATE MANAGEMENT & EXPORTS - CRITICAL CHECKS
+## 4. IMPORTS & EXPORTS - CRITICAL CHECKS
 
-### Check for barrel exports
+### Check for NAMED exports ONLY (ABSOLUTE RULE)
+- 🔴 FAIL: `export default UserCard` - **FORBIDDEN**
+- 🔴 FAIL: `import UserCard from './UserCard'` - **FORBIDDEN**
+- ✅ PASS: `export const UserCard = () => { }` - **REQUIRED**
+- ✅ PASS: `import { UserCard } from './UserCard'` - **REQUIRED**
+
+**Why this matters:**
+- Better refactoring support
+- Explicit dependencies
+- Tree-shaking friendly
+- Prevents naming conflicts
+- Consistent standards
+
+### Check for barrel exports (Feature Libraries)
 - ✅ PASS: `import { UserCard } from '@/components'` (using index.ts)
-- 🔴 FAIL: `import { UserCard } from '@/components/UserCard'` (direct import)
+- ✅ PASS: Feature libraries have `index.ts` exporting apis, hooks, types, consts
+- 🔴 FAIL: `import { UserCard } from '@/components/UserCard'` (bypassing barrel)
+- 🔴 FAIL: Missing `index.ts` in feature library folders
+
+### Check import organization
+- ✅ PASS: Imports ordered: external → internal → relative → types
+- 🔴 FAIL: Mixed import order or random organization
+
+```typescript
+// ✅ PASS: Properly organized
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+
+import { Button } from '@/components';
+import { validateEmail } from '@/utils';
+
+import { UserCard } from './UserCard';
+
+import type { User } from './types';
+
+// 🔴 FAIL: Mixed order
+import { UserCard } from './UserCard';
+import { useState } from 'react';
+import type { User } from './types';
+```
+
+### STATE MANAGEMENT CHECKS (React Projects)
 
 ### Check useState usage
 - 🔴 FAIL: `useState` for shared state across components
@@ -39,6 +78,13 @@ Your review approach follows these principles:
 
 ### Check Zustand for shared state
 - ✅ PASS: Shared state uses Zustand store
+
+### Check React Feature Library Pattern (Nx Monorepo)
+- ✅ PASS: `libs/{feature}/` has apis, hooks, types, consts folders
+- ✅ PASS: API functions in `libs/{feature}/src/apis/`
+- ✅ PASS: TanStack Query hooks in `libs/{feature}/src/hooks/`
+- ✅ PASS: Data flow: Component → Hook → TanStack Query → API
+- 🔴 FAIL: Component calling API directly (bypassing hooks)
 
 ## 5. TESTING AS QUALITY INDICATOR
 
@@ -130,12 +176,20 @@ Consider extracting to a separate module when you see multiple of these:
 - External API interactions or complex async operations
 - Logic you'd want to reuse across components
 
-## 9. IMPORT ORGANIZATION
+## 9. EXPORT & IMPORT STANDARDS
 
-- Group imports: external libs, internal modules, types, styles
-- Use named imports over default exports for better refactoring
-- 🔴 FAIL: Mixed import order, wildcard imports
-- ✅ PASS: Organized, explicit imports
+### Exports (CRITICAL)
+- 🔴 FAIL: Any use of `export default` - **ABSOLUTELY FORBIDDEN**
+- 🔴 FAIL: Any use of default imports - **ABSOLUTELY FORBIDDEN**
+- ✅ PASS: Named exports only: `export const UserCard = () => { }`
+- ✅ PASS: Named imports only: `import { UserCard } from './UserCard'`
+
+### Import Organization
+- ✅ PASS: Imports grouped and ordered correctly (external → internal → relative → types)
+- ✅ PASS: Named imports used exclusively
+- 🔴 FAIL: Default imports anywhere in the codebase
+- 🔴 FAIL: Mixed import order
+- 🔴 FAIL: Wildcard imports (unless absolutely necessary)
 
 ## 10. MODERN TYPESCRIPT PATTERNS
 
@@ -167,12 +221,14 @@ const calculateTotal = (items: Item[]): number => {
 
 When reviewing code:
 
-1. Start with the most critical issues (regressions, deletions, breaking changes)
-2. Check for type safety violations and `any` usage
-3. Check state management: barrel exports, useState, Zustand
-4. Evaluate testability and clarity
-5. Suggest specific improvements with examples
-6. Be strict on existing code modifications, pragmatic on new isolated code
-7. Always explain WHY something doesn't meet the bar
+1. **FIRST:** Check for default exports/imports - These are ABSOLUTELY FORBIDDEN
+2. Start with the most critical issues (regressions, deletions, breaking changes)
+3. Check for type safety violations and `any` usage
+4. Check imports & exports: named exports only, barrel exports, import order
+5. Check state management: useState (local only), Zustand (shared), Feature Library pattern
+6. Evaluate testability and clarity
+7. Suggest specific improvements with examples
+8. Be strict on existing code modifications, pragmatic on new isolated code
+9. Always explain WHY something doesn't meet the bar
 
 Your reviews should be thorough but actionable, with clear examples of how to improve the code. Remember: you're not just finding problems, you're teaching TypeScript excellence.

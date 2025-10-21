@@ -186,20 +186,67 @@ if (canAccess) {
 
 ---
 
-## 4. STATE MANAGEMENT & EXPORTS
+## 4. IMPORTS & EXPORTS - ABSOLUTE RULES
 
-### Use barrel exports (index.ts)
+### ALWAYS Use Named Exports (NEVER Default Exports)
+
+```typescript
+// ✅ REQUIRED: Named exports
+export const UserCard = () => { };
+export const validateEmail = (email: string) => { };
+export const fetchUserData = async (id: string) => { };
+
+// ✅ REQUIRED: Named imports
+import { UserCard } from './UserCard';
+import { validateEmail } from './validation';
+import { fetchUserData } from './api';
+
+// ❌ FORBIDDEN: Default exports/imports
+export default UserCard;                    // ❌ Never
+import UserCard from './UserCard';          // ❌ Never
+
+// ❌ AVOID: Wildcard imports (unless necessary)
+import * as Utils from './utils';           // ❌ Avoid
+```
+
+**Why Named Exports Only?**
+1. Better refactoring - IDEs can rename across all files
+2. Explicit dependencies - Clear what's being imported
+3. Tree-shaking friendly - Bundlers optimize better
+4. Prevents naming conflicts
+5. Consistent standards - One way to do things
+
+### Use Barrel Exports (index.ts) - Required for Feature Libraries
+
 ```typescript
 // ✅ GOOD: Create index.ts in each folder
 // components/index.ts
 export { UserCard } from './UserCard';
 export { UserList } from './UserList';
 
-// Then import from folder
+// libs/product/src/index.ts (Feature library)
+export * from './apis';
+export * from './hooks';
+export * from './types';
+export * from './consts';
+
+// Then import from folder/library
 import { UserCard, UserList } from '@/components';
+import { useProducts, fetchProducts } from '@{projectName}/product';
 ```
 
-### useState only for local component state
+### Type Imports
+
+```typescript
+// ✅ Use `type` keyword for type-only imports (TS 3.8+)
+import type { User, UserProfile, ApiResponse } from './types';
+
+// This helps bundlers strip types at compile time
+```
+
+### STATE MANAGEMENT PATTERNS
+
+#### React Projects: useState only for local component state
 ```typescript
 // ❌ BAD: useState for shared state
 function UserProfile() {
@@ -213,13 +260,51 @@ export const useUserStore = create<UserStore>((set) => ({
 }));
 ```
 
-### Never pass setState as props
+#### React Projects: Never pass setState as props
 ```typescript
 // ❌ BAD
 <Child setData={setData} />
 
 // ✅ GOOD
 <Child onAddItem={handleAddItem} />
+```
+
+#### React Feature Library Pattern (Nx Monorepo)
+
+**Each feature exports its API layer from `libs/{feature}/`**
+
+```typescript
+// libs/products/src/apis/index.ts
+export const fetchProducts = async (params: Params): Promise<Product[]> => {
+  const { data } = await webCore
+    .buildSignedRequest({ method: 'GET', baseURL: '/products' })
+    .execute();
+  return data;
+};
+
+// libs/products/src/hooks/index.ts
+export const productsKeys = createQueryKeys('products');
+
+export const useProducts = (params: Params) => {
+  return useQuery({
+    queryKey: productsKeys.list(params),
+    queryFn: () => fetchProducts(params)
+  });
+};
+
+// libs/products/src/index.ts (Barrel export - REQUIRED)
+export * from './apis';
+export * from './hooks';
+export * from './types';
+export * from './consts';
+
+// Usage in app
+import { useProducts, fetchProducts } from '@{projectName}/product';
+```
+
+**Data Flow:**
+```
+Component → Custom Hook → TanStack Query → API Function → Backend
 ```
 
 ---
@@ -354,13 +439,35 @@ export function UserProfile() {
 
 ---
 
-## 9. IMPORT preferences
+## 9. IMPORT & EXPORT ORGANIZATION
 
-- ✅ Named imports: `import { UserCard } from './UserCard'`
-- ❌ Default imports: `import UserCard from './UserCard'`
-- ❌ Wildcard: `import * as Utils from './utils'`
+### Import Order
+```typescript
+// Group imports in this order:
+// 1. External libraries
+import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
-**Why named imports?** Better refactoring support and explicit dependencies.
+// 2. Internal modules (absolute imports)
+import { Button } from '@/components';
+import { validateEmail } from '@/utils';
+
+// 3. Relative imports
+import { UserCard } from './UserCard';
+
+// 4. Types
+import type { User } from './types';
+```
+
+### Export Preferences
+
+- ✅ Named exports ONLY: `export const UserCard = () => { }`
+- ✅ Named imports ONLY: `import { UserCard } from './UserCard'`
+- ❌ Default exports: `export default UserCard` - **FORBIDDEN**
+- ❌ Default imports: `import UserCard from './UserCard'` - **FORBIDDEN**
+- ❌ Wildcard: `import * as Utils from './utils'` - Avoid unless necessary
+
+**Why named exports?** Better refactoring support, explicit dependencies, tree-shaking friendly.
 
 ---
 
@@ -460,15 +567,19 @@ Before submitting code:
 
 - [ ] No `any` types (or justified with comment)
 - [ ] All null/undefined cases handled
-- [ ] Functions have clear, descriptive names
+- [ ] Functions have clear, descriptive names (5-second rule)
+- [ ] Complex conditions extracted to named variables
+- [ ] Early returns used (no deep nesting)
+- [ ] const + arrow functions only (no `function` keyword)
+- [ ] **Named exports ONLY** (no default exports)
+- [ ] Barrel exports (index.ts) for feature libraries
 - [ ] Can I test this easily?
 - [ ] Did I make existing code more complex? (If yes, extract)
-- [ ] Imports organized correctly
+- [ ] Imports organized correctly (external → internal → relative → types)
 - [ ] Used modern TypeScript patterns
 - [ ] Chose simplicity over cleverness
-- [ ] No barrel exports (no index.ts)
-- [ ] useState only for local state
-- [ ] No setState passed as props
+- [ ] **React only:** useState only for local state
+- [ ] **React only:** No setState passed as props
 
 ---
 
