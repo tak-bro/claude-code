@@ -9,16 +9,16 @@ Multi-perspective code review against team standards.
 ## Workflow
 
 1. Setup (2min): Determine review types
-2. **Parallel Reviews** (10min): tak-typescript-reviewer | design-reviewer (if UI) | Security+Performance | Style
-3. **Parallel Analysis** (5min): code-simplicity-reviewer
-4. Report (3min): Consolidate, prioritize issues
+2. **Parallel** (10min): tak-typescript-reviewer | design (if UI) | Security+Performance
+3. Analysis (5min): code-simplicity-reviewer
+4. Report (3min): Consolidate, prioritize
 
 ---
 
-## Critical Checks (Priority Order)
+## Checks (Priority Order)
 
-1. **EXPORTS/IMPORTS** - Any `export default`? (auto-fail)
-2. **TYPE SAFETY** - `any` without justification? Unhandled null/undefined?
+1. **EXPORTS/IMPORTS** - `export default`? (auto-fail)
+2. **TYPE SAFETY** - `any` without justification? Unhandled null?
 3. **MODERN PATTERNS** - `function` keyword? Deep nesting?
 4. **TESTABILITY** - Hard to test = poor structure
 
@@ -27,17 +27,15 @@ Multi-perspective code review against team standards.
 ## Output
 
 ```markdown
-### 🔍 Review: [Feature]
+### 🔍 [Feature] - X/10
 
-**Score**: X/10
+🔴 **Critical**
+- [Issue]: [Fix] (File:line)
 
-**Critical** 🔴
-- [Issue]: [Fix] (File: [path:line])
-
-**Important** 🟡
+🟡 **Important**
 - [Issue]: [Suggestion]
 
-**Nice-to-have** 🟢
+🟢 **Nice-to-have**
 - [Enhancement]
 ```
 

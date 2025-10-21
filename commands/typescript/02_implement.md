@@ -9,19 +9,19 @@ Implement TypeScript features following team standards.
 ## Workflow
 
 1. Setup (3min): Read requirements, identify parallel components
-2. **Parallel Implementation** (15min): Core logic | Components/UI | Tests
+2. **Parallel** (15min): Core logic | Components/UI | Tests
 3. Integration (3min): Integrate, run tests
-4. Validation (2min): Verify standards, lint/tests
+4. Validation (2min): Standards, lint/tests
 
 ---
 
-## Team Standards
+## Standards
 
 ### CRITICAL
 - [ ] Named exports ONLY (no `export default`)
-- [ ] Barrel exports (index.ts) where appropriate
+- [ ] Barrel exports (index.ts)
 - [ ] Imports: external → internal → relative → types
-- [ ] const + arrow functions (no `function`)
+- [ ] const + arrow (no `function`)
 
 ### Type Safety
 - [ ] No `any` (or justified + comment)
@@ -38,15 +38,9 @@ Implement TypeScript features following team standards.
 ## Output
 
 ```markdown
-### ✅ Implementation: [Feature]
+### ✅ [Feature]
 
-**Files**
-- ✨ New: [paths]
-- 🔧 Modified: [paths]
-
-**Tests**
-✓ [test] (passed)
-
-**Standards**
-✅ Named exports | Barrel exports | Type safety | null handling | const+arrow
+**Files:** ✨ New: [...] | 🔧 Modified: [...]
+**Tests:** ✓ [...]
+**Standards:** Named exports | Barrel | Type safety | const+arrow
 ```

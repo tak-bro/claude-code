@@ -8,27 +8,29 @@ Implement React features using Feature Library pattern (Nx monorepo).
 
 ## Workflow
 
-1. Setup (3min): Identify feature lib structure, plan data flow, check Shadcn UI
-2. **Parallel** (20min): API Functions | TanStack Query Hooks | Components | Types/Consts
-3. Integration (5min): Create barrel exports, test data flow, verify aliases, apply cn()
-4. Validation (2min): Lint, verify ALL named exports, barrel exports, import order
+1. Setup (3min): Identify feature lib, plan data flow, check Shadcn UI
+2. **Parallel** (20min): APIs | Hooks | Components | Types/Consts
+3. Integration (5min): Barrel exports, test flow, verify aliases, cn()
+4. Validation (2min): Lint, named exports, barrel exports, import order
 
 ---
 
-## Feature Library Structure
+## Structure
 
 ```
 libs/{feature}/
 ├── apis/index.ts      # API functions
 ├── hooks/index.ts     # TanStack Query hooks
-├── types/index.ts     # TypeScript types
+├── types/index.ts     # Types
 ├── consts/index.ts    # Constants
-└── index.ts           # Barrel export (REQUIRED)
+└── index.ts           # Barrel (REQUIRED)
 ```
 
-**Data Flow:** Component → Hook → TanStack Query → API
+**Flow:** Component → Hook → TanStack Query → API
 
-## Critical Patterns
+---
+
+## Patterns
 
 **API**
 ```typescript
@@ -57,10 +59,10 @@ export const ProductList = () => {
 
 ## Checklist
 
-- [ ] Named exports ONLY (no default)
-- [ ] Barrel exports (index.ts) ALL folders
+- [ ] Named exports ONLY
+- [ ] Barrel exports ALL folders
 - [ ] Imports: external → internal → relative → types
-- [ ] @{projectName}/* aliases (not relative across libs)
+- [ ] @{projectName}/* aliases
 - [ ] cn() for Tailwind
 - [ ] Component → Hook → TanStack Query → API
 - [ ] Zustand (global) | TanStack Query (server) | useState (local)
@@ -70,11 +72,9 @@ export const ProductList = () => {
 ## Output
 
 ```markdown
-### ✅ Implementation: [Feature]
+### ✅ [Feature]
 
 **Library:** libs/[feature] (apis, hooks, types, consts)
-
-**Data Flow:** ✓ Component → Hook → TanStack Query → API
-
-**Standards:** ✅ Named exports | Barrel exports | TanStack Query | Shadcn UI | cn()
+**Flow:** Component → Hook → TanStack Query → API
+**Standards:** Named exports | Barrel exports | Shadcn UI | cn()
 ```

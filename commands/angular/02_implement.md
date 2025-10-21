@@ -8,14 +8,14 @@ Implement Angular features using ComponentStore-as-Facade pattern.
 
 ## Workflow
 
-1. Setup (3min): Verify Module-based, identify ComponentStore scope, plan wrappers
-2. **Parallel** (20min): ComponentStore | API Service | Component | Wrappers
-3. Integration (5min): Connect layers, verify DestroyedService, test Guards, check env suffixes
-4. Validation (2min): Lint, verify NO defaults, NO Ionic controllers, component-scoped
+1. Setup (3min): Verify Module-based, identify scope, plan wrappers
+2. **Parallel** (20min): ComponentStore | API | Component | Wrappers
+3. Integration (5min): Connect layers, verify DestroyedService, test Guards, env suffixes
+4. Validation (2min): Lint, NO defaults, NO Ionic controllers, component-scoped
 
 ---
 
-## Critical Patterns
+## Patterns
 
 **ComponentStore** (Facade + State)
 ```typescript
@@ -41,9 +41,9 @@ export class OrdersComponent {
 
 ## Checklist
 
-- [ ] ComponentStore = Facade (no separate Facade)
+- [ ] ComponentStore = Facade
 - [ ] Component-scoped providers
-- [ ] Component → ComponentStore → API only
+- [ ] Component → ComponentStore → API
 - [ ] Service wrappers (NOT Ionic controllers)
 - [ ] LocalStorage: `_${env}` suffix
 - [ ] Module-based (NOT standalone)
@@ -54,11 +54,8 @@ export class OrdersComponent {
 ## Output
 
 ```markdown
-### ✅ Implementation: [Feature]
+### ✅ [Feature]
 
-**Architecture**
-ComponentStore: [Store] | API: [Service] | Component: [Component]
-
-**Patterns**
-✅ ComponentStore as Facade | Service wrappers | DestroyedService | Env-suffixed keys
+**Architecture:** ComponentStore: [Store] | API: [Service] | Component: [Component]
+**Patterns:** ComponentStore as Facade | Service wrappers | DestroyedService | Env suffixes
 ```
