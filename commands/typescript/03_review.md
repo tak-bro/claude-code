@@ -1,55 +1,44 @@
-# /typescript:review 
+# /typescript:review
 
-## Purpose
-Multi-perspective code review, detect recurring issues against tak's strict quality standards.
+Multi-perspective code review against team standards.
 
-## Agent
-- **tak-typescript-reviewer**: TypeScript quality
-- **code-simplicity-reviewer**: YAGNI violations
-- **design-implementation-reviewer**: UI vs Figma
-- **tak-document-writer**: Documentation style
+**Agents:** tak-typescript-reviewer, code-simplicity-reviewer, design-implementation-reviewer (if UI)
 
 ---
 
 ## Workflow
 
-### Phase 1: Sequential (2 min)
-```bash
-1. Determine review types needed
-2. Identify parallel reviews
-```
-
-### Phase 2: Parallel Reviews 🔀 (10 min)
-```bash
-Lane 1: tak-typescript-reviewer      # Type safety
-Lane 2: design-implementation-reviewer  # UI fidelity (if UI)
-Lane 3: Security + Performance       # Vulnerabilities
-Lane 4: Style + Consistency          # ./claude/llms.txt compliance
-```
-
-### Phase 3: Parallel Analysis 🔀 (8 min)
-```bash
-Lane 1: code-simplicity-reviewer     # Find unnecessary complexity
-```
-
-### Phase 4: Sequential (2 min)
-```bash
-3. Generate suggestions
-4. Auto-fix simple issues
-```
+1. Setup (2min): Determine review types
+2. **Parallel Reviews** (10min): tak-typescript-reviewer | design-reviewer (if UI) | Security+Performance | Style
+3. **Parallel Analysis** (5min): code-simplicity-reviewer
+4. Report (3min): Consolidate, prioritize issues
 
 ---
 
-## Output Structure
+## Critical Checks (Priority Order)
+
+1. **EXPORTS/IMPORTS** - Any `export default`? (auto-fail)
+2. **TYPE SAFETY** - `any` without justification? Unhandled null/undefined?
+3. **MODERN PATTERNS** - `function` keyword? Deep nesting?
+4. **TESTABILITY** - Hard to test = poor structure
+
+---
+
+## Output
 
 ```markdown
-### 🔍 Review: [Some Features#]
+### 🔍 Review: [Feature]
 
-**Score**: [score] / 10
+**Score**: X/10
 
-**Issues Found**
-🔴 Critical: [issue] (fix: [solution])
-🟡 Important: [issue]
-🟢 Nice-to-have: [issue]
+**Critical** 🔴
+- [Issue]: [Fix] (File: [path:line])
+
+**Important** 🟡
+- [Issue]: [Suggestion]
+
+**Nice-to-have** 🟢
+- [Enhancement]
 ```
 
+**Scores:** 10=Perfect | 8-9=Minor | 6-7=Important | 4-5=Critical | 0-3=Major

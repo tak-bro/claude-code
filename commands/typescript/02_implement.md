@@ -1,47 +1,41 @@
-# /typescipr:implement
+# /typescript:implement
 
-## Purpose
-Implement TypeScript features following using TDD, apply `./claude/llms.txt` patterns
+Implement TypeScript features following team standards.
 
-## Agents
-- **react-figma-ui-engineer**: UI from Figma
-- **framework-docs-researcher**: Framework reference
-- **tak-typescript-expert**: Use as implementation checklist
-
+**Agents:** tak-typescript-expert, react-figma-ui-engineer (if UI), framework-docs-researcher (if needed)
 
 ---
 
 ## Workflow
 
-### Phase 1: Setup (3 min)
-```bash
-1. Read requirements/plan or user's text
-2. Identify parallel components
-```
-
-### Phase 2: Parallel Implementation 🔀 (15 min)
-```bash
-# If components are independent
-Lane 1: Core logic (pure functions)
-Lane 2: Components/UI 
-Lane 3: Tests (TDD)
-```
-
-### Phase 3: Integration (3 min)
-```bash
-4. Integrate components
-5. Run tests (10x for probabilistic features)
-```
-
-### Phase 4: Parallel Documentation 🔀 (2 min)
-```bash
-Lane 1: Code comments
-Lane 2: README updates
-```
+1. Setup (3min): Read requirements, identify parallel components
+2. **Parallel Implementation** (15min): Core logic | Components/UI | Tests
+3. Integration (3min): Integrate, run tests
+4. Validation (2min): Verify standards, lint/tests
 
 ---
 
-## Output Structure
+## Team Standards
+
+### CRITICAL
+- [ ] Named exports ONLY (no `export default`)
+- [ ] Barrel exports (index.ts) where appropriate
+- [ ] Imports: external → internal → relative → types
+- [ ] const + arrow functions (no `function`)
+
+### Type Safety
+- [ ] No `any` (or justified + comment)
+- [ ] null/undefined handled (early returns)
+- [ ] Complex conditions → named variables
+
+### Quality
+- [ ] Clear names (5-second rule)
+- [ ] Testable structure
+- [ ] Didn't complicate existing code
+
+---
+
+## Output
 
 ```markdown
 ### ✅ Implementation: [Feature]
@@ -52,9 +46,7 @@ Lane 2: README updates
 
 **Tests**
 ✓ [test] (passed)
-✗ [test] (9/10 - acceptable)
 
-**📝 ./CLAUDE.md Updates**
-- Added: [pattern]
-- Updated: [section]
+**Standards**
+✅ Named exports | Barrel exports | Type safety | null handling | const+arrow
 ```

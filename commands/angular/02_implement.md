@@ -1,198 +1,64 @@
 # /angular:implement
 
-## Purpose
-Implement Angular features using ComponentStore-as-Facade pattern, Module-based architecture, and Ionic 8 components.
+Implement Angular features using ComponentStore-as-Facade pattern.
 
-## Agents
-- **angular-componentstore-expert**: ComponentStore patterns and Angular best practices
-- **framework-docs-researcher**: Angular/Ionic framework reference
-- **tak-typescript-expert**: TypeScript implementation checklist
+**Agents:** angular-componentstore-expert, framework-docs-researcher, tak-typescript-expert
 
 ---
 
 ## Workflow
 
-### Phase 1: Setup (3 min)
-```bash
-1. Read requirements/plan
-2. Verify Module-based architecture (NOT standalone)
-3. Identify ComponentStore scope (component vs module)
-4. Plan service wrappers needed (Modal, Toast, Loader)
-```
-
-### Phase 2: Parallel Implementation 🔀 (20 min)
-```bash
-# If components are independent
-Lane 1: ComponentStore (Facade + State + Effects)
-Lane 2: API Service (HTTP calls only)
-Lane 3: Component (UI only, providers: [Store, DestroyedService])
-Lane 4: Service Wrappers (if needed)
-```
-
-### Phase 3: Integration (5 min)
-```bash
-4. Connect Component → ComponentStore → API
-5. Verify DestroyedService subscription cleanup
-6. Test Guards (App → Auth → Feature)
-7. Verify LocalStorage keys have _${env} suffix
-```
-
-### Phase 4: Validation (2 min)
-```bash
-8. Run lint/tests
-9. Verify NO default exports
-10. Verify NO direct Ionic controller usage
-11. Verify ComponentStore is component-scoped
-```
+1. Setup (3min): Verify Module-based, identify ComponentStore scope, plan wrappers
+2. **Parallel** (20min): ComponentStore | API Service | Component | Wrappers
+3. Integration (5min): Connect layers, verify DestroyedService, test Guards, check env suffixes
+4. Validation (2min): Lint, verify NO defaults, NO Ionic controllers, component-scoped
 
 ---
 
 ## Critical Patterns
 
-### ComponentStore Structure
+**ComponentStore** (Facade + State)
 ```typescript
 @Injectable()
-export class FeatureStore extends ComponentStore<FeatureState> {
-  constructor(
-    private api: FeatureApiService,
-    private modalService: ModalService,
-    private toastService: ToastService
-  ) {
-    super(initialState);
-  }
-
-  // 1. Selectors
-  readonly items$ = this.select(state => state.items);
-
-  // 2. Updaters
-  readonly setItems = this.updater((state, items: Item[]) => ({
-    ...state,
-    items
-  }));
-
-  // 3. Effects
-  readonly loadItems$ = this.effect((trigger$: Observable<void>) =>
-    trigger$.pipe(
-      switchMap(() => this.api.getItems$().pipe(
-        tap(items => this.setItems(items)),
-        catchError(error => {
-          this.toastService.error('Failed');
-          return EMPTY;
-        })
-      ))
-    )
-  );
+export class OrderStore extends ComponentStore<OrderState> {
+  readonly orders$ = this.select(state => state.orders);
+  readonly setOrders = this.updater((state, orders) => ({ ...state, orders }));
+  readonly loadOrders$ = this.effect((trigger$) => trigger$.pipe(...));
 }
 ```
 
-### Component Pattern
+**Component** (UI only, component-scoped)
 ```typescript
-@Component({
-  selector: 'app-feature',
-  templateUrl: './feature.component.html',
-  providers: [FeatureStore, DestroyedService]  // Component-scoped
-})
-export class FeatureComponent implements OnInit {
-  readonly items$ = this.store.items$;
-
-  constructor(
-    public store: FeatureStore,
-    private destroyed$: DestroyedService
-  ) {}
-
-  ngOnInit(): void {
-    this.store.loadItems$();
-  }
-}
-```
-
-### API Service Pattern
-```typescript
-@Injectable({ providedIn: 'root' })
-export class FeatureApiService {
-  constructor(private endpointService: EndpointService) {}
-
-  getItems$(): Observable<Item[]> {
-    return from(
-      this.endpointService
-        .getApi('feature')
-        .get<ListResponse<Item>>('/items')
-    ).pipe(
-      map(response => response.data.items),
-      catchError(this.handleError)
-    );
-  }
+@Component({ selector: 'app-orders', providers: [OrderStore, DestroyedService] })
+export class OrdersComponent {
+  readonly orders$ = this.store.orders$;
+  constructor(public store: OrderStore, private destroyed$: DestroyedService) {}
+  ngOnInit() { this.store.loadOrders$(); }
 }
 ```
 
 ---
 
-## Anti-Patterns to Avoid
+## Checklist
 
-```typescript
-// ❌ Component calling API directly
-this.api.getItems$().subscribe();
-
-// ❌ Separate Facade class
-export class FeatureFacade { }
-
-// ❌ ComponentStore providedIn: 'root'
-@Injectable({ providedIn: 'root' })
-export class FeatureStore extends ComponentStore<State> { }
-
-// ❌ Using Ionic controllers directly
-const modal = await this.modalCtrl.create({ ... });
-
-// ❌ Missing environment suffix
-this.storage.set('theme', 'dark');
-
-// ❌ Standalone components
-@Component({ standalone: true })
-
-// ❌ Default exports
-export default FeatureComponent;
-```
-
----
-
-## Checklist Before Submit
-
-- [ ] Component depends ONLY on ComponentStore (no direct API)
-- [ ] ComponentStore = Facade (no separate Facade class)
-- [ ] ComponentStore provided at component level
-- [ ] DestroyedService used for cleanup
-- [ ] LocalStorage keys have `_${env}` suffix
-- [ ] Service wrappers used (NOT Ionic controllers)
-- [ ] API service returns Observable<T>
+- [ ] ComponentStore = Facade (no separate Facade)
+- [ ] Component-scoped providers
+- [ ] Component → ComponentStore → API only
+- [ ] Service wrappers (NOT Ionic controllers)
+- [ ] LocalStorage: `_${env}` suffix
 - [ ] Module-based (NOT standalone)
 - [ ] Named exports ONLY
-- [ ] const + arrow functions
-- [ ] All null/undefined handled
 
 ---
 
-## Output Structure
+## Output
 
 ```markdown
 ### ✅ Implementation: [Feature]
 
 **Architecture**
-- ComponentStore: [FeatureStore] (component-scoped)
-- API Service: [FeatureApiService]
-- Component: [FeatureComponent]
-- Module: [FeatureModule]
+ComponentStore: [Store] | API: [Service] | Component: [Component]
 
-**Files**
-- ✨ New: [paths]
-- 🔧 Modified: [paths]
-
-**Patterns Applied**
-✓ ComponentStore as Facade
-✓ Module-based architecture
-✓ Service wrappers
-✓ DestroyedService cleanup
-✓ Environment-suffixed keys
-
-**Tests**
-✓ [test] (passed)
+**Patterns**
+✅ ComponentStore as Facade | Service wrappers | DestroyedService | Env-suffixed keys
 ```
