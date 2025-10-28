@@ -7,8 +7,7 @@ Implement React features using Feature Library pattern (Nx monorepo).
 ---
 
 ## Workflow
-
-1. Setup (3min): Identify feature lib, plan data flow, check Shadcn UI
+1. Setup (3min): **Create lib**, identify feature, plan data flow, check Shadcn UI
 2. **Parallel** (20min): APIs | Hooks | Components | Types/Consts
 3. Integration (5min): Barrel exports, test flow, verify aliases, cn()
 4. Validation (2min): Lint, named exports, barrel exports, import order
@@ -16,6 +15,10 @@ Implement React features using Feature Library pattern (Nx monorepo).
 ---
 
 ## Structure
+```bash
+# Create feature library
+npx nx g @nx/js:lib {feature} --directory=libs/{feature}
+```
 
 ```
 libs/{feature}/
@@ -25,13 +28,9 @@ libs/{feature}/
 ├── consts/index.ts    # Constants
 └── index.ts           # Barrel (REQUIRED)
 ```
-
 **Flow:** Component → Hook → TanStack Query → API
-
 ---
-
 ## Patterns
-
 **API**
 ```typescript
 export const fetchProducts = async (): Promise<Product[]> => {
@@ -58,7 +57,7 @@ export const ProductList = () => {
 ---
 
 ## Checklist
-
+- [ ] **Create lib:** `npx nx g @nx/js:lib {feature} --directory=libs/{feature}`
 - [ ] Named exports ONLY
 - [ ] Barrel exports ALL folders
 - [ ] Imports: external → internal → relative → types
@@ -75,6 +74,7 @@ export const ProductList = () => {
 ### ✅ [Feature]
 
 **Library:** libs/[feature] (apis, hooks, types, consts)
+**Command:** `npx nx g @nx/js:lib {feature} --directory=libs/{feature}`
 **Flow:** Component → Hook → TanStack Query → API
 **Standards:** Named exports | Barrel exports | Shadcn UI | cn()
 ```
