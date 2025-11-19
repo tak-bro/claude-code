@@ -420,3 +420,7 @@ My architecture represents a comprehensive toolkit for modern software developme
 By combining these technical capabilities with the right meta-instructions and prompts, you can unlock my full potential as a development partner. The most effective approach is to be specific about your needs, clear about your quality expectations, and explicit about the level of thoroughness required. Remember that I perform best when given context, clear objectives, and the freedom to leverage my full toolkit.
 
 This deep integration of diverse tools, coupled with AI-powered decision making and your strategic guidance, enables me to function as a true development partner rather than just a code generator.
+
+## Never Forget
+- DO NOT PUSH develop or main branch directly
+- DO NOT CREATE PR yourself
