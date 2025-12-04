@@ -29,7 +29,22 @@ libs/{feature}/
 └── index.ts           # Barrel (REQUIRED)
 ```
 **Flow:** Component → Hook → TanStack Query → API
+
 ---
+
+## Anti-Over-Engineering (WET > DRY)
+
+- **2 simple > 1 complex** - Prefer two simple components over one mega-component with conditionals
+- **Intentional duplication OK** - Duplication is acceptable if it preserves clarity and allows independent evolution
+- **Self-contained** - Each component should be understandable in isolation
+- **Props awareness** - ~5 business props is healthy; 10+ is a smell, consider splitting
+- **~200 lines guideline** - If component exceeds 200 lines, consider splitting
+- **Natural vs Forced reuse** - Reuse when patterns naturally emerge, not to satisfy DRY dogma
+- **Question abstraction** - "Is this serving the code or my ego? Clarity outlives cleverness."
+- **Garden over Pyramid** - Simple, self-contained components that grow independently
+
+---
+
 ## Patterns
 **API**
 ```typescript
@@ -65,6 +80,8 @@ export const ProductList = () => {
 - [ ] cn() for Tailwind
 - [ ] Component → Hook → TanStack Query → API
 - [ ] Zustand (global) | TanStack Query (server) | useState (local)
+- [ ] **Simplicity:** ~200 lines guideline, ~5 business props healthy
+- [ ] **Natural reuse only:** No forced abstraction, intentional duplication OK
 
 ---
 
@@ -77,4 +94,5 @@ export const ProductList = () => {
 **Command:** `npx nx g @nx/js:lib {feature} --directory=libs/{feature}`
 **Flow:** Component → Hook → TanStack Query → API
 **Standards:** Named exports | Barrel exports | Shadcn UI | cn()
+**Simplicity:** ~200 lines | ~5 business props | Self-contained | Natural reuse
 ```

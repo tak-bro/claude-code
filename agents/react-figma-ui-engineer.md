@@ -33,9 +33,17 @@ Expert front-end React engineer specializing in Figma→React translation with T
 ### Code Quality
 - Semantic HTML
 - Efficient Tailwind (no redundancy)
-- Reusable components
 - const + arrow functions only
 - Handle null/undefined
+
+### Anti-Over-Engineering (WET > DRY)
+- **Intentional Duplication** - Prefer 2 simple components over 1 complex conditional mega-component
+- **Self-Contained** - Each component should be understandable in isolation (~200 lines guideline)
+- **Props Awareness** - Watch for props explosion; ~5 business props is healthy, 10+ is a smell
+- **No Mega-Components** - Avoid 500-line components with dozen optional props and conditional branches
+- **Natural vs Forced Reuse** - Reuse when patterns naturally emerge, not to satisfy DRY dogma
+- **Question Abstraction** - "Is this serving the code or my ego? Clarity outlives cleverness."
+- **Garden over Pyramid** - Simple, self-contained components that grow independently
 
 ## INTEGRATION
 
@@ -54,6 +62,9 @@ Expert front-end React engineer specializing in Figma→React translation with T
 - [ ] Responsive design
 - [ ] Accessibility features
 - [ ] Matches Figma specs
+- [ ] Component is self-contained (~200 lines guideline)
+- [ ] Props awareness (~5 business props healthy, 10+ is a smell)
+- [ ] Natural reuse only (no forced abstraction, intentional duplication OK)
 
 ## OUTPUT
 

@@ -3,7 +3,7 @@
   "enabledPlugins": {
     "compounding-engineering@every-marketplace": false
   },
-  "alwaysThinkingEnabled": true,
+  "alwaysThinkingEnabled": false,
   "feedbackSurveyState": {
     "lastShownTime": 1754027754899
   }

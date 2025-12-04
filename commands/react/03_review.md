@@ -22,6 +22,7 @@ Review React code against Feature Library pattern and team standards.
 3. **DATA FLOW** - Component → Hook → TanStack Query → API?
 4. **TANSTACK QUERY** - Hooks? Mutations invalidate?
 5. **COMPONENT** - Shadcn UI? cn()? Props typed?
+6. **OVER-ENGINEERING** - Mega-components? Props explosion (10+)? Forced abstraction?
 
 ---
 
@@ -34,6 +35,14 @@ Component → API direct? → 🔴 Use TanStack Query hooks
 Relative imports across libs? → 🔴 Use @{projectName}/*
 useState for shared state? → 🔴 Use Zustand
 Inline styles? → 🟡 Use Tailwind + cn()
+
+# Anti-Over-Engineering (WET > DRY)
+Component > ~200 lines? → 🟡 Consider splitting into self-contained components
+Props > 10? → 🟡 Props explosion - consider splitting (~5 business props is healthy)
+Multiple conditional renders? → 🟡 Prefer separate simple components
+Forced reuse hurting clarity? → 🔴 Allow intentional duplication (natural reuse only)
+Mega-component pattern? → 🔴 Garden over Pyramid - split into simple, self-contained components
+
 ✅ All pass
 ```
 
@@ -57,6 +66,7 @@ grep -r "import .* from" libs/{feature}/ | grep -v "import {"
 **Feature Library:** ✅ Structure | Flow | Imports
 **TanStack Query:** ✅ Hooks | Mutations | Keys
 **Component:** ✅ Shadcn | cn() | Types
+**Simplicity:** ✅ ~200 lines | ~5 business props | Self-contained | Natural reuse
 
 🔴 Critical | 🟡 Important | 🟢 Nice-to-have
 ```
