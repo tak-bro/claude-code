@@ -9,7 +9,7 @@ Fix issues identified in review phase, prioritized by severity.
 ## Pre-Fix
 
 **From /review output, load:**
-1. Fix Checklist (Critical → Important → Nice-to-have)
+1. Fix Checklist (Critical -> Important -> Nice-to-have)
 2. Specific file:line references
 3. Fix code snippets provided
 
@@ -17,141 +17,214 @@ Fix issues identified in review phase, prioritized by severity.
 
 ## Boundaries
 
-### ✅ Always Do
-- Fix ALL 🔴 Critical issues (no exceptions)
+### Always Do
+- Fix ALL Critical issues (no exceptions)
 - Run verification after each fix
 - Mark completed items in checklist
 - Keep fixes minimal and focused
 
-### ⚠️ Ask First
-- Skip 🟡 Important issues
+### Ask First
+- Skip Important issues
 - Refactor beyond fix scope
 - Add new features while fixing
 
-### 🚫 Never Do
-- Skip 🔴 Critical issues
+### Never Do
+- Skip Critical issues
 - Change logic beyond the fix
 - Introduce new patterns
 - Leave verification failing
 
 ---
 
-## Workflow
-
-1. **Load (1min)**: Get Fix Checklist from review
-2. **Fix Critical (varies)**: Fix ALL 🔴 issues, verify each
-3. **Fix Important (varies)**: Fix 🟡 issues if time permits
-4. **Verify (2min)**: Run all verification commands
-5. **Report (1min)**: Generate completion report
-
----
-
 ## Fix Priority
 
 ```
-🔴 Critical (MUST fix - no exceptions)
-    │
-    ├─ Separate Facade → merge into ComponentStore
-    ├─ providedIn: 'root' → component-scoped
-    ├─ Standalone → Module-based
-    ├─ Direct Ionic controller → service wrapper
-    └─ export default → named export
-    │
-    ▼
-🟡 Important (SHOULD fix)
-    │
-    ├─ Missing _${env} suffix
-    ├─ Missing DestroyedService
-    ├─ Wrong Guard order
-    └─ Business logic in component
-    │
-    ▼
-🟢 Nice-to-have (OPTIONAL)
-    │
-    └─ Selector optimization, naming
+Critical (MUST fix - no exceptions)
+    |
+    |-- Standalone -> Module-based
+    |-- Component -> API direct -> use ComponentStore
+    |-- export default -> named export
+    |-- DestroyedService -> component-level destroyed$
+    |-- Business logic in Component -> move to Page/Store
+    |-- Missing message pattern -> add to state
+    |-- (Ionic) Direct controller -> service wrapper
+    |
+    v
+Important (SHOULD fix)
+    |
+    |-- Missing destroyed$ cleanup
+    |-- Page/Component separation
+    |-- Store not in Module providers
+    |-- Wrong Guard order
+    |-- (Multi-env) Missing _${env} suffix
+    |
+    v
+Nice-to-have (OPTIONAL)
+    |
+    |-- Selector optimization, naming
 ```
 
 ---
 
 ## Common Fixes
 
-**Remove Separate Facade**
+**DestroyedService -> Component-level destroyed$**
 ```typescript
-// Delete: orders.facade.ts
+// Before
+import { DestroyedService } from '@core/services';
 
-// Move all facade methods to ComponentStore
-@Injectable()
-export class OrderStore extends ComponentStore<OrderState> {
-  // Methods that were in facade now live here
-  readonly loadOrders$ = this.effect(...);
+@Component({
+    providers: [DestroyedService]
+})
+export class FeaturePage {
+    constructor(private destroyed$: DestroyedService) {}
+}
+
+// After
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+@Component({})
+export class FeaturePage implements OnDestroy {
+    private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+    ngOnDestroy(): void {
+        this.destroyed$.next(true);
+        this.destroyed$.complete();
+    }
+
+    private setupListener(): void {
+        this.data$.pipe(takeUntil(this.destroyed$)).subscribe(...);
+    }
 }
 ```
 
-**providedIn: 'root' → Component-scoped**
-```typescript
-// Before (store)
-@Injectable({ providedIn: 'root' })
-export class OrderStore extends ComponentStore<OrderState> {}
-
-// After (store)
-@Injectable()
-export class OrderStore extends ComponentStore<OrderState> {}
-
-// After (component)
-@Component({
-  selector: 'app-orders',
-  providers: [OrderStore, DestroyedService]
-})
-```
-
-**Standalone → Module-based**
+**Standalone -> Module-based**
 ```typescript
 // Before
 @Component({
-  standalone: true,
-  imports: [CommonModule, IonicModule]
+    standalone: true,
+    imports: [CommonModule]
 })
-export class OrdersComponent {}
+export class FeatureComponent {}
 
 // After
 @Component({
-  selector: 'app-orders'
+    selector: 'app-feature'
 })
-export class OrdersComponent {}
+export class FeatureComponent {}
 
+// In module
 @NgModule({
-  declarations: [OrdersComponent],
-  imports: [CommonModule, IonicModule]
+    declarations: [FeatureComponent],
+    imports: [CommonModule, SharedModule]
 })
-export class OrdersModule {}
+export class FeatureModule {}
 ```
 
-**Direct Ionic Controller → Service Wrapper**
+**Add Message Pattern to Store**
+```typescript
+// Before
+export interface FeatureState {
+    items: FeatureView[];
+}
+
+// After
+export interface FeatureState {
+    message: FeatureStoreMessage;
+    isFetching: boolean;
+    items: FeatureView[];
+}
+
+const DEFAULT_STATE: FeatureState = {
+    message: { type: 'Default' },
+    isFetching: false,
+    items: [],
+};
+
+// Add selectors
+readonly message$ = this.select(({ message }) => message);
+readonly isFetching$ = this.select(({ isFetching }) => isFetching);
+```
+
+**Remove Store from Presentational Component**
+```typescript
+// Before
+@Component({ selector: 'feature-list' })
+export class FeatureListComponent {
+    constructor(private store: FeatureStore) {}
+
+    onClick(id: string): void {
+        this.store.selectItem(id);
+    }
+}
+
+// After
+@Component({ selector: 'feature-list' })
+export class FeatureListComponent {
+    @Input() items: FeatureView[] = [];
+    @Output() selectItem = new EventEmitter<string>();
+
+    onClick(id: string): void {
+        this.selectItem.emit(id);
+    }
+}
+
+// In Page template
+<feature-list [items]="items$ | async" (selectItem)="onSelectItem($event)"></feature-list>
+```
+
+**Move Store to Module Providers**
+```typescript
+// Before - component-scoped (incorrect for this project)
+@Component({
+    providers: [FeatureStore]
+})
+export class FeaturePage {}
+
+// After - module-scoped (correct)
+@NgModule({
+    providers: [FeatureStore]
+})
+export class FeatureModule {}
+
+@Component({})  // No providers here
+export class FeaturePage {
+    constructor(private store: FeatureStore) {}
+}
+```
+
+**(Ionic) Direct Controller -> Service Wrapper**
 ```typescript
 // Before
 constructor(private modalCtrl: ModalController) {}
 
-async showModal() {
-  const modal = await this.modalCtrl.create({ component: MyModal });
-  await modal.present();
+async showModal(): Promise<void> {
+    const modal = await this.modalCtrl.create({
+        component: MyModalComponent
+    });
+    await modal.present();
 }
 
 // After
 constructor(private modalService: ModalService) {}
 
-async showModal() {
-  await this.modalService.present(MyModal);
+async showModal(): Promise<void> {
+    await this.modalService.present(MyModalComponent);
 }
 ```
 
-**Add _${env} Suffix**
+**(Multi-env) Add Environment Suffix**
 ```typescript
 // Before
 this.storage.set('user_theme', theme);
+this.storage.get('user_theme');
 
 // After
 import { environment } from '@env/environment';
+
 this.storage.set(`user_theme_${environment.env}`, theme);
+this.storage.get(`user_theme_${environment.env}`);
 ```
 
 ---
@@ -174,31 +247,31 @@ ng build --configuration=production
 ## Output
 
 ```markdown
-### ✅ Fixed: [Feature]
+### Fixed: [Feature]
 
 **Fixes Applied:**
-- [x] 🔴 C1: Removed separate Facade (orders.facade.ts deleted)
-- [x] 🔴 C2: Component-scoped providers (orders.store.ts)
-- [x] 🟡 I1: Added _${env} suffix (storage.service.ts)
+- [x] C1: Replaced DestroyedService with destroyed$ (list.page.ts)
+- [x] C2: Removed store from presentational component (list.component.ts)
+- [x] I1: Added message pattern to store (feature.store.ts)
 
 **Verification:**
-- [x] `ng build` ✓
-- [x] `{pm} run lint` ✓
-- [x] `ng test` ✓
-- [x] `ng build --prod` ✓
+- [x] `ng build`
+- [x] `{pm} run lint`
+- [x] `ng test`
+- [x] `ng build --configuration=production`
 
 **Skipped (with reason):**
-- [ ] 🟢 N1: [Reason for skip]
+- [ ] N1: [Reason for skip]
 
-**Final Score:** X/10 → 10/10
+**Final Score:** X/10 -> 10/10
 ```
 
 ---
 
 ## Checklist
 
-- [ ] ALL 🔴 Critical issues fixed
-- [ ] 🟡 Important issues addressed (or justified skip)
+- [ ] ALL Critical issues fixed
+- [ ] Important issues addressed (or justified skip)
 - [ ] `ng build` passes
 - [ ] `{pm} run lint` passes
 - [ ] `ng test` passes

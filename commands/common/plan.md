@@ -38,10 +38,10 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 
 ---
 
-**Tech Stack**
-- [Framework] [version] (e.g., React 18.x, Angular 18.x)
-- [State] [version] (e.g., TanStack Query v5, ComponentStore)
-- [Build] [tool] (e.g., Vite, Nx)
+**Tech Stack** (check `package.json` for exact versions)
+- [Framework]: [version from package.json]
+- [State]: [version from package.json]
+- [Build]: [tool]
 
 ---
 
@@ -57,6 +57,10 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 ✅ Do:
 - [What this implementation SHOULD do]
 - [Patterns to follow]
+
+⚠️ Ask First:
+- [Decisions requiring confirmation]
+- [Trade-offs to discuss]
 
 🚫 Don't:
 - [What to avoid]

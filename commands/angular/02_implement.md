@@ -1,134 +1,219 @@
 # /angular:implement
 
-Implement Angular features using ComponentStore-as-Facade pattern.
+Implement Angular features using NgRx ComponentStore pattern with Module-based architecture.
 
 **Agents:** angular-componentstore-expert, tak-typescript-expert, framework-docs-researcher
+
+---
+
+## NgRx Ecosystem
+
+```
+@ngrx/store           # Global state (router, app-wide)
+@ngrx/component-store # Feature-level state (primary)
+@ngrx/effects         # Side effects
+@ngrx/entity          # Entity collections
+@ngrx/operators       # tapResponse, etc.
+```
 
 ---
 
 ## Pre-Implementation
 
 **Before coding, verify from /plan output:**
-1. ✅ Plan approved?
-2. ✅ Files to create/modify identified?
-3. ✅ Implementation Checklist ready?
+1. Plan approved?
+2. Files to create/modify identified?
+3. Implementation Checklist ready?
 
 ---
 
 ## Boundaries
 
-### ✅ Always Do
+### Always Do
 - Use plan's Implementation Checklist
-- ComponentStore = Facade (no separate Facade class)
-- Component-scoped providers (NOT providedIn: 'root')
-- Service wrappers for Ionic controllers
-- LocalStorage keys with `_${env}` suffix
-- Named exports only (`export const`)
+- Component-level `destroyed$` for cleanup (NOT DestroyedService)
+- Page (smart) vs Component (presentational) separation
+- Message pattern in ComponentStore state
+- Store provided in Module's providers array
+- Named exports only (`export const`, `export class`)
 - Run verification commands before done
 
-### ⚠️ Ask First
+### Ask First
 - Adding new dependencies
 - Modifying shared services
 - Creating new patterns not in codebase
+- Using `providedIn: 'root'` for ComponentStore
 
-### 🚫 Never Do
+### Never Do
 - `export default`
 - Standalone components (Module-based only)
-- Direct Ionic controller usage (`modalCtrl.create()`)
-- `providedIn: 'root'` for ComponentStore
-- Component → API direct calls (must go through ComponentStore)
-
----
-
-## Workflow
-
-1. **Setup (3min)**: Verify Module-based, identify scope, plan wrappers
-2. **Parallel (20min)**: ComponentStore | API Service | Component | Module
-3. **Integration (5min)**: Connect layers, verify DestroyedService, test Guards
-4. **Validation (2min)**: Run verification commands, check env suffixes
+- Component -> API direct calls (must go through ComponentStore)
+- DestroyedService injection (use component-level destroyed$)
+- Business logic in presentational components
+- Missing message pattern in store state
+- (Ionic) Direct controller usage without service wrapper
+- (Multi-env) LocalStorage keys without `_${env}` suffix
 
 ---
 
 ## Architecture
 
 ```
-Component (UI only)
-    ↓
-ComponentStore (Facade + State + Business Logic)
-    ├─ Selectors (derived state)
-    ├─ Updaters (sync mutations)
-    └─ Effects (async operations)
-        ↓
+Page (Smart Component - orchestrates stores)
+    |
+ComponentStore (State + Business Logic + Effects)
+    |-- Selectors (derived state)
+    |-- Updaters (sync mutations)
+    |-- Effects (async operations)
+        |
 API Service (HTTP only, Observable<T>)
-    ↓
+    |
 Backend
+
+Component (Presentational - @Input/@Output only)
+```
+
+**Core Module (app-wide state):**
+```
+Manager (orchestrates state + API)
+    |
+State (BehaviorSubject holder)
+    |
+API Service
+```
+
+---
+
+## Folder Structure
+
+```
+src/app/modules/
+  [feature]/
+    [feature].module.ts
+    [feature]-routing.module.ts
+    pages/           # Smart components
+    components/      # Presentational components
+    services/        # API services
+    stores/          # ComponentStore instances
+    types/           # TypeScript interfaces
+    pipes/           # Feature-specific pipes
 ```
 
 ---
 
 ## Patterns
 
-**ComponentStore** (Facade + State)
+**ComponentStore (with Message Pattern)**
 ```typescript
-@Injectable()
-export class OrderStore extends ComponentStore<OrderState> {
-  constructor(
-    private api: OrderApiService,
-    private toastService: ToastService
-  ) {
-    super({ orders: [], loading: false });
-  }
+// types/feature.type.ts
+export type FeatureStoreMessage = { type: FeatureStoreMessageType; data?: any };
 
-  // Selectors
-  readonly orders$ = this.select(state => state.orders);
-  readonly loading$ = this.select(state => state.loading);
+// stores/feature.store.ts
+export interface FeatureState {
+    message: FeatureStoreMessage;
+    isFetching: boolean;
+    items: FeatureView[];
+    selectedItem: FeatureView | null;
+}
 
-  // Updaters
-  readonly setOrders = this.updater((state, orders: Order[]) => ({ ...state, orders }));
+const DEFAULT_STATE: FeatureState = {
+    message: { type: 'Default' },
+    isFetching: false,
+    items: [],
+    selectedItem: null,
+};
 
-  // Effects
-  readonly loadOrders$ = this.effect((trigger$: Observable<void>) =>
-    trigger$.pipe(
-      switchMap(() => this.api.getOrders$().pipe(
-        tap(orders => this.setOrders(orders)),
-        catchError(error => {
-          this.toastService.error('Failed');
-          return EMPTY;
-        })
-      ))
-    )
-  );
+@Injectable()  // Module provides it
+export class FeatureStore extends ComponentStore<FeatureState> {
+    // Selectors
+    readonly message$ = this.select(({ message }) => message);
+    readonly isFetching$ = this.select(({ isFetching }) => isFetching);
+    readonly items$ = this.select(({ items }) => items);
+
+    constructor(private api: FeatureApiService) {
+        super(DEFAULT_STATE);
+    }
+
+    // Effects
+    fetchItems$ = this.effect<void>(trigger$ =>
+        trigger$.pipe(
+            tap(() => this.patchState({ isFetching: true })),
+            switchMap(() => this.api.fetchItems$().pipe(
+                tap(items => this.patchState({ items, message: { type: 'SuccessToFetchItems' } })),
+                finalize(() => this.patchState({ isFetching: false })),
+                catchError(error => {
+                    this.patchState({ message: { type: 'FailedToRequest', data: { errorMessage: error.message } } });
+                    return EMPTY;
+                })
+            ))
+        )
+    );
 }
 ```
 
-**Component** (UI only, component-scoped)
+**Page (Smart Component)**
 ```typescript
 @Component({
-  selector: 'app-orders',
-  providers: [OrderStore, DestroyedService]  // Component-scoped
+    selector: 'feature-list-page',
+    templateUrl: './list.page.html',
 })
-export class OrdersComponent {
-  readonly orders$ = this.store.orders$;
+export class FeatureListPage implements OnInit, OnDestroy {
+    private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  constructor(
-    public store: OrderStore,
-    private destroyed$: DestroyedService
-  ) {}
+    readonly items$ = this.store.items$;
+    readonly isFetching$ = this.store.isFetching$;
 
-  ngOnInit(): void {
-    this.store.loadOrders$();
-  }
+    constructor(
+        private readonly store: FeatureStore,
+        private readonly toastService: ToastService
+    ) {}
+
+    ngOnInit(): void {
+        this.setupStoreListener();
+        this.store.fetchItems$();
+    }
+
+    ngOnDestroy(): void {
+        this.destroyed$.next(true);
+        this.destroyed$.complete();
+    }
+
+    private setupStoreListener(): void {
+        this.store.message$
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe(message => {
+                if (message.type === 'FailedToRequest') {
+                    this.toastService.showToast(message.data?.errorMessage);
+                }
+            });
+    }
 }
 ```
 
-**Module** (NOT standalone)
+**Component (Presentational)**
 ```typescript
-@NgModule({
-  declarations: [OrdersComponent],
-  imports: [CommonModule, IonicModule],
-  exports: [OrdersComponent]
+@Component({
+    selector: 'feature-list',
 })
-export class OrdersModule {}
+export class FeatureListComponent {
+    @Input() items: FeatureView[] = [];
+    @Output() selectItem = new EventEmitter<string>();
+}
+```
+
+**Module**
+```typescript
+const COMPONENTS = [FeatureListComponent, FeatureDetailComponent];
+const PAGES = [FeatureListPage, FeatureDetailPage];
+const SERVICES = [FeatureApiService];
+const STORES = [FeatureStore];
+
+@NgModule({
+    declarations: [...COMPONENTS, ...PAGES],
+    imports: [CommonModule, SharedModule, FeatureRoutingModule],
+    providers: [...SERVICES, ...STORES],
+})
+export class FeatureModule {}
 ```
 
 ---
@@ -146,40 +231,42 @@ ng test --watch=false          # Tests pass
 
 ## Checklist
 
-- [ ] ComponentStore = Facade (no separate Facade)
-- [ ] Component-scoped providers
-- [ ] Component → ComponentStore → API only
-- [ ] DestroyedService cleanup
-- [ ] Service wrappers (NOT Ionic controllers)
-- [ ] LocalStorage keys: `_${env}` suffix
 - [ ] Module-based (NOT standalone)
+- [ ] Component-level `destroyed$` cleanup
+- [ ] Page (smart) vs Component (presentational) separation
+- [ ] Message pattern in store state
+- [ ] Store provided in Module's providers
+- [ ] Component -> ComponentStore -> API only
 - [ ] Named exports ONLY
-- [ ] const + arrow functions
-- [ ] Guards: App → Auth → Feature
+- [ ] API methods end with `$` suffix
+- [ ] Guards: App -> Auth -> Feature
+- [ ] (Ionic) Service wrappers for controllers
+- [ ] (Multi-env) LocalStorage keys with `_${env}` suffix
 - [ ] Verification commands pass
 
 ---
 
-## Output (→ review 단계 입력)
+## Output (-> review)
 
 ```markdown
-### ✅ Implemented: [Feature]
+### Implemented: [Feature]
 
 **Files Created/Modified:**
-- ✨ `src/app/features/orders/orders.store.ts`
-- ✨ `src/app/features/orders/orders.component.ts`
-- ✨ `src/app/features/orders/orders.module.ts`
-- 🔧 `src/app/services/orders-api.service.ts`
+- `src/app/modules/feature/stores/feature.store.ts`
+- `src/app/modules/feature/pages/list/list.page.ts`
+- `src/app/modules/feature/components/list/list.component.ts`
+- `src/app/modules/feature/feature.module.ts`
 
 **Checklist Completed:**
-- [x] ComponentStore = Facade
-- [x] Component-scoped providers
-- [x] Service wrappers used
+- [x] Module-based architecture
+- [x] Component-level destroyed$
+- [x] Page/Component separation
+- [x] Message pattern in store
 
 **Verification:**
-- [x] `ng build` ✓
-- [x] `{pm} run lint` ✓
-- [x] `ng test` ✓
+- [x] `ng build`
+- [x] `{pm} run lint`
+- [x] `ng test`
 
 **Notes for Review:**
 - [Implementation decisions]

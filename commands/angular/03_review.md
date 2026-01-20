@@ -17,68 +17,64 @@ Review Angular code and generate actionable fix checklist for next phase.
 
 ## Boundaries
 
-### ✅ Always Do
+### Always Do
 - Check ALL Critical items (auto-fail if missed)
 - Provide specific file:line references
 - Include fix code snippets
 - Generate Fix Checklist for next phase
 
-### ⚠️ Ask First
+### Ask First
 - Suggest major refactoring
 - Recommend architecture changes
 
-### 🚫 Never Do
+### Never Do
 - Skip Critical checks
 - Give vague feedback without fix examples
 - Approve code with Critical issues
 
 ---
 
-## Workflow
-
-1. **Setup (2min)**: Load plan's Review Focus, implement's Notes
-2. **Parallel (10min)**: ComponentStore | Architecture | TypeScript | Storage
-3. **Analysis (5min)**: Cleanup patterns, env suffixes, complexity
-4. **Final (3min)**: Generate Fix Checklist, consolidate score
-
----
-
 ## Checks (Priority Order)
 
-### 🔴 Critical (Auto-Fail)
-1. Separate Facade class exists? (ComponentStore IS Facade)
-2. `providedIn: 'root'` for ComponentStore?
-3. Component → API direct call (bypassing ComponentStore)?
-4. Standalone component used (must be Module-based)?
-5. Direct Ionic controller (`modalCtrl.create()`)?
-6. `export default` found?
+### Critical (Auto-Fail)
+1. Standalone component used (must be Module-based)?
+2. Component -> API direct call (bypassing ComponentStore)?
+3. `export default` found?
+4. DestroyedService injection (should use component-level destroyed$)?
+5. Business logic in presentational component?
+6. Missing message pattern in ComponentStore state?
+7. (Ionic) Direct controller usage without service wrapper?
 
-### 🟡 Important
-7. Missing `_${env}` suffix on LocalStorage keys?
-8. Missing DestroyedService cleanup?
-9. Guards order wrong? (App → Auth → Feature)
-10. Component has business logic? (should be in ComponentStore)
+### Important
+8. Missing component-level `destroyed$` cleanup?
+9. Page vs Component separation violated?
+10. Store not provided in Module's providers?
+11. Guards order wrong? (App -> Auth -> Feature)
+12. API methods missing `$` suffix?
+13. (Multi-env) LocalStorage keys missing `_${env}` suffix?
 
-### 🟢 Nice-to-have
-11. Could selectors be combined?
-12. Effect error handling could be better?
-13. Naming could be clearer?
+### Nice-to-have
+14. Could selectors be combined?
+15. Effect error handling could be better?
+16. Naming could be clearer?
 
 ---
 
 ## Decision Tree
 
 ```
-Separate Facade class? → 🔴 Remove, use ComponentStore
-providedIn: 'root' on Store? → 🔴 Component-scoped providers
-Component → API direct? → 🔴 Use ComponentStore
-Standalone component? → 🔴 Convert to Module-based
-Ionic controller direct? → 🔴 Use service wrapper
-export default? → 🔴 Convert to named export
-Missing _${env} suffix? → 🟡 Add environment suffix
-Missing DestroyedService? → 🟡 Add cleanup
-Wrong Guard order? → 🟡 Fix to App → Auth → Feature
-✅ All pass → Score 10/10
+Standalone component? -> Critical: Convert to Module-based
+Component -> API direct? -> Critical: Use ComponentStore
+export default? -> Critical: Convert to named export
+DestroyedService injection? -> Critical: Use component-level destroyed$
+Business logic in Component? -> Critical: Move to Page or Store
+Missing message pattern? -> Critical: Add message field to state
+(Ionic) Direct controller? -> Critical: Use service wrapper
+Missing destroyed$ cleanup? -> Important: Add cleanup
+Store not in Module providers? -> Important: Add to providers
+Wrong Guard order? -> Important: Fix to App -> Auth -> Feature
+(Multi-env) Missing _${env}? -> Important: Add suffix
+All pass -> Score 10/10
 ```
 
 ---
@@ -87,93 +83,110 @@ Wrong Guard order? → 🟡 Fix to App → Auth → Feature
 
 ```bash
 # {pm} = npm, yarn, pnpm, bun (use project's package manager)
-grep -r "providedIn: 'root'" src/app/features/
+grep -r "standalone: true" src/app/modules/
 grep -r "export default" src/app/
-grep -r "modalCtrl\|toastCtrl\|loadingCtrl" src/app/ --include="*.ts"
-grep -r "localStorage\|sessionStorage" src/app/ | grep -v "_${environment.env}"
+grep -r "DestroyedService" src/app/modules/ --include="*.ts"
+# (Ionic) Check for direct controller usage
+grep -r "modalCtrl\|toastCtrl\|loadingCtrl" src/app/modules/ --include="*.ts"
+# (Multi-env) Check for localStorage without env suffix
+grep -r "localStorage\|sessionStorage" src/app/ | grep -v "_\${environment"
 ng build
 {pm} run lint
 ```
 
 ---
 
-## Output (→ fix 단계 입력)
+## Output (-> fix)
 
 ```markdown
-### 🔍 Review: [Feature] - Score: X/10
+### Review: [Feature] - Score: X/10
 
 **Summary:**
-- 🔴 Critical: X issues (must fix)
-- 🟡 Important: X issues (should fix)
-- 🟢 Nice-to-have: X issues (optional)
+- Critical: X issues (must fix)
+- Important: X issues (should fix)
+- Nice-to-have: X issues (optional)
 
 ---
 
-## 🔴 Critical Issues
+## Critical Issues
 
 ### C1: [Issue Title]
-- **File:** `src/app/features/orders/orders.facade.ts`
-- **Problem:** Separate Facade class exists
-- **Fix:** Remove facade, move logic to ComponentStore
+- **File:** `src/app/modules/feature/pages/list.page.ts:15`
+- **Problem:** DestroyedService injected instead of component-level destroyed$
+- **Fix:**
 ```typescript
-// Delete orders.facade.ts entirely
-// Move all methods to OrderStore
+// Before
+constructor(private destroyed$: DestroyedService) {}
+
+// After
+private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+}
 ```
 
 ### C2: [Issue Title]
-- **File:** `src/app/features/orders/orders.store.ts:5`
-- **Problem:** `@Injectable({ providedIn: 'root' })`
+- **File:** `src/app/modules/feature/components/list.component.ts:8`
+- **Problem:** Presentational component has store injection
 - **Fix:**
 ```typescript
 // Before
-@Injectable({ providedIn: 'root' })
-export class OrderStore extends ComponentStore<OrderState> {}
+@Component({ selector: 'feature-list' })
+export class FeatureListComponent {
+    constructor(private store: FeatureStore) {}
+}
 
 // After
-@Injectable()  // Component provides it
-export class OrderStore extends ComponentStore<OrderState> {}
-
-// In component
-@Component({
-  providers: [OrderStore, DestroyedService]  // Add here
-})
+@Component({ selector: 'feature-list' })
+export class FeatureListComponent {
+    @Input() items: FeatureView[] = [];
+    @Output() selectItem = new EventEmitter<string>();
+}
 ```
 
 ---
 
-## 🟡 Important Issues
+## Important Issues
 
 ### I1: [Issue Title]
-- **File:** `src/app/services/storage.service.ts:42`
-- **Problem:** Missing `_${env}` suffix
+- **File:** `src/app/modules/feature/stores/feature.store.ts:5`
+- **Problem:** Missing message pattern in state
 - **Fix:**
 ```typescript
 // Before
-this.storage.set('user_theme', theme);
+export interface FeatureState {
+    items: FeatureView[];
+}
 
 // After
-this.storage.set(`user_theme_${environment.env}`, theme);
+export interface FeatureState {
+    message: FeatureStoreMessage;
+    isFetching: boolean;
+    items: FeatureView[];
+}
 ```
 
 ---
 
-## 🟢 Nice-to-have
+## Nice-to-have
 
 ### N1: [Issue Title]
 - **Suggestion:** [Optional improvement]
 
 ---
 
-## Fix Checklist (→ /angular:fix 입력)
+## Fix Checklist (-> /angular:fix)
 
-**🔴 Critical (Must Fix):**
-- [ ] C1: Remove separate Facade class (orders.facade.ts)
-- [ ] C2: Remove providedIn: 'root' (orders.store.ts:5)
+**Critical (Must Fix):**
+- [ ] C1: Replace DestroyedService with destroyed$ (list.page.ts:15)
+- [ ] C2: Remove store from presentational component (list.component.ts:8)
 
-**🟡 Important (Should Fix):**
-- [ ] I1: Add _${env} suffix (storage.service.ts:42)
+**Important (Should Fix):**
+- [ ] I1: Add message pattern to store state (feature.store.ts:5)
 
-**🟢 Nice-to-have (Optional):**
+**Nice-to-have (Optional):**
 - [ ] N1: [Description]
 
 ---
@@ -193,7 +206,7 @@ ng test --watch=false
 | Score | Meaning |
 |-------|---------|
 | 10 | Perfect - no issues |
-| 8-9 | Minor issues only (🟢) |
-| 6-7 | Important issues (🟡) |
-| 4-5 | Critical issues (🔴) |
+| 8-9 | Minor issues only (Nice-to-have) |
+| 6-7 | Important issues |
+| 4-5 | Critical issues |
 | 0-3 | Major problems, needs rework |
