@@ -1,7 +1,7 @@
-# /plan 
+# /plan
 
 ## Purpose
-Analyze issue and create implementation plan by referencing existing code patterns.
+Analyze issue and create implementation plan with clear boundaries and checklists for downstream workflow.
 
 ## Agents
 - **codebase-researcher**: Analyze referenced files and extract patterns
@@ -12,11 +12,9 @@ Analyze issue and create implementation plan by referencing existing code patter
 ## Workflow
 
 ### Phase 1: Issue Analysis (2 min)
-```bash
 1. Understand the issue/requirement
 2. Identify referenced files to learn from
-3. Extract key patterns to apply
-```
+3. Determine tech stack and versions
 
 ### Phase 2: Parallel Research 🔀 (3 min)
 ```bash
@@ -26,11 +24,10 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 ```
 
 ### Phase 3: Plan Creation (3 min)
-```bash
-3. Extract patterns from referenced files
-4. Identify what needs modification
-5. Create step-by-step implementation plan
-```
+1. Extract patterns from referenced files
+2. Define boundaries (Do/Don't)
+3. Create implementation checklist
+4. Define review focus areas
 
 ---
 
@@ -39,24 +36,80 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 ```markdown
 ### 📋 Implementation Plan: [Feature]
 
+---
+
+**Tech Stack** (check `package.json` for exact versions)
+- [Framework]: [version from package.json]
+- [State]: [version from package.json]
+- [Build]: [tool]
+
+---
+
 **Knowledge Sources**
-- ./claude/llms.txt: [current patterns] (if exists)
-- ./CLAUDE.md: [current patterns] (if exists)
+- `./CLAUDE.md`: [patterns found]
+- `[reference file]`: [patterns extracted]
 - External: [research findings]
 
-**File Structure**
-src/
-  └── [files]
+---
 
-**Steps**
-1. [Step]
-2. [Step]
+**Boundaries**
 
-**Testing**
-- [Strategy]
+✅ Do:
+- [What this implementation SHOULD do]
+- [Patterns to follow]
+
+⚠️ Ask First:
+- [Decisions requiring confirmation]
+- [Trade-offs to discuss]
+
+🚫 Don't:
+- [What to avoid]
+- [Anti-patterns for this feature]
+
+---
+
+**Files to Create/Modify**
+
+| File | Action | Purpose |
+|------|--------|---------|
+| `path/to/file.ts` | Create | [Purpose] |
+| `path/to/existing.ts` | Modify | [What changes] |
+
+---
+
+**Implementation Checklist** (→ implement 단계에서 사용)
+
+- [ ] [Step 1]
+- [ ] [Step 2]
+- [ ] [Feature-specific requirement]
+- [ ] Named exports only
+- [ ] Barrel exports (index.ts)
+- [ ] Verification commands pass
+
+---
+
+**Verification Commands**
+
+```bash
+# {pm} = npm, yarn, pnpm, bun (use project's package manager)
+{pm} run typecheck    # or: ng build
+{pm} run lint
+{pm} test
+```
+
+---
+
+**Review Focus** (→ review 단계에서 확인)
+
+- [ ] [This feature's critical check point]
+- [ ] [Edge case to verify]
+- [ ] [Performance consideration]
+
+---
 
 **Decisions**
-- Choice: [X]
-- Rationale: [Why]
-- Source: [Citation]
+
+| Choice | Options | Selected | Rationale |
+|--------|---------|----------|-----------|
+| [Decision] | A, B | A | [Why] |
 ```

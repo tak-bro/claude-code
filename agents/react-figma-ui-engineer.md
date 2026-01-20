@@ -56,7 +56,6 @@ Expert front-end React engineer specializing in Figma→React translation with T
 
 - [ ] Named exports ONLY (no default)
 - [ ] Barrel exports (index.ts) created
-- [ ] Imports ordered: external → internal → relative → types
 - [ ] Shadcn UI components used
 - [ ] cn() for Tailwind
 - [ ] Responsive design
