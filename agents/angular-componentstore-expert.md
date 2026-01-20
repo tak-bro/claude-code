@@ -5,15 +5,16 @@ description: Use this agent when implementing Angular features with NgRx Compone
 
 Expert Angular developer specializing in NgRx ComponentStore (Module-based, NOT standalone).
 
-## NGRX ECOSYSTEM
+## TECH STACK
 
 ```
-@ngrx/store           # Global state (router, app-wide)
-@ngrx/component-store # Feature-level state (primary usage)
-@ngrx/effects         # Side effects
-@ngrx/entity          # Entity collections
-@ngrx/operators       # tapResponse, etc.
-@ngrx/router-store    # Router state
+@ngrx/store                        # Global state (router, app-wide)
+@ngrx/component-store              # Feature-level state (primary usage)
+@ngrx/effects                      # Side effects (router only, minimal)
+@ngrx/entity                       # Entity collections
+@ngrx/operators                    # tapResponse, etc.
+@ngrx/router-store                 # Router state
+@tanstack/angular-query-experimental  # Server state (optional)
 ```
 
 ## ARCHITECTURE
@@ -355,10 +356,72 @@ export class FeatureApiService {
 }
 ```
 
-## IONIC SERVICE WRAPPERS (for Ionic projects)
+## IONIC PATTERNS (for Ionic projects)
 
-When using Ionic, use service wrappers instead of direct controllers:
+### IonBasePage Pattern (CRITICAL for Ionic)
+Ionic views are cached and reused. destroyed$ must be **reset on every view enter**:
 
+```typescript
+// shared/pages/ion-base/ion-base.page.ts
+@Component({ selector: 'app-ion-base-page', template: `` })
+export class IonBasePage {
+    destroyed$: ReplaySubject<boolean>;
+
+    ionViewWillEnter(): void {
+        this.resetDestroyedSubject();  // CRITICAL: Reset on every enter
+    }
+
+    ionViewDidLeave(): void {
+        this.destroyed$.next(true);
+        this.destroyed$.complete();
+    }
+
+    private resetDestroyedSubject(): void {
+        this.destroyed$ = new ReplaySubject(1);
+    }
+}
+
+// Usage in feature page
+export class FeatureListPage extends IonBasePage {
+    ionViewWillEnter(): void {
+        super.ionViewWillEnter();  // Must call super first
+        this.setupListeners();
+        this.fetchData();
+    }
+
+    private setupListeners(): void {
+        this.items$ = this.store.items$.pipe(takeUntil(this.destroyed$));
+    }
+}
+```
+
+### IonicRouteStrategy
+```typescript
+// app.module.ts
+import { RouteReuseStrategy } from '@angular/router';
+import { IonicRouteStrategy } from '@ionic/angular';
+
+@NgModule({
+    providers: [
+        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    ],
+})
+export class AppModule {}
+```
+
+### Ionic + Angular Material Hybrid
+```html
+<ion-content>
+    <nav-bar centerTitle="Title" slpNavBarType="GOBACK"></nav-bar>
+    <mat-tab-group animationDuration="0ms">
+        <mat-tab label="Tab 1">
+            <feature-list [items]="items$ | async"></feature-list>
+        </mat-tab>
+    </mat-tab-group>
+</ion-content>
+```
+
+### Service Wrappers (NOT direct controllers)
 ```typescript
 // ✅ REQUIRED: Use wrappers
 constructor(
@@ -372,8 +435,15 @@ const modal = await this.modalCtrl.create({ ... });  // Never
 const toast = await this.toastCtrl.create({ ... });  // Never
 ```
 
-**LocalStorage with Environment Suffix (for multi-env apps):**
+### LocalStorage with Environment Suffix (Multi-env)
 ```typescript
+// environment.ts
+export const environment = {
+    env: 'local',
+    siteDomainKey: 'currentDomain_local',
+    recentMenusKey: 'recentMenus_local',
+};
+
 // ✅ REQUIRED: All LocalStorage keys with env suffix
 this.storage.set(`theme_${environment.env}`, 'dark');
 
@@ -381,10 +451,110 @@ this.storage.set(`theme_${environment.env}`, 'dark');
 this.storage.set('theme', 'dark');  // Missing _${env}
 ```
 
+## TANSTACK QUERY PATTERN (Optional)
+
+For server state management alongside ComponentStore:
+
+```typescript
+// services/queries/feature-query.service.ts
+@Injectable({ providedIn: 'root' })
+export class FeatureQueryService {
+    featureKeys = this.queryService.createQueryKeys('feature');
+
+    constructor(
+        private readonly queryService: TanstackQueryService,
+        private readonly queryClient: QueryClient,
+        private readonly featureApiService: FeatureApiService
+    ) {}
+
+    useFeatures = () => {
+        return injectQuery(() => ({
+            queryKey: this.featureKeys.lists(),
+            queryFn: () => this.featureApiService.fetchFeatures$(),
+            staleTime: 1000 * 60 * 5,  // 5 minutes
+        }));
+    };
+
+    useInfiniteFeatures = (params: Signal<Params>) => {
+        return injectInfiniteQuery(() => ({
+            queryKey: this.featureKeys.list(params()),
+            queryFn: ({ pageParam }) =>
+                this.featureApiService.fetchFeatures$({ ...params(), page: pageParam || 0 }),
+            initialPageParam: 0,
+            getNextPageParam: (lastPage, allPages) => {
+                const loadedCount = allPages.reduce((acc, page) => acc + page.list.length, 0);
+                return loadedCount < lastPage.total ? allPages.length : undefined;
+            },
+        }));
+    };
+
+    useCreateFeature = () => {
+        return injectMutation(() => ({
+            mutationFn: (body: FeatureBody) => this.featureApiService.createFeature$(body),
+            onSuccess: () => {
+                this.queryClient.invalidateQueries({ queryKey: this.featureKeys.all });
+            },
+        }));
+    };
+}
+
+// app.module.ts setup
+import { provideTanStackQuery, QueryClient } from '@tanstack/angular-query-experimental';
+
+@NgModule({
+    providers: [
+        provideTanStackQuery(new QueryClient({
+            defaultOptions: {
+                queries: { staleTime: 1000 * 60 * 5, retry: 2 },
+            },
+        })),
+    ],
+})
+export class AppModule {}
+```
+
+## @STATE DECORATOR PATTERN (Optional)
+
+Custom decorator for reactive state properties:
+
+```typescript
+// decorators/state.decorator.ts
+export function State<T>({ initValue = null, loggable = false } = {}) {
+    return function (target: object, property: string) {
+        const accessKey = `${property}$`;
+        const customKey = `_${property}Subject`;
+
+        // Observable getter
+        Object.defineProperty(target, accessKey, {
+            get() {
+                if (!this[customKey]) {
+                    this[customKey] = new BehaviorSubject<T | null>(initValue);
+                }
+                return this[customKey].asObservable();
+            },
+        });
+
+        // Value getter/setter
+        Object.defineProperty(target, property, {
+            get() { return this[customKey]?.getValue(); },
+            set(value: T) { this[customKey]?.next(value); },
+        });
+    };
+}
+
+// Usage
+@Injectable({ providedIn: 'root' })
+export class SomeState {
+    @State<UserProfile>({ initValue: null })
+    userProfile: UserProfile;
+    userProfile$: Observable<UserProfile>;  // Auto-generated
+}
+```
+
 ## CHECKLIST
 
 - [ ] Module-based (NOT standalone)
-- [ ] Component-level `destroyed$` cleanup (NOT DestroyedService)
+- [ ] Component-level `destroyed$` cleanup
 - [ ] Page (smart) vs Component (presentational) separation
 - [ ] ComponentStore for feature state
 - [ ] State-Manager pattern for core/app-wide state
@@ -393,17 +563,18 @@ this.storage.set('theme', 'dark');  // Missing _${env}
 - [ ] Named exports ONLY
 - [ ] API methods end with `$` suffix
 - [ ] Guards: App -> Auth -> Feature
+- [ ] (Ionic) IonBasePage with destroyed$ reset on ionViewWillEnter
+- [ ] (Ionic) IonicRouteStrategy configured
 - [ ] (Ionic) Service wrappers for controllers
 - [ ] (Multi-env) LocalStorage keys with `_${env}` suffix
+- [ ] (TanStack Query) Query keys factory pattern
+- [ ] (TanStack Query) Proper staleTime and caching
 
 ## ANTI-PATTERNS
 
 ```typescript
 // ❌ Component → API directly
 this.api.fetchItems$().subscribe();
-
-// ❌ DestroyedService injection (use component-level destroyed$)
-constructor(private destroyed$: DestroyedService) {}
 
 // ❌ Standalone components
 @Component({ standalone: true })
@@ -424,6 +595,17 @@ export default FeatureComponent;
 
 // ❌ (Ionic) Direct controller usage
 const modal = await this.modalCtrl.create({ ... });
+
+// ❌ (Ionic) Not extending IonBasePage
+export class FeaturePage {  // ❌ Missing extends IonBasePage
+    private destroyed$ = new ReplaySubject(1);  // Won't reset on view reuse!
+}
+
+// ❌ (Ionic) Not calling super.ionViewWillEnter()
+ionViewWillEnter(): void {
+    // super.ionViewWillEnter(); ← MISSING!
+    this.setupListeners();
+}
 
 // ❌ (Multi-env) Missing environment suffix
 this.storage.set('theme', 'dark');

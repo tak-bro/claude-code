@@ -40,23 +40,26 @@ Review Angular code and generate actionable fix checklist for next phase.
 1. Standalone component used (must be Module-based)?
 2. Component -> API direct call (bypassing ComponentStore)?
 3. `export default` found?
-4. DestroyedService injection (should use component-level destroyed$)?
-5. Business logic in presentational component?
-6. Missing message pattern in ComponentStore state?
-7. (Ionic) Direct controller usage without service wrapper?
+4. Business logic in presentational component?
+5. Missing message pattern in ComponentStore state?
+6. (Ionic) Direct controller usage without service wrapper?
+7. (Ionic) Page not extending IonBasePage?
+8. (Ionic) Missing super.ionViewWillEnter() call?
 
 ### Important
-8. Missing component-level `destroyed$` cleanup?
-9. Page vs Component separation violated?
-10. Store not provided in Module's providers?
-11. Guards order wrong? (App -> Auth -> Feature)
-12. API methods missing `$` suffix?
-13. (Multi-env) LocalStorage keys missing `_${env}` suffix?
+9. Missing component-level `destroyed$` cleanup?
+10. Page vs Component separation violated?
+11. Store not provided in Module's providers?
+12. Guards order wrong? (App -> Auth -> Feature)
+13. API methods missing `$` suffix?
+14. (Ionic) IonicRouteStrategy not configured?
+15. (Multi-env) LocalStorage keys missing `_${env}` suffix?
+16. (TanStack Query) Missing query keys factory pattern?
 
 ### Nice-to-have
-14. Could selectors be combined?
-15. Effect error handling could be better?
-16. Naming could be clearer?
+17. Could selectors be combined?
+18. Effect error handling could be better?
+19. Naming could be clearer?
 
 ---
 
@@ -66,14 +69,17 @@ Review Angular code and generate actionable fix checklist for next phase.
 Standalone component? -> Critical: Convert to Module-based
 Component -> API direct? -> Critical: Use ComponentStore
 export default? -> Critical: Convert to named export
-DestroyedService injection? -> Critical: Use component-level destroyed$
 Business logic in Component? -> Critical: Move to Page or Store
 Missing message pattern? -> Critical: Add message field to state
 (Ionic) Direct controller? -> Critical: Use service wrapper
+(Ionic) Not extending IonBasePage? -> Critical: Add extends IonBasePage
+(Ionic) Missing super.ionViewWillEnter()? -> Critical: Add super call
 Missing destroyed$ cleanup? -> Important: Add cleanup
 Store not in Module providers? -> Important: Add to providers
 Wrong Guard order? -> Important: Fix to App -> Auth -> Feature
+(Ionic) Missing IonicRouteStrategy? -> Important: Configure in app.module
 (Multi-env) Missing _${env}? -> Important: Add suffix
+(TanStack Query) No query keys? -> Important: Add factory pattern
 All pass -> Score 10/10
 ```
 
@@ -85,11 +91,22 @@ All pass -> Score 10/10
 # {pm} = npm, yarn, pnpm, bun (use project's package manager)
 grep -r "standalone: true" src/app/modules/
 grep -r "export default" src/app/
-grep -r "DestroyedService" src/app/modules/ --include="*.ts"
+
+# (Ionic) Check for pages not extending IonBasePage
+grep -r "class.*Page" src/app/modules/ --include="*.page.ts" | grep -v "extends IonBasePage"
+
+# (Ionic) Check for missing super.ionViewWillEnter()
+grep -rL "super.ionViewWillEnter" src/app/modules/ --include="*.page.ts"
+
 # (Ionic) Check for direct controller usage
 grep -r "modalCtrl\|toastCtrl\|loadingCtrl" src/app/modules/ --include="*.ts"
+
+# (Ionic) Check IonicRouteStrategy
+grep -r "IonicRouteStrategy" src/app/app.module.ts
+
 # (Multi-env) Check for localStorage without env suffix
 grep -r "localStorage\|sessionStorage" src/app/ | grep -v "_\${environment"
+
 ng build
 {pm} run lint
 ```
@@ -180,11 +197,13 @@ export interface FeatureState {
 ## Fix Checklist (-> /angular:fix)
 
 **Critical (Must Fix):**
-- [ ] C1: Replace DestroyedService with destroyed$ (list.page.ts:15)
-- [ ] C2: Remove store from presentational component (list.component.ts:8)
+- [ ] C1: Remove store from presentational component (list.component.ts:8)
+- [ ] C2: (Ionic) Add extends IonBasePage (list.page.ts:10)
+- [ ] C3: (Ionic) Add super.ionViewWillEnter() call (list.page.ts:25)
 
 **Important (Should Fix):**
 - [ ] I1: Add message pattern to store state (feature.store.ts:5)
+- [ ] I2: (Ionic) Configure IonicRouteStrategy (app.module.ts)
 
 **Nice-to-have (Optional):**
 - [ ] N1: [Description]

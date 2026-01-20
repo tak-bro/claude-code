@@ -6,14 +6,15 @@ Implement Angular features using NgRx ComponentStore pattern with Module-based a
 
 ---
 
-## NgRx Ecosystem
+## Tech Stack
 
 ```
-@ngrx/store           # Global state (router, app-wide)
-@ngrx/component-store # Feature-level state (primary)
-@ngrx/effects         # Side effects
-@ngrx/entity          # Entity collections
-@ngrx/operators       # tapResponse, etc.
+@ngrx/store                        # Global state (router, app-wide)
+@ngrx/component-store              # Feature-level state (primary)
+@ngrx/effects                      # Side effects (router only)
+@ngrx/entity                       # Entity collections
+@ngrx/operators                    # tapResponse, etc.
+@tanstack/angular-query-experimental  # Server state (optional)
 ```
 
 ---
@@ -48,10 +49,11 @@ Implement Angular features using NgRx ComponentStore pattern with Module-based a
 - `export default`
 - Standalone components (Module-based only)
 - Component -> API direct calls (must go through ComponentStore)
-- DestroyedService injection (use component-level destroyed$)
 - Business logic in presentational components
 - Missing message pattern in store state
 - (Ionic) Direct controller usage without service wrapper
+- (Ionic) Missing `extends IonBasePage` for pages
+- (Ionic) Missing `super.ionViewWillEnter()` call
 - (Multi-env) LocalStorage keys without `_${env}` suffix
 
 ---
@@ -218,6 +220,103 @@ export class FeatureModule {}
 
 ---
 
+## Ionic Patterns
+
+**IonBasePage (CRITICAL for Ionic projects)**
+Ionic views are cached and reused. destroyed$ must be **reset on every view enter**:
+
+```typescript
+// shared/pages/ion-base/ion-base.page.ts
+@Component({ selector: 'app-ion-base-page', template: `` })
+export class IonBasePage {
+    destroyed$: ReplaySubject<boolean>;
+
+    ionViewWillEnter(): void {
+        this.resetDestroyedSubject();  // CRITICAL: Reset on every enter
+    }
+
+    ionViewDidLeave(): void {
+        this.destroyed$.next(true);
+        this.destroyed$.complete();
+    }
+
+    private resetDestroyedSubject(): void {
+        this.destroyed$ = new ReplaySubject(1);
+    }
+}
+```
+
+**Feature Page (Ionic)**
+```typescript
+export class FeatureListPage extends IonBasePage {
+    ionViewWillEnter(): void {
+        super.ionViewWillEnter();  // MUST call super first
+        this.setupListeners();
+        this.fetchData();
+    }
+
+    private setupListeners(): void {
+        this.items$ = this.store.items$.pipe(takeUntil(this.destroyed$));
+    }
+}
+```
+
+**IonicRouteStrategy (app.module.ts)**
+```typescript
+import { RouteReuseStrategy } from '@angular/router';
+import { IonicRouteStrategy } from '@ionic/angular';
+
+@NgModule({
+    providers: [
+        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    ],
+})
+export class AppModule {}
+```
+
+---
+
+## TanStack Query Pattern (Optional)
+
+For server state management alongside ComponentStore:
+
+```typescript
+// services/queries/feature-query.service.ts
+@Injectable({ providedIn: 'root' })
+export class FeatureQueryService {
+    featureKeys = this.queryService.createQueryKeys('feature');
+
+    constructor(
+        private readonly queryService: TanstackQueryService,
+        private readonly queryClient: QueryClient,
+        private readonly featureApiService: FeatureApiService
+    ) {}
+
+    useFeatures = () => {
+        return injectQuery(() => ({
+            queryKey: this.featureKeys.lists(),
+            queryFn: () => this.featureApiService.fetchFeatures$(),
+            staleTime: 1000 * 60 * 5,
+        }));
+    };
+
+    useInfiniteFeatures = (params: Signal<Params>) => {
+        return injectInfiniteQuery(() => ({
+            queryKey: this.featureKeys.list(params()),
+            queryFn: ({ pageParam }) =>
+                this.featureApiService.fetchFeatures$({ ...params(), page: pageParam || 0 }),
+            initialPageParam: 0,
+            getNextPageParam: (lastPage, allPages) => {
+                const loadedCount = allPages.reduce((acc, page) => acc + page.list.length, 0);
+                return loadedCount < lastPage.total ? allPages.length : undefined;
+            },
+        }));
+    };
+}
+```
+
+---
+
 ## Verification Commands
 
 ```bash
@@ -240,8 +339,12 @@ ng test --watch=false          # Tests pass
 - [ ] Named exports ONLY
 - [ ] API methods end with `$` suffix
 - [ ] Guards: App -> Auth -> Feature
+- [ ] (Ionic) Pages extend IonBasePage
+- [ ] (Ionic) super.ionViewWillEnter() called first
+- [ ] (Ionic) IonicRouteStrategy configured
 - [ ] (Ionic) Service wrappers for controllers
 - [ ] (Multi-env) LocalStorage keys with `_${env}` suffix
+- [ ] (TanStack Query) Query keys factory pattern
 - [ ] Verification commands pass
 
 ---

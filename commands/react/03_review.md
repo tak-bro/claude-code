@@ -52,10 +52,9 @@ Review React code and generate actionable fix checklist for next phase.
 4. `any` without justification?
 
 ### 🟡 Important
-5. Import order wrong? (external → internal → relative → types)
-6. `useState` for shared state? (should use Zustand)
-7. Props > 10? (props explosion)
-8. Component > 200 lines?
+5. `useState` for shared state? (should use Zustand)
+6. Props > 10? (props explosion)
+7. Component > 200 lines?
 
 ### 🟢 Nice-to-have
 9. Could be simpler?

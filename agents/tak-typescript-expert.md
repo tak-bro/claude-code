@@ -263,7 +263,6 @@ Extract when you see **2 or more** of these:
 
 - [ ] Named exports ONLY (no default)
 - [ ] Barrel exports (index.ts) for features
-- [ ] Imports: external → internal → relative → types
 - [ ] No `any` (or justified + comment)
 - [ ] null/undefined handled (early returns)
 - [ ] const + arrow functions (no `function`)

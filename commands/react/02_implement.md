@@ -2,7 +2,9 @@
 
 Implement React features using Feature Library pattern (Nx monorepo).
 
-**Agents:** tak-typescript-expert, react-figma-ui-engineer, framework-docs-researcher
+**Agents:** react-feature-library-expert, react-figma-ui-engineer, framework-docs-researcher
+
+**For React Feature Library patterns and examples, follow `react-feature-library-expert` agent guidelines.**
 
 ---
 
@@ -120,7 +122,6 @@ export const ProductList = () => {
 - [ ] **Create lib:** `npx nx g @nx/js:lib {feature} --directory=libs/{feature}`
 - [ ] Named exports ONLY
 - [ ] Barrel exports ALL folders
-- [ ] Imports: external → internal → relative → types
 - [ ] @{projectName}/* aliases
 - [ ] cn() for Tailwind
 - [ ] Component → Hook → TanStack Query → API

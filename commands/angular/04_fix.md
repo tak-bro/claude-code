@@ -44,10 +44,11 @@ Critical (MUST fix - no exceptions)
     |-- Standalone -> Module-based
     |-- Component -> API direct -> use ComponentStore
     |-- export default -> named export
-    |-- DestroyedService -> component-level destroyed$
     |-- Business logic in Component -> move to Page/Store
     |-- Missing message pattern -> add to state
     |-- (Ionic) Direct controller -> service wrapper
+    |-- (Ionic) Not extending IonBasePage -> add extends
+    |-- (Ionic) Missing super.ionViewWillEnter() -> add call
     |
     v
 Important (SHOULD fix)
@@ -56,7 +57,9 @@ Important (SHOULD fix)
     |-- Page/Component separation
     |-- Store not in Module providers
     |-- Wrong Guard order
+    |-- (Ionic) Missing IonicRouteStrategy -> configure
     |-- (Multi-env) Missing _${env} suffix
+    |-- (TanStack Query) Missing query keys factory
     |
     v
 Nice-to-have (OPTIONAL)
@@ -68,19 +71,58 @@ Nice-to-have (OPTIONAL)
 
 ## Common Fixes
 
-**DestroyedService -> Component-level destroyed$**
+**(Ionic) Add IonBasePage Extension**
 ```typescript
 // Before
-import { DestroyedService } from '@core/services';
+@Component({ selector: 'feature-list-page' })
+export class FeatureListPage {
+    private destroyed$ = new ReplaySubject(1);  // Won't reset on view reuse!
 
-@Component({
-    providers: [DestroyedService]
-})
-export class FeaturePage {
-    constructor(private destroyed$: DestroyedService) {}
+    ngOnInit(): void {
+        this.setupListeners();
+    }
 }
 
 // After
+import { IonBasePage } from '@shared/pages/ion-base/ion-base.page';
+
+@Component({ selector: 'feature-list-page' })
+export class FeatureListPage extends IonBasePage {
+    ionViewWillEnter(): void {
+        super.ionViewWillEnter();  // CRITICAL: Must call super first
+        this.setupListeners();
+        this.fetchData();
+    }
+
+    private setupListeners(): void {
+        this.items$ = this.store.items$.pipe(takeUntil(this.destroyed$));
+    }
+}
+```
+
+**(Ionic) Add IonicRouteStrategy**
+```typescript
+// Before (app.module.ts)
+@NgModule({
+    providers: [],
+})
+export class AppModule {}
+
+// After
+import { RouteReuseStrategy } from '@angular/router';
+import { IonicRouteStrategy } from '@ionic/angular';
+
+@NgModule({
+    providers: [
+        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    ],
+})
+export class AppModule {}
+```
+
+**Component-level destroyed$ (Non-Ionic)**
+```typescript
+// For non-Ionic projects
 import { ReplaySubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -227,6 +269,40 @@ this.storage.set(`user_theme_${environment.env}`, theme);
 this.storage.get(`user_theme_${environment.env}`);
 ```
 
+**(TanStack Query) Add Query Keys Factory**
+```typescript
+// Before
+@Injectable({ providedIn: 'root' })
+export class FeatureQueryService {
+    useFeatures = () => {
+        return injectQuery(() => ({
+            queryKey: ['features'],  // Hard-coded key
+            queryFn: () => this.api.fetchFeatures$(),
+        }));
+    };
+}
+
+// After
+@Injectable({ providedIn: 'root' })
+export class FeatureQueryService {
+    featureKeys = this.queryService.createQueryKeys('feature');
+
+    constructor(
+        private readonly queryService: TanstackQueryService,
+        private readonly queryClient: QueryClient,
+        private readonly api: FeatureApiService
+    ) {}
+
+    useFeatures = () => {
+        return injectQuery(() => ({
+            queryKey: this.featureKeys.lists(),
+            queryFn: () => this.api.fetchFeatures$(),
+            staleTime: 1000 * 60 * 5,
+        }));
+    };
+}
+```
+
 ---
 
 ## Verification Commands
@@ -250,9 +326,11 @@ ng build --configuration=production
 ### Fixed: [Feature]
 
 **Fixes Applied:**
-- [x] C1: Replaced DestroyedService with destroyed$ (list.page.ts)
-- [x] C2: Removed store from presentational component (list.component.ts)
+- [x] C1: Removed store from presentational component (list.component.ts)
+- [x] C2: (Ionic) Added extends IonBasePage (list.page.ts)
+- [x] C3: (Ionic) Added super.ionViewWillEnter() call (list.page.ts)
 - [x] I1: Added message pattern to store (feature.store.ts)
+- [x] I2: (Ionic) Configured IonicRouteStrategy (app.module.ts)
 
 **Verification:**
 - [x] `ng build`

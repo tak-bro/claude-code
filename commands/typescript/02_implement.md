@@ -135,7 +135,6 @@ if (user.age >= 18 && user.verified && !user.banned) { /* ... */ }
 
 - [ ] Named exports ONLY (no `export default`)
 - [ ] Barrel exports (index.ts)
-- [ ] Imports: external → internal → relative → types
 - [ ] const + arrow (no `function`)
 - [ ] No `any` (or justified + comment)
 - [ ] null/undefined handled (early returns)

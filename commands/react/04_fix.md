@@ -59,7 +59,6 @@ Fix issues identified in review phase, prioritized by severity.
     ▼
 🟡 Important (SHOULD fix)
     │
-    ├─ import order
     ├─ useState → Zustand for shared
     ├─ props explosion
     └─ component too large
@@ -143,7 +142,7 @@ const data: FeatureData[] = await fetchData();
 **Fixes Applied:**
 - [x] 🔴 C1: Converted default export → named (Component.tsx:42)
 - [x] 🔴 C2: Added barrel export (index.ts)
-- [x] 🟡 I1: Fixed import order (Component.tsx)
+- [x] 🟡 I1: Fixed useState → Zustand (Component.tsx)
 
 **Verification:**
 - [x] `{pm} run typecheck` ✓

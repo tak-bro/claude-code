@@ -53,10 +53,9 @@ Review TypeScript code and generate actionable fix checklist for next phase.
 5. Missing barrel exports (index.ts)?
 
 ### 🟡 Important
-6. Import order wrong? (external → internal → relative → types)
-7. Deep nesting? (should use early returns)
-8. Complex conditions not named?
-9. Hard to test structure?
+6. Deep nesting? (should use early returns)
+7. Complex conditions not named?
+8. Hard to test structure?
 
 ### 🟢 Nice-to-have
 10. Could be simpler?
@@ -73,7 +72,6 @@ any without comment? → 🔴 Add types or justification
 function keyword? → 🔴 Convert to arrow function
 Unhandled null/undefined? → 🔴 Add guards/early returns
 Missing barrel exports? → 🔴 Add index.ts
-Wrong import order? → 🟡 Reorder imports
 Deep nesting? → 🟡 Use early returns
 Complex unnamed condition? → 🟡 Extract to named variable
 Hard to test? → 🟡 Restructure for testability

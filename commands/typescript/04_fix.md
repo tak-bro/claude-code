@@ -60,7 +60,6 @@ Fix issues identified in review phase, prioritized by severity.
     ▼
 🟡 Important (SHOULD fix)
     │
-    ├─ import order
     ├─ deep nesting → early returns
     ├─ unnamed conditions → named variables
     └─ testability improvements
