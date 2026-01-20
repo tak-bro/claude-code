@@ -1,10 +1,14 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "enabledPlugins": {
-    "compounding-engineering@every-marketplace": false
+    "compounding-engineering@every-marketplace": false,
+    "swift-lsp@claude-plugins-official": true
   },
-  "alwaysThinkingEnabled": false,
+  "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754027754899
+  },
+  "permissions": {
+    "allow": ["Bash", "Read(*)", "Write(*)", "Edit(*)"]
   }
 }
