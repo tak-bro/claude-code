@@ -309,11 +309,11 @@ export class FeatureQueryService {
 
 ```bash
 # {pm} = npm, yarn, pnpm, bun (use project's package manager)
-# After each fix
+# After each fix (if available)
 ng build
 {pm} run lint
 
-# After all fixes
+# After all fixes (if available)
 ng test --watch=false
 ng build --configuration=production
 ```
@@ -332,7 +332,7 @@ ng build --configuration=production
 - [x] I1: Added message pattern to store (feature.store.ts)
 - [x] I2: (Ionic) Configured IonicRouteStrategy (app.module.ts)
 
-**Verification:**
+**Verification:** (if available)
 - [x] `ng build`
 - [x] `{pm} run lint`
 - [x] `ng test`
@@ -350,8 +350,8 @@ ng build --configuration=production
 
 - [ ] ALL Critical issues fixed
 - [ ] Important issues addressed (or justified skip)
-- [ ] `ng build` passes
-- [ ] `{pm} run lint` passes
-- [ ] `ng test` passes
-- [ ] `ng build --configuration=production` passes
+- [ ] `ng build` passes (if available)
+- [ ] `{pm} run lint` passes (if available)
+- [ ] `ng test` passes (if available)
+- [ ] `ng build --configuration=production` passes (if available)
 - [ ] Fix report generated

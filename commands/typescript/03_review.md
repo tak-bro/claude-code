@@ -87,8 +87,7 @@ Hard to test? → 🟡 Restructure for testability
 grep -r "export default" src/
 grep -r ": any" src/ --include="*.ts"
 grep -r "^function " src/ --include="*.ts"
-{pm} run lint
-{pm} run typecheck
+{pm} run lint    # if available
 ```
 
 ---
@@ -184,9 +183,8 @@ const calculateTotal = (items: Item[]): number => { }
 
 **Verification After Fix:**
 ```bash
-{pm} run typecheck
-{pm} run lint
-{pm} test
+{pm} run lint    # if available
+{pm} test        # if available
 ```
 ```
 

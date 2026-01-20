@@ -124,12 +124,11 @@ const data: FeatureData[] = await fetchData();
 ```bash
 # {pm} = npm, yarn, pnpm, bun (use project's package manager)
 # After each fix
-{pm} run typecheck
-{pm} run lint
+{pm} run lint    # if available
 
 # After all fixes
-{pm} test -- --watchAll=false
-{pm} run build
+{pm} test        # if available
+{pm} run build   # if available
 ```
 
 ---
@@ -145,10 +144,9 @@ const data: FeatureData[] = await fetchData();
 - [x] 🟡 I1: Fixed useState → Zustand (Component.tsx)
 
 **Verification:**
-- [x] `{pm} run typecheck` ✓
-- [x] `{pm} run lint` ✓
-- [x] `{pm} test` ✓
-- [x] `{pm} run build` ✓
+- [x] `{pm} run lint` ✓ (if available)
+- [x] `{pm} test` ✓ (if available)
+- [x] `{pm} run build` ✓ (if available)
 
 **Skipped (with reason):**
 - [ ] 🟢 N1: [Reason for skip - e.g., "minimal impact, time constraint"]
@@ -162,8 +160,7 @@ const data: FeatureData[] = await fetchData();
 
 - [ ] ALL 🔴 Critical issues fixed
 - [ ] 🟡 Important issues addressed (or justified skip)
-- [ ] `{pm} run typecheck` passes
-- [ ] `{pm} run lint` passes
-- [ ] `{pm} test` passes
-- [ ] `{pm} run build` passes
+- [ ] `{pm} run lint` passes (if available)
+- [ ] `{pm} test` passes (if available)
+- [ ] `{pm} run build` passes (if available)
 - [ ] Fix report generated

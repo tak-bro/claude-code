@@ -92,9 +92,8 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 
 ```bash
 # {pm} = npm, yarn, pnpm, bun (use project's package manager)
-{pm} run typecheck    # or: ng build
-{pm} run lint
-{pm} test
+{pm} run lint    # if available
+{pm} test        # if available
 ```
 
 ---

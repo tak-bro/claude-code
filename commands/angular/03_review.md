@@ -107,8 +107,8 @@ grep -r "IonicRouteStrategy" src/app/app.module.ts
 # (Multi-env) Check for localStorage without env suffix
 grep -r "localStorage\|sessionStorage" src/app/ | grep -v "_\${environment"
 
-ng build
-{pm} run lint
+ng build              # if available
+{pm} run lint         # if available
 ```
 
 ---
@@ -210,7 +210,7 @@ export interface FeatureState {
 
 ---
 
-**Verification After Fix:**
+**Verification After Fix:** (if available)
 ```bash
 ng build
 {pm} run lint

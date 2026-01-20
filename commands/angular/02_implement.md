@@ -321,9 +321,9 @@ export class FeatureQueryService {
 
 ```bash
 # {pm} = npm, yarn, pnpm, bun (use project's package manager)
-ng build                       # No build errors
-{pm} run lint                  # No lint errors
-ng test --watch=false          # Tests pass
+ng build              # if available
+{pm} run lint         # if available
+ng test --watch=false # if available
 ```
 
 ---
@@ -366,7 +366,7 @@ ng test --watch=false          # Tests pass
 - [x] Page/Component separation
 - [x] Message pattern in store
 
-**Verification:**
+**Verification:** (if available)
 - [x] `ng build`
 - [x] `{pm} run lint`
 - [x] `ng test`

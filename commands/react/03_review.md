@@ -86,8 +86,7 @@ Inline styles? → 🟢 Use Tailwind + cn()
 # {pm} = npm, yarn, pnpm, bun (use project's package manager)
 grep -r "export default" libs/{feature}/
 grep -r ": any" libs/{feature}/ --include="*.ts" --include="*.tsx"
-{pm} run lint
-{pm} run typecheck
+{pm} run lint    # if available
 ```
 
 ---
@@ -157,9 +156,8 @@ export const Component = () => { }
 
 **Verification After Fix:**
 ```bash
-{pm} run typecheck
-{pm} run lint
-{pm} test
+{pm} run lint    # if available
+{pm} test        # if available
 ```
 ```
 

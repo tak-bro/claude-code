@@ -110,9 +110,8 @@ export const ProductList = () => {
 
 ```bash
 # {pm} = npm, yarn, pnpm, bun (use project's package manager)
-{pm} run typecheck              # No type errors
-{pm} run lint                   # No lint errors
-{pm} test -- --watchAll=false   # Tests pass
+{pm} run lint    # if available
+{pm} test        # if available
 ```
 
 ---
@@ -147,9 +146,8 @@ export const ProductList = () => {
 - [x] Component → Hook → API flow
 
 **Verification:**
-- [x] `{pm} run typecheck` ✓
-- [x] `{pm} run lint` ✓
-- [x] `{pm} test` ✓
+- [x] `{pm} run lint` ✓ (if available)
+- [x] `{pm} test` ✓ (if available)
 
 **Notes for Review:**
 - [Implementation decisions]
