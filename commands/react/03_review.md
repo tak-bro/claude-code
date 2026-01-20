@@ -1,28 +1,66 @@
 # /react:review
 
-Review React code against Feature Library pattern and team standards.
+Review React code and generate actionable fix checklist for next phase.
 
-**Agents:** react-figma-ui-engineer, tak-typescript-reviewer, code-simplicity-reviewer, design-implementation-reviewer (if UI)
+**Agents:** tak-typescript-reviewer, code-simplicity-reviewer, design-implementation-reviewer (if UI)
+
+---
+
+## Pre-Review
+
+**From /plan and /implement outputs:**
+1. Review Focus items from plan
+2. Implementation notes from implement
+3. Files created/modified list
+
+---
+
+## Boundaries
+
+### ✅ Always Do
+- Check ALL Critical items (auto-fail if missed)
+- Provide specific file:line references
+- Include fix code snippets
+- Generate Fix Checklist for next phase
+
+### ⚠️ Ask First
+- Suggest major refactoring
+- Recommend architecture changes
+
+### 🚫 Never Do
+- Skip Critical checks
+- Give vague feedback without fix examples
+- Approve code with Critical issues
 
 ---
 
 ## Workflow
 
-1. Setup (2min): Identify scope, check UI review
-2. **Parallel** (10min): Feature Library | Exports/Imports | TypeScript | TanStack Query | State
-3. Analysis (5min): Complexity review
-4. Final (3min): Figma (if UI), consolidate
+1. **Setup (2min)**: Load plan's Review Focus, implement's Notes
+2. **Parallel (10min)**: Feature Library | Exports/Imports | TypeScript | State
+3. **Analysis (5min)**: Complexity review, over-engineering check
+4. **Final (3min)**: Generate Fix Checklist, consolidate score
 
 ---
 
 ## Checks (Priority Order)
 
-1. **EXPORTS/IMPORTS** - Default exports/imports? (auto-fail)
-2. **FEATURE LIBRARY** - Structure? Barrel exports? Clean imports?
-3. **DATA FLOW** - Component → Hook → TanStack Query → API?
-4. **TANSTACK QUERY** - Hooks? Mutations invalidate?
-5. **COMPONENT** - Shadcn UI? cn()? Props typed?
-6. **OVER-ENGINEERING** - Mega-components? Props explosion (10+)? Forced abstraction?
+### 🔴 Critical (Auto-Fail)
+1. `export default` found? → Must convert to named
+2. Missing barrel exports (index.ts)?
+3. Component → API direct call (bypassing hooks)?
+4. `any` without justification?
+
+### 🟡 Important
+5. Import order wrong? (external → internal → relative → types)
+6. `useState` for shared state? (should use Zustand)
+7. Props > 10? (props explosion)
+8. Component > 200 lines?
+
+### 🟢 Nice-to-have
+9. Could be simpler?
+10. Missing cn() for Tailwind?
+11. Naming could be clearer?
 
 ---
 
@@ -32,41 +70,108 @@ Review React code against Feature Library pattern and team standards.
 Default exports/imports? → 🔴 Convert to named
 Barrel exports missing? → 🔴 Add index.ts
 Component → API direct? → 🔴 Use TanStack Query hooks
-Relative imports across libs? → 🔴 Use @{projectName}/*
-useState for shared state? → 🔴 Use Zustand
-Inline styles? → 🟡 Use Tailwind + cn()
-
-# Anti-Over-Engineering (WET > DRY)
-Component > ~200 lines? → 🟡 Consider splitting into self-contained components
-Props > 10? → 🟡 Props explosion - consider splitting (~5 business props is healthy)
-Multiple conditional renders? → 🟡 Prefer separate simple components
-Forced reuse hurting clarity? → 🔴 Allow intentional duplication (natural reuse only)
-Mega-component pattern? → 🔴 Garden over Pyramid - split into simple, self-contained components
-
-✅ All pass
+any without comment? → 🔴 Add types or justification
+Relative imports across libs? → 🟡 Use @{projectName}/*
+useState for shared state? → 🟡 Use Zustand
+Component > 200 lines? → 🟡 Consider splitting
+Props > 10? → 🟡 Props explosion - split component
+Inline styles? → 🟢 Use Tailwind + cn()
+✅ All pass → Score 10/10
 ```
 
 ---
 
-## Verification
+## Verification Commands
 
 ```bash
+# {pm} = npm, yarn, pnpm, bun (use project's package manager)
 grep -r "export default" libs/{feature}/
-grep -r "import .* from" libs/{feature}/ | grep -v "import {"
+grep -r ": any" libs/{feature}/ --include="*.ts" --include="*.tsx"
+{pm} run lint
+{pm} run typecheck
 ```
 
 ---
 
-## Output
+## Output (→ fix 단계 입력)
 
 ```markdown
-### 🔍 [Feature] - X/10
+### 🔍 Review: [Feature] - Score: X/10
 
-**Exports/Imports:** ✅ Named | Barrel | Ordered
-**Feature Library:** ✅ Structure | Flow | Imports
-**TanStack Query:** ✅ Hooks | Mutations | Keys
-**Component:** ✅ Shadcn | cn() | Types
-**Simplicity:** ✅ ~200 lines | ~5 business props | Self-contained | Natural reuse
+**Summary:**
+- 🔴 Critical: X issues (must fix)
+- 🟡 Important: X issues (should fix)
+- 🟢 Nice-to-have: X issues (optional)
 
-🔴 Critical | 🟡 Important | 🟢 Nice-to-have
+---
+
+## 🔴 Critical Issues
+
+### C1: [Issue Title]
+- **File:** `libs/feature/Component.tsx:42`
+- **Problem:** `export default Component`
+- **Fix:**
+```typescript
+// Before
+export default Component
+
+// After
+export const Component = () => { }
 ```
+
+### C2: [Issue Title]
+- **File:** `libs/feature/hooks/index.ts:15`
+- **Problem:** Missing barrel export
+- **Fix:** Add to `libs/feature/index.ts`
+
+---
+
+## 🟡 Important Issues
+
+### I1: [Issue Title]
+- **File:** `libs/feature/Component.tsx`
+- **Problem:** [Description]
+- **Suggestion:** [How to improve]
+
+---
+
+## 🟢 Nice-to-have
+
+### N1: [Issue Title]
+- **Suggestion:** [Optional improvement]
+
+---
+
+## Fix Checklist (→ /react:fix 입력)
+
+**🔴 Critical (Must Fix):**
+- [ ] C1: Convert default export → named (Component.tsx:42)
+- [ ] C2: Add barrel export (index.ts)
+
+**🟡 Important (Should Fix):**
+- [ ] I1: [Description] (File.tsx:line)
+
+**🟢 Nice-to-have (Optional):**
+- [ ] N1: [Description]
+
+---
+
+**Verification After Fix:**
+```bash
+{pm} run typecheck
+{pm} run lint
+{pm} test
+```
+```
+
+---
+
+## Scoring
+
+| Score | Meaning |
+|-------|---------|
+| 10 | Perfect - no issues |
+| 8-9 | Minor issues only (🟢) |
+| 6-7 | Important issues (🟡) |
+| 4-5 | Critical issues (🔴) |
+| 0-3 | Major problems, needs rework |

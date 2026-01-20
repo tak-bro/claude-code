@@ -2,19 +2,54 @@
 
 Implement React features using Feature Library pattern (Nx monorepo).
 
-**Agents:** react-figma-ui-engineer, framework-docs-researcher, tak-typescript-expert
+**Agents:** tak-typescript-expert, react-figma-ui-engineer, framework-docs-researcher
+
+---
+
+## Pre-Implementation
+
+**Before coding, verify from /plan output:**
+1. ✅ Plan approved?
+2. ✅ Files to create/modify identified?
+3. ✅ Implementation Checklist ready?
+
+---
+
+## Boundaries
+
+### ✅ Always Do
+- Use plan's Implementation Checklist
+- Named exports only (`export const`)
+- Barrel exports (index.ts) for every folder
+- Component → Hook → TanStack Query → API flow
+- Run verification commands before done
+- Zustand for shared state, useState for local only
+
+### ⚠️ Ask First
+- Adding new dependencies
+- Modifying shared utilities
+- Creating patterns not in codebase
+
+### 🚫 Never Do
+- `export default`
+- `useState` for shared state
+- Direct API calls in components
+- Skip barrel exports
+- `any` without justification
 
 ---
 
 ## Workflow
-1. Setup (3min): **Create lib**, identify feature, plan data flow, check Shadcn UI
-2. **Parallel** (20min): APIs | Hooks | Components | Types/Consts
-3. Integration (5min): Barrel exports, test flow, verify aliases, cn()
-4. Validation (2min): Lint, named exports, barrel exports, import order
+
+1. **Setup (3min)**: Create lib, identify feature, plan data flow
+2. **Parallel (20min)**: APIs | Hooks | Components | Types/Consts
+3. **Integration (5min)**: Barrel exports, test flow, verify aliases
+4. **Validation (2min)**: Run verification commands
 
 ---
 
 ## Structure
+
 ```bash
 # Create feature library
 npx nx g @nx/js:lib {feature} --directory=libs/{feature}
@@ -28,24 +63,13 @@ libs/{feature}/
 ├── consts/index.ts    # Constants
 └── index.ts           # Barrel (REQUIRED)
 ```
+
 **Flow:** Component → Hook → TanStack Query → API
 
 ---
 
-## Anti-Over-Engineering (WET > DRY)
-
-- **2 simple > 1 complex** - Prefer two simple components over one mega-component with conditionals
-- **Intentional duplication OK** - Duplication is acceptable if it preserves clarity and allows independent evolution
-- **Self-contained** - Each component should be understandable in isolation
-- **Props awareness** - ~5 business props is healthy; 10+ is a smell, consider splitting
-- **~200 lines guideline** - If component exceeds 200 lines, consider splitting
-- **Natural vs Forced reuse** - Reuse when patterns naturally emerge, not to satisfy DRY dogma
-- **Question abstraction** - "Is this serving the code or my ego? Clarity outlives cleverness."
-- **Garden over Pyramid** - Simple, self-contained components that grow independently
-
----
-
 ## Patterns
+
 **API**
 ```typescript
 export const fetchProducts = async (): Promise<Product[]> => {
@@ -71,7 +95,28 @@ export const ProductList = () => {
 
 ---
 
+## Anti-Over-Engineering (WET > DRY)
+
+- **2 simple > 1 complex**: Prefer two simple components over mega-component
+- **Intentional duplication OK**: If it preserves clarity
+- **~200 lines guideline**: Consider splitting if exceeded
+- **~5 business props healthy**: 10+ is a smell
+
+---
+
+## Verification Commands
+
+```bash
+# {pm} = npm, yarn, pnpm, bun (use project's package manager)
+{pm} run typecheck              # No type errors
+{pm} run lint                   # No lint errors
+{pm} test -- --watchAll=false   # Tests pass
+```
+
+---
+
 ## Checklist
+
 - [ ] **Create lib:** `npx nx g @nx/js:lib {feature} --directory=libs/{feature}`
 - [ ] Named exports ONLY
 - [ ] Barrel exports ALL folders
@@ -80,19 +125,32 @@ export const ProductList = () => {
 - [ ] cn() for Tailwind
 - [ ] Component → Hook → TanStack Query → API
 - [ ] Zustand (global) | TanStack Query (server) | useState (local)
-- [ ] **Simplicity:** ~200 lines guideline, ~5 business props healthy
-- [ ] **Natural reuse only:** No forced abstraction, intentional duplication OK
+- [ ] ~200 lines guideline, ~5 business props
+- [ ] Verification commands pass
 
 ---
 
-## Output
+## Output (→ review 단계 입력)
 
 ```markdown
-### ✅ [Feature]
+### ✅ Implemented: [Feature]
 
-**Library:** libs/[feature] (apis, hooks, types, consts)
-**Command:** `npx nx g @nx/js:lib {feature} --directory=libs/{feature}`
-**Flow:** Component → Hook → TanStack Query → API
-**Standards:** Named exports | Barrel exports | Shadcn UI | cn()
-**Simplicity:** ~200 lines | ~5 business props | Self-contained | Natural reuse
+**Files Created/Modified:**
+- ✨ `libs/feature/apis/index.ts`
+- ✨ `libs/feature/hooks/index.ts`
+- 🔧 `libs/feature/index.ts`
+
+**Checklist Completed:**
+- [x] Named exports
+- [x] Barrel exports
+- [x] Component → Hook → API flow
+
+**Verification:**
+- [x] `{pm} run typecheck` ✓
+- [x] `{pm} run lint` ✓
+- [x] `{pm} test` ✓
+
+**Notes for Review:**
+- [Implementation decisions]
+- [Areas needing attention]
 ```
