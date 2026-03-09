@@ -38,16 +38,23 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 ```
 
 ### Phase 3: Plan Creation
-1. Extract patterns from referenced files
-2. Define boundaries (Do/Don't)
-3. Create implementation checklist
-4. Define review focus areas
+1. **Plan 파일 생성** (기존 파일 덮어쓰기 금지):
+   ```bash
+   # 항상 새 파일에 작성. 기존 PLAN.md 절대 덮어쓰지 않는다.
+   PLAN_FILE="PLAN-$(date +%Y%m%d-%H%M%S).md"
+   ```
+2. Extract patterns from referenced files
+3. Define boundaries (Do/Don't)
+4. Create implementation checklist
+5. Define review focus areas
 
 > **Note:** 프레임워크별 plan이 있으면 함께 참조 (`/angular:01_plan`, `/react:01_plan`, `/typescript:01_plan`)
 
 ---
 
 ## Output Structure
+
+> ⚠️ 반드시 `PLAN-{timestamp}.md` 파일에 작성할 것. 기존 plan 파일을 덮어쓰지 않는다.
 
 ```markdown
 ### 📋 Implementation Plan: [Feature]

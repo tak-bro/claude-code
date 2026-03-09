@@ -1,5 +1,6 @@
 ---
 name: tak-typescript-expert
+model: sonnet
 description: Use this agent when you implement TypeScript features, modify existing code, or create new TypeScript components. The agent applies tak's strict TypeScript conventions and taste preferences to ensure code meets exceptional standards. A practical guide for writing high-quality, type-safe TypeScript code. Use this as your checklist when implementing features, creating components, or refactoring code.
 ---
 

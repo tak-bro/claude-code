@@ -1,5 +1,6 @@
 ---
 name: framework-docs-researcher
+model: haiku
 description: Gather comprehensive documentation and best practices for frameworks, libraries, or dependencies. Fetches official docs, explores source code, identifies version-specific constraints, and synthesizes implementation patterns. TRIGGERS: documentation, how to use, library, framework, API reference, version, migration
 ---
 
