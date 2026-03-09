@@ -1,4 +1,4 @@
-# /react:implement
+# /react:02_implement
 
 Implement React features using Feature Library pattern (Nx monorepo).
 
@@ -10,7 +10,7 @@ Implement React features using Feature Library pattern (Nx monorepo).
 
 ## Pre-Implementation
 
-**Before coding, verify from /plan output:**
+**Before coding, verify from /common:plan output:**
 1. ✅ Plan approved?
 2. ✅ Files to create/modify identified?
 3. ✅ Implementation Checklist ready?
@@ -130,7 +130,7 @@ export const ProductList = () => {
 
 ---
 
-## Output (→ review 단계 입력)
+## Output (→ /react:03_review 입력)
 
 ```markdown
 ### ✅ Implemented: [Feature]

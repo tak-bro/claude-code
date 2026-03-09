@@ -1,4 +1,4 @@
-# /typescript:review
+# /typescript:03_review
 
 Review TypeScript code and generate actionable fix checklist for next phase.
 
@@ -8,7 +8,7 @@ Review TypeScript code and generate actionable fix checklist for next phase.
 
 ## Pre-Review
 
-**From /plan and /implement outputs:**
+**From /common:plan and /typescript:02_implement outputs:**
 1. Review Focus items from plan
 2. Implementation notes from implement
 3. Files created/modified list
@@ -92,7 +92,7 @@ grep -r "^function " src/ --include="*.ts"
 
 ---
 
-## Output (→ fix 단계 입력)
+## Output (→ /typescript:04_fix 입력)
 
 ```markdown
 ### 🔍 Review: [Feature] - Score: X/10
@@ -165,7 +165,7 @@ const calculateTotal = (items: Item[]): number => { }
 
 ---
 
-## Fix Checklist (→ /typescript:fix 입력)
+## Fix Checklist (→ /typescript:04_fix 입력)
 
 **🔴 Critical (Must Fix):**
 - [ ] C1: Convert default export → named (validation.ts:45)

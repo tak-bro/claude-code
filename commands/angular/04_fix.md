@@ -1,4 +1,4 @@
-# /angular:fix
+# /angular:04_fix
 
 Fix issues identified in review phase, prioritized by severity.
 
@@ -8,8 +8,8 @@ Fix issues identified in review phase, prioritized by severity.
 
 ## Pre-Fix
 
-**From /review output, load:**
-1. Fix Checklist (Critical -> Important -> Nice-to-have)
+**From /angular:03_review output, load:**
+1. Fix Checklist (Critical → Important → Nice-to-have)
 2. Specific file:line references
 3. Fix code snippets provided
 
@@ -17,19 +17,19 @@ Fix issues identified in review phase, prioritized by severity.
 
 ## Boundaries
 
-### Always Do
-- Fix ALL Critical issues (no exceptions)
+### ✅ Always Do
+- Fix ALL 🔴 Critical issues (no exceptions)
 - Run verification after each fix
 - Mark completed items in checklist
 - Keep fixes minimal and focused
 
-### Ask First
-- Skip Important issues
+### ⚠️ Ask First
+- Skip 🟡 Important issues
 - Refactor beyond fix scope
 - Add new features while fixing
 
-### Never Do
-- Skip Critical issues
+### 🚫 Never Do
+- Skip 🔴 Critical issues
 - Change logic beyond the fix
 - Introduce new patterns
 - Leave verification failing
@@ -39,32 +39,32 @@ Fix issues identified in review phase, prioritized by severity.
 ## Fix Priority
 
 ```
-Critical (MUST fix - no exceptions)
-    |
-    |-- Standalone -> Module-based
-    |-- Component -> API direct -> use ComponentStore
-    |-- export default -> named export
-    |-- Business logic in Component -> move to Page/Store
-    |-- Missing message pattern -> add to state
-    |-- (Ionic) Direct controller -> service wrapper
-    |-- (Ionic) Not extending IonBasePage -> add extends
-    |-- (Ionic) Missing super.ionViewWillEnter() -> add call
-    |
-    v
-Important (SHOULD fix)
-    |
-    |-- Missing destroyed$ cleanup
-    |-- Page/Component separation
-    |-- Store not in Module providers
-    |-- Wrong Guard order
-    |-- (Ionic) Missing IonicRouteStrategy -> configure
-    |-- (Multi-env) Missing _${env} suffix
-    |-- (TanStack Query) Missing query keys factory
-    |
-    v
-Nice-to-have (OPTIONAL)
-    |
-    |-- Selector optimization, naming
+🔴 Critical (MUST fix - no exceptions)
+    │
+    ├─ Standalone → Module-based
+    ├─ Component → API direct → use ComponentStore
+    ├─ export default → named export
+    ├─ Business logic in Component → move to Page/Store
+    ├─ Missing message pattern → add to state
+    ├─ (Ionic) Direct controller → service wrapper
+    ├─ (Ionic) Not extending IonBasePage → add extends
+    └─ (Ionic) Missing super.ionViewWillEnter() → add call
+    │
+    ▼
+🟡 Important (SHOULD fix)
+    │
+    ├─ Missing destroyed$ cleanup
+    ├─ Page/Component separation
+    ├─ Store not in Module providers
+    ├─ Wrong Guard order
+    ├─ (Ionic) Missing IonicRouteStrategy → configure
+    ├─ (Multi-env) Missing _${env} suffix
+    └─ (TanStack Query) Missing query keys factory
+    │
+    ▼
+🟢 Nice-to-have (OPTIONAL)
+    │
+    └─ Selector optimization, naming
 ```
 
 ---
@@ -323,14 +323,14 @@ ng build --configuration=production
 ## Output
 
 ```markdown
-### Fixed: [Feature]
+### ✅ Fixed: [Feature]
 
 **Fixes Applied:**
-- [x] C1: Removed store from presentational component (list.component.ts)
-- [x] C2: (Ionic) Added extends IonBasePage (list.page.ts)
-- [x] C3: (Ionic) Added super.ionViewWillEnter() call (list.page.ts)
-- [x] I1: Added message pattern to store (feature.store.ts)
-- [x] I2: (Ionic) Configured IonicRouteStrategy (app.module.ts)
+- [x] 🔴 C1: Removed store from presentational component (list.component.ts)
+- [x] 🔴 C2: (Ionic) Added extends IonBasePage (list.page.ts)
+- [x] 🔴 C3: (Ionic) Added super.ionViewWillEnter() call (list.page.ts)
+- [x] 🟡 I1: Added message pattern to store (feature.store.ts)
+- [x] 🟡 I2: (Ionic) Configured IonicRouteStrategy (app.module.ts)
 
 **Verification:** (if available)
 - [x] `ng build`
@@ -339,19 +339,33 @@ ng build --configuration=production
 - [x] `ng build --configuration=production`
 
 **Skipped (with reason):**
-- [ ] N1: [Reason for skip]
+- [ ] 🟢 N1: [Reason for skip]
 
-**Final Score:** X/10 -> 10/10
+**Final Score:** X/10 → 10/10
 ```
+
+---
+
+## Re-Review 판단 기준
+
+Fix 완료 후, 아래 기준에 따라 re-review 필요 여부를 결정:
+
+| 조건 | 액션 |
+|------|------|
+| 🔴 Critical 이슈가 있었음 | → `/angular:03_review` 재실행 (필수) |
+| 🟡 Important 이슈만 있었음 | → 셀프 체크 후 완료 |
+| 최종 스코어 8/10 이상 | → 완료 |
+| 최종 스코어 8/10 미만 | → `/angular:03_review` 재실행 |
 
 ---
 
 ## Checklist
 
-- [ ] ALL Critical issues fixed
-- [ ] Important issues addressed (or justified skip)
+- [ ] ALL 🔴 Critical issues fixed
+- [ ] 🟡 Important issues addressed (or justified skip)
 - [ ] `ng build` passes (if available)
 - [ ] `{pm} run lint` passes (if available)
 - [ ] `ng test` passes (if available)
 - [ ] `ng build --configuration=production` passes (if available)
 - [ ] Fix report generated
+- [ ] Re-review 필요 여부 판단 완료

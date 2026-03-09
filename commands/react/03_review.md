@@ -1,4 +1,4 @@
-# /react:review
+# /react:03_review
 
 Review React code and generate actionable fix checklist for next phase.
 
@@ -8,7 +8,7 @@ Review React code and generate actionable fix checklist for next phase.
 
 ## Pre-Review
 
-**From /plan and /implement outputs:**
+**From /common:plan and /react:02_implement outputs:**
 1. Review Focus items from plan
 2. Implementation notes from implement
 3. Files created/modified list
@@ -91,7 +91,7 @@ grep -r ": any" libs/{feature}/ --include="*.ts" --include="*.tsx"
 
 ---
 
-## Output (→ fix 단계 입력)
+## Output (→ /react:04_fix 입력)
 
 ```markdown
 ### 🔍 Review: [Feature] - Score: X/10
@@ -140,7 +140,7 @@ export const Component = () => { }
 
 ---
 
-## Fix Checklist (→ /react:fix 입력)
+## Fix Checklist (→ /react:04_fix 입력)
 
 **🔴 Critical (Must Fix):**
 - [ ] C1: Convert default export → named (Component.tsx:42)

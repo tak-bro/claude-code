@@ -1,4 +1,4 @@
-# /typescript:implement
+# /typescript:02_implement
 
 Implement TypeScript features following team standards.
 
@@ -8,7 +8,7 @@ Implement TypeScript features following team standards.
 
 ## Pre-Implementation
 
-**Before coding, verify from /plan output:**
+**Before coding, verify from /common:plan output:**
 1. ✅ Plan approved?
 2. ✅ Files to create/modify identified?
 3. ✅ Implementation Checklist ready?
@@ -145,7 +145,7 @@ if (user.age >= 18 && user.verified && !user.banned) { /* ... */ }
 
 ---
 
-## Output (→ review 단계 입력)
+## Output (→ /typescript:03_review 입력)
 
 ```markdown
 ### ✅ Implemented: [Feature]

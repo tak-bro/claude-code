@@ -1,4 +1,4 @@
-# /plan
+# /common:plan
 
 ## Purpose
 Analyze issue and create implementation plan with clear boundaries and checklists for downstream workflow.
@@ -7,27 +7,43 @@ Analyze issue and create implementation plan with clear boundaries and checklist
 - **codebase-researcher**: Analyze referenced files and extract patterns
 - **framework-docs-researcher**: Look up framework-specific solutions (if needed)
 
+### Agent 호출 방법
+```
+# Task 도구를 사용하여 에이전트를 병렬 실행
+Task(subagent_type: "general-purpose", prompt: "codebase-researcher 에이전트로서 [파일/패턴]을 분석하라")
+Task(subagent_type: "general-purpose", prompt: "framework-docs-researcher 에이전트로서 [기술] 문서를 조사하라")
+```
+
 ---
 
 ## Workflow
 
-### Phase 1: Issue Analysis (2 min)
+### Phase 1: Issue Analysis
 1. Understand the issue/requirement
 2. Identify referenced files to learn from
 3. Determine tech stack and versions
+4. **Detect package manager:**
+   ```bash
+   if [ -f "bun.lockb" ]; then pm="bun"
+   elif [ -f "pnpm-lock.yaml" ]; then pm="pnpm"
+   elif [ -f "yarn.lock" ]; then pm="yarn"
+   else pm="npm"; fi
+   ```
 
-### Phase 2: Parallel Research 🔀 (3 min)
+### Phase 2: Parallel Research 🔀
 ```bash
-# Run simultaneously
+# Run simultaneously using Task tool
 Lane 1: codebase-researcher     # Analyze referenced files
 Lane 2: framework-docs-researcher  # Framework best practice (optional)
 ```
 
-### Phase 3: Plan Creation (3 min)
+### Phase 3: Plan Creation
 1. Extract patterns from referenced files
 2. Define boundaries (Do/Don't)
 3. Create implementation checklist
 4. Define review focus areas
+
+> **Note:** 프레임워크별 plan이 있으면 함께 참조 (`/angular:01_plan`, `/react:01_plan`, `/typescript:01_plan`)
 
 ---
 
@@ -77,7 +93,7 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 
 ---
 
-**Implementation Checklist** (→ implement 단계에서 사용)
+**Implementation Checklist** (→ 02_implement 단계에서 사용)
 
 - [ ] [Step 1]
 - [ ] [Step 2]
@@ -98,7 +114,7 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 
 ---
 
-**Review Focus** (→ review 단계에서 확인)
+**Review Focus** (→ 03_review 단계에서 확인)
 
 - [ ] [This feature's critical check point]
 - [ ] [Edge case to verify]

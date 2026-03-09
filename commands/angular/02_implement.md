@@ -1,4 +1,4 @@
-# /angular:implement
+# /angular:02_implement
 
 Implement Angular features using NgRx ComponentStore pattern with Module-based architecture.
 
@@ -21,7 +21,7 @@ Implement Angular features using NgRx ComponentStore pattern with Module-based a
 
 ## Pre-Implementation
 
-**Before coding, verify from /plan output:**
+**Before coding, verify from /common:plan output:**
 1. Plan approved?
 2. Files to create/modify identified?
 3. Implementation Checklist ready?
@@ -30,7 +30,7 @@ Implement Angular features using NgRx ComponentStore pattern with Module-based a
 
 ## Boundaries
 
-### Always Do
+### ✅ Always Do
 - Use plan's Implementation Checklist
 - Component-level `destroyed$` for cleanup (NOT DestroyedService)
 - Page (smart) vs Component (presentational) separation
@@ -39,16 +39,16 @@ Implement Angular features using NgRx ComponentStore pattern with Module-based a
 - Named exports only (`export const`, `export class`)
 - Run verification commands before done
 
-### Ask First
+### ⚠️ Ask First
 - Adding new dependencies
 - Modifying shared services
 - Creating new patterns not in codebase
 - Using `providedIn: 'root'` for ComponentStore
 
-### Never Do
+### 🚫 Never Do
 - `export default`
 - Standalone components (Module-based only)
-- Component -> API direct calls (must go through ComponentStore)
+- Component → API direct calls (must go through ComponentStore)
 - Business logic in presentational components
 - Missing message pattern in store state
 - (Ionic) Direct controller usage without service wrapper
@@ -349,10 +349,10 @@ ng test --watch=false # if available
 
 ---
 
-## Output (-> review)
+## Output (→ /angular:03_review 입력)
 
 ```markdown
-### Implemented: [Feature]
+### ✅ Implemented: [Feature]
 
 **Files Created/Modified:**
 - `src/app/modules/feature/stores/feature.store.ts`

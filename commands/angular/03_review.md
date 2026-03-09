@@ -1,4 +1,4 @@
-# /angular:review
+# /angular:03_review
 
 Review Angular code and generate actionable fix checklist for next phase.
 
@@ -8,7 +8,7 @@ Review Angular code and generate actionable fix checklist for next phase.
 
 ## Pre-Review
 
-**From /plan and /implement outputs:**
+**From /common:plan and /angular:02_implement outputs:**
 1. Review Focus items from plan
 2. Implementation notes from implement
 3. Files created/modified list
@@ -17,17 +17,17 @@ Review Angular code and generate actionable fix checklist for next phase.
 
 ## Boundaries
 
-### Always Do
+### ✅ Always Do
 - Check ALL Critical items (auto-fail if missed)
 - Provide specific file:line references
 - Include fix code snippets
 - Generate Fix Checklist for next phase
 
-### Ask First
+### ⚠️ Ask First
 - Suggest major refactoring
 - Recommend architecture changes
 
-### Never Do
+### 🚫 Never Do
 - Skip Critical checks
 - Give vague feedback without fix examples
 - Approve code with Critical issues
@@ -36,7 +36,7 @@ Review Angular code and generate actionable fix checklist for next phase.
 
 ## Checks (Priority Order)
 
-### Critical (Auto-Fail)
+### 🔴 Critical (Auto-Fail)
 1. Standalone component used (must be Module-based)?
 2. Component -> API direct call (bypassing ComponentStore)?
 3. `export default` found?
@@ -46,7 +46,7 @@ Review Angular code and generate actionable fix checklist for next phase.
 7. (Ionic) Page not extending IonBasePage?
 8. (Ionic) Missing super.ionViewWillEnter() call?
 
-### Important
+### 🟡 Important
 9. Missing component-level `destroyed$` cleanup?
 10. Page vs Component separation violated?
 11. Store not provided in Module's providers?
@@ -56,7 +56,7 @@ Review Angular code and generate actionable fix checklist for next phase.
 15. (Multi-env) LocalStorage keys missing `_${env}` suffix?
 16. (TanStack Query) Missing query keys factory pattern?
 
-### Nice-to-have
+### 🟢 Nice-to-have
 17. Could selectors be combined?
 18. Effect error handling could be better?
 19. Naming could be clearer?
@@ -66,21 +66,21 @@ Review Angular code and generate actionable fix checklist for next phase.
 ## Decision Tree
 
 ```
-Standalone component? -> Critical: Convert to Module-based
-Component -> API direct? -> Critical: Use ComponentStore
-export default? -> Critical: Convert to named export
-Business logic in Component? -> Critical: Move to Page or Store
-Missing message pattern? -> Critical: Add message field to state
-(Ionic) Direct controller? -> Critical: Use service wrapper
-(Ionic) Not extending IonBasePage? -> Critical: Add extends IonBasePage
-(Ionic) Missing super.ionViewWillEnter()? -> Critical: Add super call
-Missing destroyed$ cleanup? -> Important: Add cleanup
-Store not in Module providers? -> Important: Add to providers
-Wrong Guard order? -> Important: Fix to App -> Auth -> Feature
-(Ionic) Missing IonicRouteStrategy? -> Important: Configure in app.module
-(Multi-env) Missing _${env}? -> Important: Add suffix
-(TanStack Query) No query keys? -> Important: Add factory pattern
-All pass -> Score 10/10
+Standalone component? → 🔴 Convert to Module-based
+Component → API direct? → 🔴 Use ComponentStore
+export default? → 🔴 Convert to named export
+Business logic in Component? → 🔴 Move to Page or Store
+Missing message pattern? → 🔴 Add message field to state
+(Ionic) Direct controller? → 🔴 Use service wrapper
+(Ionic) Not extending IonBasePage? → 🔴 Add extends IonBasePage
+(Ionic) Missing super.ionViewWillEnter()? → 🔴 Add super call
+Missing destroyed$ cleanup? → 🟡 Add cleanup
+Store not in Module providers? → 🟡 Add to providers
+Wrong Guard order? → 🟡 Fix to App → Auth → Feature
+(Ionic) Missing IonicRouteStrategy? → 🟡 Configure in app.module
+(Multi-env) Missing _${env}? → 🟡 Add suffix
+(TanStack Query) No query keys? → 🟡 Add factory pattern
+✅ All pass → Score 10/10
 ```
 
 ---
@@ -113,19 +113,19 @@ ng build              # if available
 
 ---
 
-## Output (-> fix)
+## Output (→ /angular:04_fix 입력)
 
 ```markdown
-### Review: [Feature] - Score: X/10
+### 🔍 Review: [Feature] - Score: X/10
 
 **Summary:**
-- Critical: X issues (must fix)
-- Important: X issues (should fix)
-- Nice-to-have: X issues (optional)
+- 🔴 Critical: X issues (must fix)
+- 🟡 Important: X issues (should fix)
+- 🟢 Nice-to-have: X issues (optional)
 
 ---
 
-## Critical Issues
+## 🔴 Critical Issues
 
 ### C1: [Issue Title]
 - **File:** `src/app/modules/feature/pages/list.page.ts:15`
@@ -165,7 +165,7 @@ export class FeatureListComponent {
 
 ---
 
-## Important Issues
+## 🟡 Important Issues
 
 ### I1: [Issue Title]
 - **File:** `src/app/modules/feature/stores/feature.store.ts:5`
@@ -187,14 +187,14 @@ export interface FeatureState {
 
 ---
 
-## Nice-to-have
+## 🟢 Nice-to-have
 
 ### N1: [Issue Title]
 - **Suggestion:** [Optional improvement]
 
 ---
 
-## Fix Checklist (-> /angular:fix)
+## Fix Checklist (→ /angular:04_fix 입력)
 
 **Critical (Must Fix):**
 - [ ] C1: Remove store from presentational component (list.component.ts:8)
