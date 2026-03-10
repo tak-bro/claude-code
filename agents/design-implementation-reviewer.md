@@ -1,6 +1,6 @@
 ---
 name: design-implementation-reviewer
-description: Verify that a UI implementation matches its Figma design specifications. Compares live implementation against design and provides detailed feedback on discrepancies with actionable fixes. TRIGGERS: Figma, design review, pixel-perfect, UI comparison, design implementation, visual QA
+description: "Verify that a UI implementation matches its Figma design specifications. Compares live implementation against design and provides detailed feedback on discrepancies with actionable fixes. TRIGGERS: Figma, design review, pixel-perfect, UI comparison, design implementation, visual QA"
 model: opus
 ---
 

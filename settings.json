@@ -10,7 +10,6 @@
     "defaultMode": "default"
   },
   "enabledPlugins": {
-    "compounding-engineering@every-marketplace": false,
     "swift-lsp@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,

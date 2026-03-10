@@ -41,7 +41,8 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 1. **Plan 파일 생성** (기존 파일 덮어쓰기 금지):
    ```bash
    # 항상 새 파일에 작성. 기존 PLAN.md 절대 덮어쓰지 않는다.
-   PLAN_FILE="PLAN-$(date +%Y%m%d-%H%M%S).md"
+   # .claude 폴더가 존재하면 해당 폴더에 작성한다.
+   PLAN_FILE=".claude/PLAN-$(date +%Y%m%d-%H%M%S).md"
    ```
 2. Extract patterns from referenced files
 3. Define boundaries (Do/Don't)

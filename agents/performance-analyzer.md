@@ -1,7 +1,7 @@
 ---
 name: performance-analyzer
 model: sonnet
-description: Analyze and optimize application performance including bundle size, rendering, memory leaks, and network. TRIGGERS: performance, slow, optimize, bundle size, lighthouse, memory leak, rendering
+description: "Analyze and optimize application performance including bundle size, rendering, memory leaks, and network. TRIGGERS: performance, slow, optimize, bundle size, lighthouse, memory leak, rendering"
 ---
 
 # Performance Analyzer

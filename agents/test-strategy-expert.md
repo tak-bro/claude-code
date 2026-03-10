@@ -1,7 +1,7 @@
 ---
 name: test-strategy-expert
 model: sonnet
-description: Design test strategies and write unit/integration/E2E tests. Determines what to test, mocking strategies, and coverage targets. TRIGGERS: test, spec, coverage, mock, fixture, jest, vitest, testing library
+description: "Design test strategies and write unit/integration/E2E tests. Determines what to test, mocking strategies, and coverage targets. TRIGGERS: test, spec, coverage, mock, fixture, jest, vitest, testing library"
 ---
 
 # Test Strategy Expert
