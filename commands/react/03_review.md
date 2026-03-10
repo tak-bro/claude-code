@@ -91,7 +91,7 @@ grep -r ": any" libs/{feature}/ --include="*.ts" --include="*.tsx"
 
 ---
 
-## Output (→ /react:04_fix 입력)
+## Output (→ run /react:04_fix)
 
 ```markdown
 ### 🔍 Review: [Feature] - Score: X/10
@@ -140,7 +140,7 @@ export const Component = () => { }
 
 ---
 
-## Fix Checklist (→ /react:04_fix 입력)
+## Fix Checklist (→ run /react:04_fix)
 
 **🔴 Critical (Must Fix):**
 - [ ] C1: Convert default export → named (Component.tsx:42)

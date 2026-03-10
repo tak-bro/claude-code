@@ -13,38 +13,38 @@ Implement and run tests for TypeScript features.
 **Before writing tests, verify:**
 1. ✅ Implementation complete? (`/typescript:02_implement`)
 2. ✅ Review passed? (`/typescript:03_review` → `/typescript:04_fix`)
-3. ✅ 테스트 대상 파일 목록 확인
+3. ✅ Files to test identified
 
 ---
 
 ## TypeScript Test Stack
 
 ```
-Vitest 또는 Jest               # Test runner (프로젝트에 따라)
-expectTypeOf (vitest)           # 타입 테스트
-tsd                             # 타입 테스트 (대안)
+Vitest or Jest                    # Test runner (project-dependent)
+expectTypeOf (vitest)             # Type testing
+tsd                               # Type testing (alternative)
 ```
 
 ---
 
 ## Workflow
 
-### Phase 1: 테스트 전략 수립
+### Phase 1: Test Strategy
 
-1. **구현된 파일 분석**
-   - 유틸리티 함수 → 🔴 필수 테스트
-   - 서비스/클래스 → 🔴 필수 테스트
-   - 타입/인터페이스 → 🟡 타입 테스트 (복잡한 경우)
-   - 상수/설정 → 🟢 선택
+1. **Analyze implemented files**
+   - Utility functions → 🔴 Required test
+   - Services/classes → 🔴 Required test
+   - Types/interfaces → 🟡 Type test (if complex)
+   - Constants/config → 🟢 Optional
 
-2. **모킹 대상 결정**
-   - 외부 API → mock 함수
-   - 파일시스템 → mock
-   - 날짜/타이머 → `vi.useFakeTimers()` / `jest.useFakeTimers()`
+2. **Determine mocking targets**
+   - External API → mock functions
+   - File system → mock
+   - Date/timers → `vi.useFakeTimers()` / `jest.useFakeTimers()`
 
-### Phase 2: 테스트 작성
+### Phase 2: Write Tests
 
-#### 유틸리티 함수 테스트 (필수)
+#### Utility Function Test (Required)
 
 ```typescript
 describe('calculateTotal', () => {
@@ -64,7 +64,7 @@ describe('calculateTotal', () => {
 });
 ```
 
-#### 에러 핸들링 테스트
+#### Error Handling Test
 
 ```typescript
 describe('parseConfig', () => {
@@ -86,7 +86,7 @@ describe('parseConfig', () => {
 });
 ```
 
-#### 타입 테스트 (복잡한 제네릭/유틸리티 타입)
+#### Type Test (for complex generics/utility types)
 
 ```typescript
 // Vitest expectTypeOf
@@ -103,7 +103,7 @@ describe('type tests', () => {
 });
 ```
 
-#### 비동기 함수 테스트
+#### Async Function Test
 
 ```typescript
 describe('fetchWithRetry', () => {
@@ -130,7 +130,7 @@ describe('fetchWithRetry', () => {
 });
 ```
 
-### Phase 3: 실행 및 검증
+### Phase 3: Run and Verify
 
 ```bash
 # Vitest
@@ -139,48 +139,48 @@ describe('fetchWithRetry', () => {
 # Jest
 {pm} jest --verbose --testPathPattern="feature-name"
 
-# 커버리지 포함
+# With coverage
 {pm} vitest run --coverage src/utils/feature-name
 
-# Watch 모드
+# Watch mode
 {pm} vitest watch src/utils/feature-name
 ```
 
 ---
 
-## 테스트 작성 규칙
+## Test Writing Rules
 
 ### ✅ Do
-- 행동 기반 테스트 네이밍 (`should [action] when [condition]`)
-- AAA 패턴 (Arrange-Act-Assert)
-- Edge case 포함 (빈 배열, null, undefined, 경계값)
-- Early return 로직 각 분기 테스트
-- Result 패턴 → success/error 양쪽 테스트
+- Behavior-based test naming (`should [action] when [condition]`)
+- AAA pattern (Arrange-Act-Assert)
+- Include edge cases (empty array, null, undefined, boundary values)
+- Test each branch of early return logic
+- Result pattern → test both success/error
 
 ### 🚫 Don't
-- 구현 상세 테스트
-- `any` 타입 모킹
-- 테스트 간 상태 공유
-- 외부 의존성 직접 호출 (모킹 필수)
-- 하드코딩된 매직 넘버 (상수 사용)
+- Implementation detail tests
+- `any` type mocking
+- Share state between tests
+- Direct external dependency calls (mock required)
+- Hard-coded magic numbers (use constants)
 
 ---
 
 ## Output
 
 ```markdown
-### 🧪 Test Results: [Feature Name]
+### Test Results: [Feature Name]
 
-**커버리지**
-| 파일 | Statements | Branches | Functions | Lines |
+**Coverage**
+| File | Statements | Branches | Functions | Lines |
 |------|-----------|----------|-----------|-------|
 | `feature-util.ts` | 95% | 90% | 100% | 95% |
 
-**테스트 수**
+**Test Count**
 - ✅ Pass: [N]
 - ❌ Fail: [N]
 
-**다음 단계**
-→ 모든 테스트 통과 시 완료
-→ 실패 시 `/typescript:04_fix` 재실행
+**Next Steps**
+→ All tests pass → Complete
+→ Failures → Run `/typescript:04_fix` again
 ```

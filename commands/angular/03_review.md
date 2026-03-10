@@ -113,7 +113,7 @@ ng build              # if available
 
 ---
 
-## Output (→ /angular:04_fix 입력)
+## Output (→ run /angular:04_fix)
 
 ```markdown
 ### 🔍 Review: [Feature] - Score: X/10
@@ -194,7 +194,7 @@ export interface FeatureState {
 
 ---
 
-## Fix Checklist (→ /angular:04_fix 입력)
+## Fix Checklist (→ run /angular:04_fix)
 
 **Critical (Must Fix):**
 - [ ] C1: Remove store from presentational component (list.component.ts:8)

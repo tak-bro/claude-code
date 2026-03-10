@@ -3,15 +3,21 @@
 ## Purpose
 Analyze issue and create implementation plan with clear boundaries and checklists for downstream workflow.
 
+## ⛔ CRITICAL: STOP AFTER PLAN
+**After completing the plan, STOP and wait for user's next command.**
+- NEVER automatically start implementation
+- After creating the plan file, output: "Plan complete. Run `/{framework}:02_implement` to start implementation."
+- Wait until user explicitly enters the implement command
+
 ## Agents
 - **codebase-researcher**: Analyze referenced files and extract patterns
 - **framework-docs-researcher**: Look up framework-specific solutions (if needed)
 
-### Agent 호출 방법
+### How to invoke agents
 ```
-# Task 도구를 사용하여 에이전트를 병렬 실행
-Task(subagent_type: "general-purpose", prompt: "codebase-researcher 에이전트로서 [파일/패턴]을 분석하라")
-Task(subagent_type: "general-purpose", prompt: "framework-docs-researcher 에이전트로서 [기술] 문서를 조사하라")
+# Run agents in parallel using Task tool
+Task(subagent_type: "general-purpose", prompt: "As codebase-researcher, analyze [files/patterns]")
+Task(subagent_type: "general-purpose", prompt: "As framework-docs-researcher, research [technology] docs")
 ```
 
 ---
@@ -38,10 +44,10 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 ```
 
 ### Phase 3: Plan Creation
-1. **Plan 파일 생성** (기존 파일 덮어쓰기 금지):
+1. **Create plan file** (never overwrite existing):
    ```bash
-   # 항상 새 파일에 작성. 기존 PLAN.md 절대 덮어쓰지 않는다.
-   # .claude 폴더가 존재하면 해당 폴더에 작성한다.
+   # Always write to new file. Never overwrite existing PLAN.md.
+   # If .claude folder exists, write there.
    PLAN_FILE=".claude/PLAN-$(date +%Y%m%d-%H%M%S).md"
    ```
 2. Extract patterns from referenced files
@@ -49,13 +55,13 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 4. Create implementation checklist
 5. Define review focus areas
 
-> **Note:** 프레임워크별 plan이 있으면 함께 참조 (`/angular:01_plan`, `/react:01_plan`, `/typescript:01_plan`)
+> **Note:** Reference framework-specific plans if available (`/angular:01_plan`, `/react:01_plan`, `/typescript:01_plan`)
 
 ---
 
 ## Output Structure
 
-> ⚠️ 반드시 `PLAN-{timestamp}.md` 파일에 작성할 것. 기존 plan 파일을 덮어쓰지 않는다.
+> ⚠️ Always write to `PLAN-{timestamp}.md`. Never overwrite existing plan files.
 
 ```markdown
 ### 📋 Implementation Plan: [Feature]
@@ -101,7 +107,7 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 
 ---
 
-**Implementation Checklist** (→ 02_implement 단계에서 사용)
+**Implementation Checklist** (→ used in 02_implement phase)
 
 - [ ] [Step 1]
 - [ ] [Step 2]
@@ -122,7 +128,7 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 
 ---
 
-**Review Focus** (→ 03_review 단계에서 확인)
+**Review Focus** (→ checked in 03_review phase)
 
 - [ ] [This feature's critical check point]
 - [ ] [Edge case to verify]

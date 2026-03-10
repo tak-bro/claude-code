@@ -6,82 +6,88 @@ Analyze issue and create React-specific implementation plan.
 
 **Extends:** `/common:plan` (use the same output structure)
 
+## ⛔ CRITICAL: STOP AFTER PLAN
+**After completing the plan, STOP and wait for user's next command.**
+- NEVER automatically start implementation
+- After creating the plan file, output: "Plan complete. Run `/react:02_implement` to start implementation."
+- Wait until user explicitly enters the implement command
+
 ---
 
 ## React-Specific Planning
 
 On top of the base `/common:plan` workflow, consider these React-specific items:
 
-### Phase 1 추가 분석
+### Phase 1 Additional Analysis
 
-1. **Feature Library 배치**
-   - 어떤 Feature Library에 속하는가?
-   - 새 lib 생성 필요한가? (`npx nx g @nx/js:lib`)
-   - 기존 lib에 추가하는 게 맞는가?
+1. **Feature Library Placement**
+   - Which Feature Library does this belong to?
+   - Need to create new lib? (`npx nx g @nx/js:lib`)
+   - Should it be added to existing lib?
 
-2. **데이터 흐름 설계**
-   - Component → Hook → TanStack Query → API 경로
-   - 어떤 API 엔드포인트가 필요한가?
-   - Server state vs Client state 구분
+2. **Data Flow Design**
+   - Component → Hook → TanStack Query → API path
+   - What API endpoints are needed?
+   - Server state vs Client state distinction
 
-3. **상태 관리 전략**
-   - TanStack Query: 서버 데이터 (목록, 상세, CRUD)
-   - Zustand: 전역 클라이언트 상태 (UI 상태, 사용자 설정)
-   - useState: 로컬 상태만 (폼 입력, 토글)
+3. **State Management Strategy**
+   - TanStack Query: Server data (lists, details, CRUD)
+   - Zustand: Global client state (UI state, user preferences)
+   - useState: Local state only (form inputs, toggles)
 
-4. **쿼리키 전략**
-   - `createQueryKeys` factory 사용
-   - 기존 쿼리키와 충돌 여부
-   - Invalidation 전략 (mutation 후 어떤 쿼리를 무효화할 것인가)
+4. **Query Key Strategy**
+   - Use `createQueryKeys` factory
+   - Check for conflicts with existing query keys
+   - Invalidation strategy (which queries to invalidate after mutation)
 
-### Phase 2 추가 리서치
+### Phase 2 Additional Research
 
-- 기존 Feature Library 패턴 분석 (codebase-researcher)
-- 유사 기능의 hooks/apis 패턴 확인
-- Zustand store 구조 확인 (전역 상태 추가 필요 시)
+- Analyze existing Feature Library patterns (codebase-researcher)
+- Check similar hooks/apis patterns
+- Review Zustand store structure (if global state addition needed)
 
 ---
 
-## React 전용 Boundaries 추가
+## React-Specific Boundaries
 
 ### ✅ Do
-- Feature Library 구조 (apis/, hooks/, types/, consts/)
-- Barrel exports (index.ts) 모든 폴더에
-- Component → Hook → API 데이터 흐름
-- cn() 유틸리티로 Tailwind 클래스 결합
+- Feature Library structure (apis/, hooks/, types/, consts/)
+- Barrel exports (index.ts) in all folders
+- Component → Hook → API data flow
+- cn() utility for Tailwind class merging
 
 ### ⚠️ Ask First
-- 새로운 Zustand store 생성
-- 공유 hooks 수정
-- 새로운 query key namespace
+- Creating new Zustand store
+- Modifying shared hooks
+- New query key namespace
 
 ### 🚫 Don't
-- Component에서 직접 API 호출
-- useState로 공유 상태 관리
-- Barrel export 누락
-- 과도한 추상화 (WET > DRY)
+- Direct API calls from Component
+- Shared state with useState
+- Missing barrel exports
+- Over-abstraction (WET > DRY)
 
 ---
 
-## React 전용 Checklist 항목
+## React-Specific Checklist Items
 
-Implementation Checklist에 반드시 포함:
+Implementation Checklist must include:
 
-- [ ] Feature Library 생성/확인
-- [ ] API 함수 정의 (apis/)
-- [ ] Query keys factory 정의 (hooks/)
-- [ ] TanStack Query hooks 정의 (hooks/)
-- [ ] Type 정의 (types/)
-- [ ] Barrel exports 모든 폴더
-- [ ] 상태 관리: Zustand(global) / TanStack Query(server) / useState(local)
-- [ ] ~200줄 가이드라인, ~5 business props
+- [ ] Create/verify Feature Library
+- [ ] Define API functions (apis/)
+- [ ] Define Query keys factory (hooks/)
+- [ ] Define TanStack Query hooks (hooks/)
+- [ ] Define Types (types/)
+- [ ] Barrel exports in all folders
+- [ ] State management: Zustand(global) / TanStack Query(server) / useState(local)
+- [ ] ~200 lines guideline, ~5 business props
 
 ---
 
-## Review Focus 추가 항목
+## Review Focus Additional Items
 
-- [ ] Component → Hook → API 흐름 준수
-- [ ] useState가 공유 상태에 사용되지 않음
-- [ ] Barrel exports 완전성
-- [ ] Query key 충돌 없음
-- [ ] cn() 사용으로 Tailwind 클래스 정리
+- [ ] Component → Hook → API flow compliance
+- [ ] useState not used for shared state
+- [ ] Barrel exports completeness
+- [ ] No query key conflicts
+- [ ] Tailwind classes organized with cn()

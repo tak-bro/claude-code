@@ -208,16 +208,16 @@ export * from './helpers';
 
 ---
 
-## Re-Review 판단 기준
+## Re-Review Criteria
 
-Fix 완료 후, 아래 기준에 따라 re-review 필요 여부를 결정:
+After completing fixes, determine if re-review is needed based on these criteria:
 
-| 조건 | 액션 |
-|------|------|
-| 🔴 Critical 이슈가 있었음 | → `/typescript:03_review` 재실행 (필수) |
-| 🟡 Important 이슈만 있었음 | → 셀프 체크 후 완료 |
-| 최종 스코어 8/10 이상 | → 완료 |
-| 최종 스코어 8/10 미만 | → `/typescript:03_review` 재실행 |
+| Condition | Action |
+|-----------|--------|
+| Had Critical issues | → Run `/typescript:03_review` again (required) |
+| Had only Important issues | → Self-check and complete |
+| Final score 8/10 or higher | → Complete |
+| Final score below 8/10 | → Run `/typescript:03_review` again |
 
 ---
 
@@ -229,4 +229,4 @@ Fix 완료 후, 아래 기준에 따라 re-review 필요 여부를 결정:
 - [ ] `{pm} test` passes (if available)
 - [ ] `{pm} run build` passes (if available)
 - [ ] Fix report generated
-- [ ] Re-review 필요 여부 판단 완료
+- [ ] Re-review decision made

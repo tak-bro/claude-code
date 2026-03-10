@@ -145,7 +145,7 @@ if (user.age >= 18 && user.verified && !user.banned) { /* ... */ }
 
 ---
 
-## Output (→ /typescript:03_review 입력)
+## Output (→ run /typescript:03_review)
 
 ```markdown
 ### ✅ Implemented: [Feature]

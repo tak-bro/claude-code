@@ -6,80 +6,86 @@ Analyze issue and create TypeScript-specific implementation plan.
 
 **Extends:** `/common:plan` (use the same output structure)
 
+## ⛔ CRITICAL: STOP AFTER PLAN
+**After completing the plan, STOP and wait for user's next command.**
+- NEVER automatically start implementation
+- After creating the plan file, output: "Plan complete. Run `/typescript:02_implement` to start implementation."
+- Wait until user explicitly enters the implement command
+
 ---
 
 ## TypeScript-Specific Planning
 
 On top of the base `/common:plan` workflow, consider these TypeScript-specific items:
 
-### Phase 1 추가 분석
+### Phase 1 Additional Analysis
 
-1. **타입 설계**
-   - 핵심 도메인 타입/인터페이스 정의
-   - Discriminated unions 필요 여부 (Result<T>, 상태 머신 등)
-   - 유틸리티 타입 활용 (Partial, Pick, Omit, Record 등)
-   - 제네릭 필요 여부 및 수준
+1. **Type Design**
+   - Define core domain types/interfaces
+   - Need for discriminated unions (Result<T>, state machines, etc.)
+   - Utility type usage (Partial, Pick, Omit, Record, etc.)
+   - Generic requirements and complexity level
 
-2. **모듈 구조**
-   - 어떤 모듈/폴더에 배치하는가?
-   - Barrel export (index.ts) 계획
-   - 기존 모듈과의 의존 관계
+2. **Module Structure**
+   - Which module/folder does this belong to?
+   - Barrel export (index.ts) plan
+   - Dependencies with existing modules
 
-3. **에러 핸들링 전략**
-   - Result 패턴 vs try-catch
-   - null/undefined 처리 방식 (early return)
-   - 에러 타입 정의
+3. **Error Handling Strategy**
+   - Result pattern vs try-catch
+   - null/undefined handling (early return)
+   - Error type definitions
 
-### Phase 2 추가 리서치
+### Phase 2 Additional Research
 
-- 기존 타입 패턴 분석 (codebase-researcher)
-- 유사 기능의 유틸리티/서비스 확인
-- 공유 타입 정의 확인 (중복 방지)
+- Analyze existing type patterns (codebase-researcher)
+- Check similar utilities/services
+- Review shared type definitions (avoid duplication)
 
 ---
 
-## TypeScript 전용 Boundaries 추가
+## TypeScript-Specific Boundaries
 
 ### ✅ Do
 - const + arrow function
 - Named exports only
-- Early returns로 flat 구조
-- 복잡한 조건 → named variables
-- 명확한 타입 정의
+- Early returns for flat structure
+- Complex conditions → named variables
+- Clear type definitions
 
 ### ⚠️ Ask First
-- 새로운 유틸리티 타입 생성
-- 공유 모듈 수정
-- 제네릭 3단계 이상 중첩
+- Creating new utility types
+- Modifying shared modules
+- Generic nesting 3+ levels deep
 
 ### 🚫 Don't
 - `export default`
 - `function` keyword
 - `any` without justification
 - Deep nesting
-- 기존 코드 불필요한 복잡화
+- Unnecessary complexity in existing code
 
 ---
 
-## TypeScript 전용 Checklist 항목
+## TypeScript-Specific Checklist Items
 
-Implementation Checklist에 반드시 포함:
+Implementation Checklist must include:
 
-- [ ] 도메인 타입/인터페이스 정의
+- [ ] Define domain types/interfaces
 - [ ] const + arrow function
 - [ ] Named exports + barrel exports
-- [ ] null/undefined 처리 (early returns)
-- [ ] 복잡한 조건 → named variables
-- [ ] 테스트 가능한 구조
-- [ ] 5-second naming rule 통과
-- [ ] 기존 코드 복잡화 없음
+- [ ] null/undefined handling (early returns)
+- [ ] Complex conditions → named variables
+- [ ] Testable structure
+- [ ] 5-second naming rule pass
+- [ ] No complexity added to existing code
 
 ---
 
-## Review Focus 추가 항목
+## Review Focus Additional Items
 
-- [ ] 타입 안정성 (any 없음 또는 정당화)
-- [ ] Early returns로 flat 구조
-- [ ] Named variables로 가독성 확보
-- [ ] 기존 패턴과 일관성
-- [ ] 테스트 가능 구조
+- [ ] Type safety (no any or justified)
+- [ ] Early returns for flat structure
+- [ ] Named variables for readability
+- [ ] Consistency with existing patterns
+- [ ] Testable structure

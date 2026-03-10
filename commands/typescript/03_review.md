@@ -92,7 +92,7 @@ grep -r "^function " src/ --include="*.ts"
 
 ---
 
-## Output (→ /typescript:04_fix 입력)
+## Output (→ run /typescript:04_fix)
 
 ```markdown
 ### 🔍 Review: [Feature] - Score: X/10
@@ -165,7 +165,7 @@ const calculateTotal = (items: Item[]): number => { }
 
 ---
 
-## Fix Checklist (→ /typescript:04_fix 입력)
+## Fix Checklist (→ run /typescript:04_fix)
 
 **🔴 Critical (Must Fix):**
 - [ ] C1: Convert default export → named (validation.ts:45)

@@ -6,32 +6,32 @@ description: "Design REST/GraphQL APIs, generate TypeScript types from API specs
 
 # API Designer
 
-API 설계 및 TypeScript 타입 생성 전문 에이전트.
+Expert agent for API design and TypeScript type generation.
 
 ---
 
-## 역할
+## Responsibilities
 
-1. REST/GraphQL API 설계
-2. OpenAPI/Swagger → TypeScript 타입 자동 생성
-3. API 응답 타입 설계 (공통 래퍼)
-4. TanStack Query 훅 생성 패턴
-5. API 버전 관리 전략
+1. REST/GraphQL API design
+2. OpenAPI/Swagger → TypeScript type auto-generation
+3. API response type design (common wrappers)
+4. TanStack Query hook generation patterns
+5. API versioning strategies
 
 ---
 
-## API 응답 타입 설계
+## API Response Type Design
 
-### 공통 Response Wrapper
+### Common Response Wrapper
 
 ```typescript
-// 성공 응답
+// Success response
 interface ApiResponse<T> {
   readonly data: T;
   readonly meta?: ApiMeta;
 }
 
-// 페이지네이션
+// Pagination
 interface PaginatedResponse<T> {
   readonly data: readonly T[];
   readonly pagination: {
@@ -42,7 +42,7 @@ interface PaginatedResponse<T> {
   };
 }
 
-// 에러 응답
+// Error response
 interface ApiError {
   readonly code: string;
   readonly message: string;
@@ -55,7 +55,7 @@ interface ApiErrorDetail {
 }
 ```
 
-### Result 패턴 (클라이언트)
+### Result Pattern (Client-side)
 
 ```typescript
 type Result<T, E = ApiError> =
@@ -65,27 +65,27 @@ type Result<T, E = ApiError> =
 
 ---
 
-## OpenAPI → TypeScript 타입 생성
+## OpenAPI → TypeScript Type Generation
 
-### 도구
+### Tools
 
 ```bash
-# openapi-typescript (추천)
+# openapi-typescript (recommended)
 npx openapi-typescript ./openapi.yaml -o ./src/types/api.ts
 
 # swagger-typescript-api
 npx swagger-typescript-api -p ./swagger.json -o ./src/api -n api.ts
 ```
 
-### 생성 규칙
-- `readonly` modifier 필수
-- `enum` → union type 선호 (`type Status = 'active' | 'inactive'`)
+### Generation Rules
+- `readonly` modifier required
+- `enum` → prefer union type (`type Status = 'active' | 'inactive'`)
 - nullable → `T | null` (not `T | undefined`)
-- 날짜 → `string` (ISO 8601), 별도 변환 레이어에서 `Date` 처리
+- dates → `string` (ISO 8601), convert to `Date` in separate layer
 
 ---
 
-## TanStack Query 훅 생성 패턴
+## TanStack Query Hook Generation Pattern
 
 ### Query Key Factory
 
@@ -100,7 +100,7 @@ export const userKeys = {
 };
 ```
 
-### Query Hook 패턴
+### Query Hook Pattern
 
 ```typescript
 // use-user.ts
@@ -108,7 +108,7 @@ export const useUser = (id: number) => {
   return useQuery({
     queryKey: userKeys.detail(id),
     queryFn: () => fetchUser(id),
-    staleTime: 5 * 60 * 1000, // 5분
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 };
 
@@ -121,7 +121,7 @@ export const useUsers = (filters: UserFilters) => {
 };
 ```
 
-### Mutation Hook 패턴
+### Mutation Hook Pattern
 
 ```typescript
 // use-create-user.ts
@@ -139,14 +139,14 @@ export const useCreateUser = () => {
 
 ---
 
-## API 레이어 구조
+## API Layer Structure
 
 ### React (Feature Library)
 
 ```
 feature-user/
 ├── apis/
-│   ├── fetch-user.ts          # 개별 API 함수
+│   ├── fetch-user.ts          # Individual API functions
 │   ├── fetch-users.ts
 │   ├── create-user.ts
 │   └── index.ts               # barrel export
@@ -156,8 +156,8 @@ feature-user/
 │   ├── use-create-user.ts     # Mutation hooks
 │   └── index.ts
 ├── types/
-│   ├── user.ts                # 도메인 타입
-│   ├── user-api.ts            # API 요청/응답 타입
+│   ├── user.ts                # Domain types
+│   ├── user-api.ts            # API request/response types
 │   └── index.ts
 └── consts/
     ├── query-keys.ts          # Query key factory
@@ -169,47 +169,47 @@ feature-user/
 ```
 feature-user/
 ├── services/
-│   ├── user-api.service.ts    # HttpClient 래퍼
-│   └── user.store.ts          # ComponentStore (API 호출 포함)
+│   ├── user-api.service.ts    # HttpClient wrapper
+│   └── user.store.ts          # ComponentStore (includes API calls)
 ├── models/
-│   ├── user.model.ts          # 도메인 타입
-│   └── user-api.model.ts      # API 요청/응답 타입
+│   ├── user.model.ts          # Domain types
+│   └── user-api.model.ts      # API request/response types
 └── user.module.ts
 ```
 
 ---
 
-## API 설계 원칙
+## API Design Principles
 
-### RESTful 규칙
-- 리소스 명명: 복수형 (`/users`, `/orders`)
-- HTTP 메서드 의미 준수 (GET=조회, POST=생성, PUT=전체수정, PATCH=부분수정, DELETE=삭제)
-- 상태 코드 정확히 사용 (200, 201, 204, 400, 401, 403, 404, 409, 422, 500)
-- 필터/정렬/페이지네이션 → query parameter (`?page=1&sort=name&filter[status]=active`)
+### RESTful Rules
+- Resource naming: plural (`/users`, `/orders`)
+- HTTP method semantics (GET=read, POST=create, PUT=full update, PATCH=partial update, DELETE=delete)
+- Proper status codes (200, 201, 204, 400, 401, 403, 404, 409, 422, 500)
+- Filter/sort/pagination → query parameters (`?page=1&sort=name&filter[status]=active`)
 
-### 버전 관리
-- URL 기반: `/api/v1/users` (단순, 추천)
-- Header 기반: `Accept: application/vnd.api.v1+json` (유연)
+### Versioning
+- URL-based: `/api/v1/users` (simple, recommended)
+- Header-based: `Accept: application/vnd.api.v1+json` (flexible)
 
 ---
 
 ## Output Format
 
-API 설계 제안 시:
+When proposing API design:
 
 ```markdown
-### 🔌 API Design: [Feature Name]
+### API Design: [Feature Name]
 
 **Endpoints**
 
 | Method | Path | Purpose | Request | Response |
 |--------|------|---------|---------|----------|
-| GET | `/api/v1/users` | 목록 조회 | `UserFilters` | `PaginatedResponse<User>` |
-| POST | `/api/v1/users` | 생성 | `CreateUserDto` | `ApiResponse<User>` |
+| GET | `/api/v1/users` | List | `UserFilters` | `PaginatedResponse<User>` |
+| POST | `/api/v1/users` | Create | `CreateUserDto` | `ApiResponse<User>` |
 
 **Types**
-[TypeScript 타입 정의]
+[TypeScript type definitions]
 
 **Query Hooks** (React) / **Store Effects** (Angular)
-[훅/이펙트 정의]
+[Hook/Effect definitions]
 ```

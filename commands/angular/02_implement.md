@@ -349,7 +349,7 @@ ng test --watch=false # if available
 
 ---
 
-## Output (→ /angular:03_review 입력)
+## Output (→ run /angular:03_review)
 
 ```markdown
 ### ✅ Implemented: [Feature]

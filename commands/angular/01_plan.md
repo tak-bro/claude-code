@@ -6,75 +6,81 @@ Analyze issue and create Angular-specific implementation plan.
 
 **Extends:** `/common:plan` (use the same output structure)
 
+## ⛔ CRITICAL: STOP AFTER PLAN
+**After completing the plan, STOP and wait for user's next command.**
+- NEVER automatically start implementation
+- After creating the plan file, output: "Plan complete. Run `/angular:02_implement` to start implementation."
+- Wait until user explicitly enters the implement command
+
 ---
 
 ## Angular-Specific Planning
 
 On top of the base `/common:plan` workflow, consider these Angular-specific items:
 
-### Phase 1 추가 분석
+### Phase 1 Additional Analysis
 
-1. **모듈 구조 파악**
-   - 어떤 Feature Module에 속하는가?
-   - 새 모듈 생성이 필요한가?
-   - SharedModule에서 필요한 것은?
+1. **Module Structure**
+   - Which Feature Module does this belong to?
+   - Need to create new module?
+   - What's needed from SharedModule?
 
-2. **라우팅 설계**
-   - 라우팅 모듈에 등록할 경로
-   - Guard 순서: App → Auth → Feature
-   - Lazy loading 적용 여부
+2. **Routing Design**
+   - Routes to register in routing module
+   - Guard order: App → Auth → Feature
+   - Lazy loading applicability
 
-3. **ComponentStore 설계**
-   - State interface 정의
-   - 필요한 Selectors, Updaters, Effects
-   - Message pattern 타입 정의
+3. **ComponentStore Design**
+   - State interface definition
+   - Required Selectors, Updaters, Effects
+   - Message pattern type definition
 
-### Phase 2 추가 리서치
+### Phase 2 Additional Research
 
-- 기존 ComponentStore 패턴 분석 (codebase-researcher)
-- Ionic 프로젝트인 경우 IonBasePage 패턴 확인
-- TanStack Query 사용 여부 및 기존 QueryService 패턴 확인
+- Analyze existing ComponentStore patterns (codebase-researcher)
+- Check IonBasePage pattern for Ionic projects
+- Verify TanStack Query usage and existing QueryService patterns
 
 ---
 
-## Angular 전용 Boundaries 추가
+## Angular-Specific Boundaries
 
 ### ✅ Do
-- Module-based architecture (standalone 금지)
-- ComponentStore를 Module providers에 등록
-- Page(smart) / Component(presentational) 분리 계획
-- Message pattern 포함한 State 설계
+- Module-based architecture (no standalone)
+- Register ComponentStore in Module providers
+- Plan Page(smart) / Component(presentational) separation
+- State design including message pattern
 
 ### ⚠️ Ask First
-- 새로운 Shared 서비스 생성
-- Core state-manager 수정
-- Guard 순서 변경
+- Creating new Shared service
+- Modifying Core state-manager
+- Changing Guard order
 
 ### 🚫 Don't
-- Standalone component 사용
-- Component에서 직접 API 호출 계획
-- Store를 Component providers에 등록
+- Standalone component usage
+- Direct API calls from Component
+- Register Store in Component providers
 
 ---
 
-## Angular 전용 Checklist 항목
+## Angular-Specific Checklist Items
 
-Implementation Checklist에 반드시 포함:
+Implementation Checklist must include:
 
-- [ ] Feature Module 생성/수정
-- [ ] Routing Module 등록
-- [ ] ComponentStore state interface 정의
-- [ ] Message pattern 타입 정의
-- [ ] Page/Component 분리
-- [ ] (Ionic) IonBasePage extends 필요 여부
-- [ ] (Ionic) IonicRouteStrategy 확인
-- [ ] (TanStack Query) Query keys factory 필요 여부
+- [ ] Create/modify Feature Module
+- [ ] Register in Routing Module
+- [ ] Define ComponentStore state interface
+- [ ] Define Message pattern types
+- [ ] Page/Component separation
+- [ ] (Ionic) IonBasePage extends requirement
+- [ ] (Ionic) IonicRouteStrategy verification
+- [ ] (TanStack Query) Query keys factory requirement
 
 ---
 
-## Review Focus 추가 항목
+## Review Focus Additional Items
 
-- [ ] Module providers에 Store 등록 여부
-- [ ] destroyed$ cleanup 패턴
-- [ ] Presentational component에 Store 주입 없음
-- [ ] (Ionic) ionViewWillEnter lifecycle 사용
+- [ ] Store registered in Module providers
+- [ ] destroyed$ cleanup pattern
+- [ ] No Store injection in presentational components
+- [ ] (Ionic) ionViewWillEnter lifecycle usage

@@ -130,7 +130,7 @@ export const ProductList = () => {
 
 ---
 
-## Output (→ /react:03_review 입력)
+## Output (→ run /react:03_review)
 
 ```markdown
 ### ✅ Implemented: [Feature]

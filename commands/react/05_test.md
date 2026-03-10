@@ -13,7 +13,7 @@ Implement and run tests for React features.
 **Before writing tests, verify:**
 1. ✅ Implementation complete? (`/react:02_implement`)
 2. ✅ Review passed? (`/react:03_review` → `/react:04_fix`)
-3. ✅ 테스트 대상 파일 목록 확인
+3. ✅ Files to test identified
 
 ---
 
@@ -21,33 +21,33 @@ Implement and run tests for React features.
 
 ```
 Vitest                            # Test runner
-React Testing Library             # Component 테스트
-MSW (Mock Service Worker)         # API 모킹
-@testing-library/react → renderHook  # Hook 테스트
+React Testing Library             # Component testing
+MSW (Mock Service Worker)         # API mocking
+@testing-library/react → renderHook  # Hook testing
 ```
 
 ---
 
 ## Workflow
 
-### Phase 1: 테스트 전략 수립
+### Phase 1: Test Strategy
 
-1. **구현된 파일 분석**
-   - API 함수 (apis/) → 🔴 필수 테스트
-   - Query/Mutation hooks (hooks/) → 🔴 필수 테스트
-   - Custom hooks (hooks/) → 🔴 필수 테스트
-   - Container component → 🟡 통합 테스트
-   - Presentational component → 🟢 선택
+1. **Analyze implemented files**
+   - API functions (apis/) → 🔴 Required test
+   - Query/Mutation hooks (hooks/) → 🔴 Required test
+   - Custom hooks (hooks/) → 🔴 Required test
+   - Container component → 🟡 Integration test
+   - Presentational component → 🟢 Optional
 
-2. **모킹 대상 결정**
-   - API 호출 → MSW handlers
+2. **Determine mocking targets**
+   - API calls → MSW handlers
    - TanStack Query → `QueryClientProvider` wrapper
    - Zustand → Store reset in `beforeEach`
    - Router → `MemoryRouter`
 
-### Phase 2: 테스트 작성
+### Phase 2: Write Tests
 
-#### TanStack Query Hook 테스트 (필수)
+#### TanStack Query Hook Test (Required)
 
 ```typescript
 const createWrapper = () => {
@@ -115,12 +115,12 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 ```
 
-#### Zustand Store 테스트
+#### Zustand Store Test
 
 ```typescript
 describe('useFeatureStore', () => {
   beforeEach(() => {
-    // Store 초기화
+    // Reset store
     useFeatureStore.setState(initialState);
   });
 
@@ -132,7 +132,7 @@ describe('useFeatureStore', () => {
 });
 ```
 
-#### Component 테스트 (선택)
+#### Component Test (Optional)
 
 ```typescript
 describe('FeatureList', () => {
@@ -157,54 +157,54 @@ describe('FeatureList', () => {
 });
 ```
 
-### Phase 3: 실행 및 검증
+### Phase 3: Run and Verify
 
 ```bash
-# 특정 파일 테스트
+# Test specific files
 {pm} vitest run --reporter=verbose src/features/feature-name
 
-# 커버리지 포함
+# With coverage
 {pm} vitest run --coverage src/features/feature-name
 
-# Watch 모드
+# Watch mode
 {pm} vitest watch src/features/feature-name
 ```
 
 ---
 
-## 테스트 작성 규칙
+## Test Writing Rules
 
 ### ✅ Do
-- 행동 기반 테스트 네이밍 (`should [action] when [condition]`)
-- AAA 패턴 (Arrange-Act-Assert)
-- `waitFor`로 비동기 대기
-- MSW로 네트워크 레이어 모킹
-- 매 테스트마다 fresh `QueryClient` 생성
+- Behavior-based test naming (`should [action] when [condition]`)
+- AAA pattern (Arrange-Act-Assert)
+- `waitFor` for async operations
+- MSW for network layer mocking
+- Fresh `QueryClient` per test
 
 ### 🚫 Don't
-- 스냅샷 테스트
-- 구현 상세 테스트 (내부 상태, 호출 횟수)
-- `any` 타입 모킹
-- 테스트 간 `QueryClient` 공유
-- `setTimeout`으로 비동기 대기 → `waitFor` 사용
+- Snapshot tests
+- Implementation detail tests (internal state, call counts)
+- `any` type mocking
+- Share `QueryClient` between tests
+- `setTimeout` for async waiting → use `waitFor`
 
 ---
 
 ## Output
 
 ```markdown
-### 🧪 Test Results: [Feature Name]
+### Test Results: [Feature Name]
 
-**커버리지**
-| 파일 | Statements | Branches | Functions | Lines |
+**Coverage**
+| File | Statements | Branches | Functions | Lines |
 |------|-----------|----------|-----------|-------|
 | `use-feature.ts` | 95% | 90% | 100% | 95% |
 
-**테스트 수**
+**Test Count**
 - ✅ Pass: [N]
 - ❌ Fail: [N]
 
-**다음 단계**
-→ 모든 테스트 통과 시 완료
-→ 실패 시 `/react:04_fix` 재실행
+**Next Steps**
+→ All tests pass → Complete
+→ Failures → Run `/react:04_fix` again
 ```
