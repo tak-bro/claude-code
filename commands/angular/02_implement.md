@@ -349,6 +349,58 @@ ng test --watch=false # if available
 
 ---
 
+## --team Mode (Agent Teams)
+
+Use `--team` flag for large features requiring parallel implementation.
+
+**Cost:** 3-5x tokens vs standard mode. Use for complex features only.
+
+### Team Composition
+
+| Role | Responsibility | Files |
+|------|---------------|-------|
+| Store Agent | ComponentStore, state, effects | `stores/` |
+| Page Agent | Smart components, orchestration | `pages/` |
+| Component Agent | Presentational components | `components/` |
+| Service Agent | API services, types | `services/`, `types/` |
+
+### Coordination
+
+1. **Shared Task List**: All agents use TaskCreate/TaskUpdate for progress
+2. **Interface Changes**: When types/state change, notify other agents
+3. **No File Conflicts**: Each agent owns distinct folders
+4. **Integration Point**: Main agent handles Module configuration
+
+### Workflow
+
+```
+1. Main agent creates Task List from Implementation Checklist
+2. Spawn 4 parallel agents (Store, Page, Component, Service)
+3. Each agent:
+   - Claims tasks via TaskUpdate (owner, in_progress)
+   - Implements assigned files
+   - Marks tasks completed
+   - Notifies if interface changes affect others
+4. Main agent:
+   - Monitors progress via TaskList
+   - Handles Module integration (declarations, providers)
+   - Runs verification commands
+```
+
+### When to Use
+
+✅ **Use --team:**
+- Feature with store + pages + components
+- Complex state management
+- Time-sensitive large features
+
+❌ **Skip --team:**
+- Single page/component
+- Small bug fixes
+- Features touching 1-2 files
+
+---
+
 ## Output (→ run /angular:03_review)
 
 ```markdown

@@ -1,6 +1,6 @@
 ---
 name: angular-componentstore-expert
-model: sonnet
+model: opus
 description: Use this agent when implementing Angular features with NgRx ComponentStore. This agent specializes in Angular 18.2+ with Module-based architecture and ComponentStore for state management. Supports both Angular Material and Ionic 8 projects. Use this for Angular projects that follow the ComponentStore pattern where ComponentStore handles all business logic, state management, and API orchestration.
 ---
 

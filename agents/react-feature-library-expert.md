@@ -1,6 +1,6 @@
 ---
 name: react-feature-library-expert
-model: sonnet
+model: opus
 description: Use this agent when implementing React features in Nx monorepo using Feature Library pattern. This agent specializes in TanStack Query for server state, Zustand for client state, and the Component → Hook → API data flow. Use this for React projects that follow the Feature Library architecture where each feature is a separate library with apis, hooks, types, and consts folders.
 ---
 

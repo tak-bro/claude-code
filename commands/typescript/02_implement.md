@@ -145,6 +145,58 @@ if (user.age >= 18 && user.verified && !user.banned) { /* ... */ }
 
 ---
 
+## --team Mode (Agent Teams)
+
+Use `--team` flag for large features requiring parallel implementation.
+
+**Cost:** 3-5x tokens vs standard mode. Use for complex features only.
+
+### Team Composition
+
+| Role | Responsibility | Files |
+|------|---------------|-------|
+| Core Logic Agent | Business logic, algorithms | `core/`, `utils/` |
+| Types Agent | TypeScript types, interfaces | `types/` |
+| Service Agent | External integrations, APIs | `services/` |
+| Test Agent | Unit tests, test utilities | `__tests__/`, `*.test.ts` |
+
+### Coordination
+
+1. **Shared Task List**: All agents use TaskCreate/TaskUpdate for progress
+2. **Interface Changes**: When types change, notify other agents via messages
+3. **No File Conflicts**: Each agent owns distinct folders
+4. **Integration Point**: Main agent coordinates barrel exports
+
+### Workflow
+
+```
+1. Main agent creates Task List from Implementation Checklist
+2. Spawn parallel agents based on feature scope
+3. Each agent:
+   - Claims tasks via TaskUpdate (owner, in_progress)
+   - Implements assigned files
+   - Marks tasks completed
+   - Notifies if interface changes affect others
+4. Main agent:
+   - Monitors progress via TaskList
+   - Handles integration (barrel exports)
+   - Runs verification commands
+```
+
+### When to Use
+
+✅ **Use --team:**
+- Feature with 4+ files across folders
+- Complex logic needing parallel work
+- Features requiring types + logic + tests
+
+❌ **Skip --team:**
+- Single utility function
+- Small bug fixes
+- Features touching 1-2 files
+
+---
+
 ## Output (→ run /typescript:03_review)
 
 ```markdown

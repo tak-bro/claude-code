@@ -130,6 +130,58 @@ export const ProductList = () => {
 
 ---
 
+## --team Mode (Agent Teams)
+
+Use `--team` flag for large features requiring parallel implementation.
+
+**Cost:** 3-5x tokens vs standard mode. Use for complex features only.
+
+### Team Composition
+
+| Role | Responsibility | Files |
+|------|---------------|-------|
+| API Agent | API functions, endpoints | `apis/` |
+| Hook Agent | TanStack Query hooks, Zustand | `hooks/` |
+| Component Agent | React components, UI | `components/` |
+| Types Agent | TypeScript types, constants | `types/`, `consts/` |
+
+### Coordination
+
+1. **Shared Task List**: All agents use TaskCreate/TaskUpdate for progress
+2. **Interface Changes**: When types change, notify other agents via messages
+3. **No File Conflicts**: Each agent owns distinct folders
+4. **Integration Point**: Main agent coordinates final barrel exports
+
+### Workflow
+
+```
+1. Main agent creates Task List from Implementation Checklist
+2. Spawn 4 parallel agents (API, Hook, Component, Types)
+3. Each agent:
+   - Claims tasks via TaskUpdate (owner, in_progress)
+   - Implements assigned files
+   - Marks tasks completed
+   - Notifies if interface changes affect others
+4. Main agent:
+   - Monitors progress via TaskList
+   - Handles integration (barrel exports)
+   - Runs verification commands
+```
+
+### When to Use
+
+✅ **Use --team:**
+- Feature with 4+ files across folders
+- Complex data flow needing parallel work
+- Time-sensitive large features
+
+❌ **Skip --team:**
+- Single component/hook
+- Small bug fixes
+- Features touching 1-2 files
+
+---
+
 ## Output (→ run /react:03_review)
 
 ```markdown

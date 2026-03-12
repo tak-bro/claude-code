@@ -172,3 +172,55 @@ export const Component = () => { }
 | 6-7 | Important issues (🟡) |
 | 4-5 | Critical issues (🔴) |
 | 0-3 | Major problems, needs rework |
+
+---
+
+## --team Mode (Agent Teams)
+
+Use `--team` flag for comprehensive multi-perspective review.
+
+**Cost:** 3x tokens vs standard mode. Use for critical features only.
+
+### Team Composition
+
+| Role | Focus | Agent |
+|------|-------|-------|
+| Code Quality | TypeScript, patterns, exports | tak-typescript-reviewer |
+| Simplicity | Over-engineering, complexity | code-simplicity-reviewer |
+| UI/Design | Figma match, visual QA | design-implementation-reviewer |
+
+### Coordination
+
+1. **Parallel Review**: Each agent reviews independently
+2. **Issue Sharing**: Agents share findings via messages
+3. **Deduplication**: Remove duplicate issues across agents
+4. **Priority Discussion**: Agents discuss issue severity
+5. **Unified Output**: Main agent consolidates Fix Checklist
+
+### Workflow
+
+```
+1. Main agent identifies files to review
+2. Spawn 3 parallel agents (Quality, Simplicity, UI)
+3. Each agent:
+   - Reviews from their perspective
+   - Creates issues with severity
+   - Shares findings with team
+4. Main agent:
+   - Collects all issues
+   - Removes duplicates
+   - Resolves severity conflicts
+   - Generates unified Fix Checklist
+```
+
+### When to Use
+
+✅ **Use --team:**
+- Critical feature launch
+- Complex UI with Figma designs
+- Code requiring deep quality review
+
+❌ **Skip --team:**
+- Small changes
+- Non-UI features (skip design reviewer)
+- Quick iteration cycles

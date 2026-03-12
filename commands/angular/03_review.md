@@ -229,3 +229,55 @@ ng test --watch=false
 | 6-7 | Important issues |
 | 4-5 | Critical issues |
 | 0-3 | Major problems, needs rework |
+
+---
+
+## --team Mode (Agent Teams)
+
+Use `--team` flag for comprehensive multi-perspective review.
+
+**Cost:** 3x tokens vs standard mode. Use for critical features only.
+
+### Team Composition
+
+| Role | Focus | Agent |
+|------|-------|-------|
+| Angular Expert | ComponentStore patterns, Module arch | angular-componentstore-expert |
+| Code Quality | TypeScript, exports, naming | tak-typescript-reviewer |
+| Simplicity | Over-engineering, complexity | code-simplicity-reviewer |
+
+### Coordination
+
+1. **Parallel Review**: Each agent reviews independently
+2. **Issue Sharing**: Agents share findings via messages
+3. **Deduplication**: Remove duplicate issues across agents
+4. **Priority Discussion**: Agents discuss issue severity
+5. **Unified Output**: Main agent consolidates Fix Checklist
+
+### Workflow
+
+```
+1. Main agent identifies files to review
+2. Spawn 3 parallel agents (Angular, Quality, Simplicity)
+3. Each agent:
+   - Reviews from their perspective
+   - Creates issues with severity
+   - Shares findings with team
+4. Main agent:
+   - Collects all issues
+   - Removes duplicates
+   - Resolves severity conflicts
+   - Generates unified Fix Checklist
+```
+
+### When to Use
+
+✅ **Use --team:**
+- Critical feature with ComponentStore
+- Complex state/effect patterns
+- Code requiring architecture review
+
+❌ **Skip --team:**
+- Small changes
+- Simple CRUD features
+- Quick iteration cycles

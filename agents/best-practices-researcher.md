@@ -1,6 +1,6 @@
 ---
 name: best-practices-researcher
-model: sonnet
+model: opus
 description: "Research and gather external best practices, documentation, and examples for any technology, framework, or development practice. Synthesizes information from multiple authoritative sources into actionable guidance. TRIGGERS: best practices, how should I, recommended approach, industry standard, conventions, style guide"
 ---
 
