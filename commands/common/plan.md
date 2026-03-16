@@ -6,7 +6,11 @@ Analyze issue and create implementation plan with clear boundaries and checklist
 ## ⛔ CRITICAL: STOP AFTER PLAN
 **After completing the plan, STOP and wait for user's next command.**
 - NEVER automatically start implementation
-- After creating the plan file, output: "Plan complete. Run `/{framework}:02_implement` to start implementation."
+- After creating the plan file, output:
+  ```
+  ✅ Plan complete: `.claude/{YYYYMMDD}/PLAN-{HHMMSS}.md`
+  Run `/{framework}:02_implement` to start implementation.
+  ```
 - Wait until user explicitly enters the implement command
 
 ## Agents
@@ -37,11 +41,11 @@ Task(subagent_type: "framework-docs-researcher", prompt: "Research [technology] 
    ```
 
 ### Phase 2: Parallel Research 🔀
-```bash
-# Run simultaneously using Task tool
-Lane 1: codebase-researcher     # Analyze referenced files
-Lane 2: framework-docs-researcher  # Framework best practice (optional)
-```
+Run agents simultaneously using Task tool:
+| Lane | Agent | Purpose |
+|------|-------|---------|
+| 1 | `codebase-researcher` | Analyze referenced files |
+| 2 | `framework-docs-researcher` | Framework best practices (optional) |
 
 ### Phase 3: Plan Creation
 1. **Create plan file in `.claude/{date}/` folder** (never overwrite existing):
@@ -65,25 +69,29 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 > ⚠️ Always write to `.claude/{YYYYMMDD}/PLAN-{HHMMSS}.md`. Never overwrite existing plan files.
 
 ```markdown
-### 📋 Implementation Plan: [Feature]
+# 📋 Implementation Plan: [Feature]
+
+> **Created:** YYYY-MM-DD HH:MM
+> **Package Manager:** {pm}
 
 ---
 
-**Tech Stack** (check `package.json` for exact versions)
+## Tech Stack
+(check `package.json` for exact versions)
 - [Framework]: [version from package.json]
 - [State]: [version from package.json]
 - [Build]: [tool]
 
 ---
 
-**Knowledge Sources**
+## Knowledge Sources
 - `./CLAUDE.md`: [patterns found]
 - `[reference file]`: [patterns extracted]
 - External: [research findings]
 
 ---
 
-**Boundaries**
+## Boundaries
 
 ✅ Do:
 - [What this implementation SHOULD do]
@@ -99,7 +107,7 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 
 ---
 
-**Files to Create/Modify**
+## Files to Create/Modify
 
 | File | Action | Purpose |
 |------|--------|---------|
@@ -108,7 +116,8 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 
 ---
 
-**Implementation Checklist** (→ used in 02_implement phase)
+## Implementation Checklist
+(→ used in 02_implement phase)
 
 - [ ] [Step 1]
 - [ ] [Step 2]
@@ -119,17 +128,17 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 
 ---
 
-**Verification Commands**
+## Verification Commands
 
 ```bash
-# {pm} = npm, yarn, pnpm, bun (use project's package manager)
-{pm} run lint    # if available
-{pm} test        # if available
+{pm} run lint
+{pm} test
 ```
 
 ---
 
-**Review Focus** (→ checked in 03_review phase)
+## Review Focus
+(→ checked in 03_review phase)
 
 - [ ] [This feature's critical check point]
 - [ ] [Edge case to verify]
@@ -137,7 +146,7 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 
 ---
 
-**Decisions**
+## Decisions
 
 | Choice | Options | Selected | Rationale |
 |--------|---------|----------|-----------|
