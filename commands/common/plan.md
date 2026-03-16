@@ -15,9 +15,9 @@ Analyze issue and create implementation plan with clear boundaries and checklist
 
 ### How to invoke agents
 ```
-# Run agents in parallel using Task tool
-Task(subagent_type: "general-purpose", prompt: "As codebase-researcher, analyze [files/patterns]")
-Task(subagent_type: "general-purpose", prompt: "As framework-docs-researcher, research [technology] docs")
+# Run agents in parallel using Task tool with correct subagent_type
+Task(subagent_type: "codebase-researcher", prompt: "Analyze [files/patterns] and extract implementation patterns")
+Task(subagent_type: "framework-docs-researcher", prompt: "Research [technology] docs for [specific topic]")
 ```
 
 ---
@@ -44,11 +44,12 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 ```
 
 ### Phase 3: Plan Creation
-1. **Create plan file** (never overwrite existing):
+1. **Create plan file in `.claude/{date}/` folder** (never overwrite existing):
    ```bash
-   # Always write to new file. Never overwrite existing PLAN.md.
-   # If .claude folder exists, write there.
-   PLAN_FILE=".claude/PLAN-$(date +%Y%m%d-%H%M%S).md"
+   # Always write to .claude/YYYYMMDD/ folder with timestamp
+   DATE_DIR=".claude/$(date +%Y%m%d)"
+   mkdir -p "$DATE_DIR"
+   PLAN_FILE="$DATE_DIR/PLAN-$(date +%H%M%S).md"
    ```
 2. Extract patterns from referenced files
 3. Define boundaries (Do/Don't)
@@ -61,7 +62,7 @@ Lane 2: framework-docs-researcher  # Framework best practice (optional)
 
 ## Output Structure
 
-> ⚠️ Always write to `PLAN-{timestamp}.md`. Never overwrite existing plan files.
+> ⚠️ Always write to `.claude/{YYYYMMDD}/PLAN-{HHMMSS}.md`. Never overwrite existing plan files.
 
 ```markdown
 ### 📋 Implementation Plan: [Feature]
