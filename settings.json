@@ -16,8 +16,8 @@
     "swift-lsp@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true,
+  "skipDangerousModePermissionPrompt": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754027754899
-  },
-  "skipDangerousModePermissionPrompt": true
+  }
 }

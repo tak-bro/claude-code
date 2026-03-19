@@ -9,7 +9,17 @@ Analyze issue and create TypeScript-specific implementation plan.
 ## ⛔ CRITICAL: STOP AFTER PLAN
 **After completing the plan, STOP and wait for user's next command.**
 - NEVER automatically start implementation
-- After creating the plan file, output: "Plan complete. Run `/typescript:02_implement` to start implementation."
+- **Plan file path:** `.claude/{YYYYMMDD}/PLAN-{HHMMSS}.md` (same as `/common:plan`)
+  ```bash
+  DATE_DIR=".claude/$(date +%Y%m%d)"
+  mkdir -p "$DATE_DIR"
+  PLAN_FILE="$DATE_DIR/PLAN-$(date +%H%M%S).md"
+  ```
+- After creating the plan file, output:
+  ```
+  ✅ Plan complete: `.claude/{YYYYMMDD}/PLAN-{HHMMSS}.md`
+  Run `/typescript:02_implement` to start implementation.
+  ```
 - Wait until user explicitly enters the implement command
 
 ---
