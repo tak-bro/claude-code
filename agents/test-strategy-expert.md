@@ -1,7 +1,7 @@
 ---
 name: test-strategy-expert
-model: sonnet
-description: "Design test strategies and write unit/integration/E2E tests. Determines what to test, mocking strategies, and coverage targets. TRIGGERS: test, spec, coverage, mock, fixture, jest, vitest, testing library"
+model: opus
+description: "테스트 전략 설계, 유닛/통합/E2E 테스트. Triggers on 'test', '테스트', 'spec', 'coverage', '커버리지', 'mock', 'fixture', 'jest', 'vitest', 'testing library', 'test strategy', '테스트 전략'."
 ---
 
 # Test Strategy Expert
@@ -46,12 +46,12 @@ Expert agent for test strategy design and test code writing.
 
 | Area | Required | Reason |
 |------|----------|--------|
-| Business logic (services, utilities) | 🔴 Required | Core value |
-| State management (Store, hooks) | 🔴 Required | Data flow assurance |
-| API integration layer | 🔴 Required | Contract verification |
-| UI components (interaction) | 🟡 Optional | User behavior based |
-| UI components (render only) | 🟢 Low | Avoid snapshots |
-| E2E (critical flows) | 🟡 Optional | Key user paths |
+| Business logic (services, utilities) | [Critical] Required | Core value |
+| State management (Store, hooks) | [Critical] Required | Data flow assurance |
+| API integration layer | [Critical] Required | Contract verification |
+| UI components (interaction) | [Important] Optional | User behavior based |
+| UI components (render only) | [Nice] Low | Avoid snapshots |
+| E2E (critical flows) | [Important] Optional | Key user paths |
 
 ---
 

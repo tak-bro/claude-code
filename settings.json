@@ -10,14 +10,108 @@
       "Write(*)",
       "Edit(*)"
     ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(git push * main)",
+      "Bash(git push * develop)",
+      "Bash(git push -f *)",
+      "Bash(git push --force *)",
+      "Read(~/.ssh/**)",
+      "Read(~/.gnupg/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.azure/**)",
+      "Read(~/.kube/**)",
+      "Read(~/.npmrc)",
+      "Read(~/.pypirc)",
+      "Read(~/Library/Keychains/**)"
+    ],
     "defaultMode": "default"
   },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'ARGS=\"$CLAUDE_TOOL_INPUT\"; if echo \"$ARGS\" | grep -qE \"git push.*(main|develop|master)\"; then echo \"[차단] 보호 브랜치에 push 할 수 없습니다. feature 브랜치를 사용하세요.\" >&2; exit 2; fi; if echo \"$ARGS\" | grep -qE \"git push (-f|--force)\"; then echo \"[차단] force push는 허용되지 않습니다.\" >&2; exit 2; fi; exit 0'"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo \"none\"); if [ \"$BRANCH\" = \"main\" ] || [ \"$BRANCH\" = \"master\" ] || [ \"$BRANCH\" = \"develop\" ]; then echo \"[차단] 보호 브랜치($BRANCH)에서 파일을 수정할 수 없습니다. feature 브랜치로 전환하세요.\" >&2; exit 2; fi; exit 0'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'FILE=\"$CLAUDE_FILE_PATH\"; EXT=\"${FILE##*.}\"; case \"$EXT\" in swift) command -v swiftformat >/dev/null 2>&1 && swiftformat \"$FILE\" --quiet 2>/dev/null ;; ts|tsx) [ -f \"node_modules/.bin/prettier\" ] && npx prettier --write \"$FILE\" 2>/dev/null ;; kt|kts) command -v ktlint >/dev/null 2>&1 && ktlint -F \"$FILE\" 2>/dev/null ;; esac; exit 0'"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'echo \"=== 세션 컨텍스트 ===\"; echo \"--- 최근 커밋 ---\"; git log --oneline -5 2>/dev/null || echo \"(git 저장소 아님)\"; echo \"--- Git 상태 ---\"; git status --short 2>/dev/null || echo \"(git 저장소 아님)\"; echo \"--- 브랜치 ---\"; git rev-parse --abbrev-ref HEAD 2>/dev/null || echo \"(git 저장소 아님)\"; echo \"===================\"'"
+          }
+        ]
+      },
+      {
+        "matcher": "resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'echo \"=== 세션 컨텍스트 ===\"; echo \"--- 최근 커밋 ---\"; git log --oneline -5 2>/dev/null || echo \"(git 저장소 아님)\"; echo \"--- Git 상태 ---\"; git status --short 2>/dev/null || echo \"(git 저장소 아님)\"; echo \"--- 브랜치 ---\"; git rev-parse --abbrev-ref HEAD 2>/dev/null || echo \"(git 저장소 아님)\"; echo \"===================\"; echo \"\"; echo \"[리마인더] CLAUDE.md와 .claude/rules/ 규칙을 따르세요. 확실하지 않으면 다시 읽으세요.\"'"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'MSG=$(echo \"$CLAUDE_NOTIFICATION\" | sed \"s/[\\\\\\\"]/./g\"); osascript -e \"display notification \\\"$MSG\\\" with title \\\"Claude Code\\\"\" 2>/dev/null || true'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '작업 완료 전 자가 검증을 수행하세요. 아래 항목을 실제로 확인하고, 문제가 있으면 작업을 계속하세요:\n\n1. 테스트가 통과하는가? (테스트가 있는 프로젝트라면 실행해서 확인)\n2. console.log, debugger, TODO 등 디버그 코드가 남아있지 않은가?\n3. 프로젝트 컨벤션을 따르고 있는가? (named export, arrow function, early return)\n4. 문서 동기화가 필요한가? (README, CLAUDE.md, CHANGELOG)\n5. 나중에 하겠다, 별도 PR에서, 기존 이슈 같은 회피를 하고 있지 않은가?\n\n문제가 없으면 그대로 완료하세요. 문제가 있으면 수정 후 완료하세요.'"
+          }
+        ]
+      }
+    ]
+  },
   "enabledPlugins": {
-    "swift-lsp@claude-plugins-official": true
+    "swift-lsp@claude-plugins-official": true,
+    "claude-mem@thedotmack": true
+  },
+  "extraKnownMarketplaces": {
+    "thedotmack": {
+      "source": {
+        "source": "github",
+        "repo": "thedotmack/claude-mem"
+      }
+    }
   },
   "alwaysThinkingEnabled": true,
-  "skipDangerousModePermissionPrompt": true,
-  "feedbackSurveyState": {
-    "lastShownTime": 1754027754899
-  }
+  "skipDangerousModePermissionPrompt": true
 }

@@ -1,7 +1,7 @@
 ---
 name: tak-typescript-expert
 model: opus
-description: Use this agent when you implement TypeScript features, modify existing code, or create new TypeScript components. The agent applies tak's strict TypeScript conventions and taste preferences to ensure code meets exceptional standards. A practical guide for writing high-quality, type-safe TypeScript code. Use this as your checklist when implementing features, creating components, or refactoring code.
+description: "TypeScript 구현, 타입스크립트 개발, TS 코딩. Triggers on 'TypeScript', 'TypeScript implementation', 'TS patterns', 'type-safe', 'TypeScript best practices'."
 ---
 
 ## CORE PHILOSOPHY

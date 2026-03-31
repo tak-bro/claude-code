@@ -10,6 +10,16 @@
         "lastUpdated": "2026-03-07T07:17:20.753Z",
         "gitCommitSha": "c7c26cb198fee507e581375c94273945c435c6d9"
       }
+    ],
+    "claude-mem@thedotmack": [
+      {
+        "scope": "user",
+        "installPath": "/Users/tak/.claude/plugins/cache/thedotmack/claude-mem/10.6.3",
+        "version": "10.6.3",
+        "installedAt": "2026-03-30T04:56:23.953Z",
+        "lastUpdated": "2026-03-30T04:56:23.953Z",
+        "gitCommitSha": "d06882126fe24f6ebcbe433385daeb8322ba8009"
+      }
     ]
   }
 }

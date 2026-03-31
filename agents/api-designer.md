@@ -1,7 +1,7 @@
 ---
 name: api-designer
-model: sonnet
-description: "Design REST/GraphQL APIs, generate TypeScript types from API specs, and create API integration layers. TRIGGERS: API design, endpoint, swagger, openapi, schema, REST, GraphQL"
+model: opus
+description: "REST/GraphQL API 설계, TypeScript 타입 생성. Triggers on 'API design', 'API 설계', 'endpoint', 'swagger', 'openapi', 'schema', 'REST', 'GraphQL', 'API 타입'."
 ---
 
 # API Designer
