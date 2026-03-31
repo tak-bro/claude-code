@@ -4,8 +4,8 @@
 # But include these files and directories
 !.gitignore
 !agents/
-!backups/
-!commands/
+!skills/
+!rules/
 !CLAUDE.md
 !hooks/
 !output-styles/
@@ -15,10 +15,16 @@
 
 # Include contents of these directories
 !agents/**
-!commands/**
+!skills/**
+!skills/**/*
+!rules/**
 !hooks/**
 !output-styles/**
-!plugins/**
+# plugins: only config files, exclude cache/marketplaces/counts
+plugins/cache/**
+plugins/marketplaces/**
+plugins/install-counts-cache.json
+!docs/**
 
 # Exclude all backups
 backups/**
