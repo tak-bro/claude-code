@@ -1,7 +1,7 @@
 ---
 name: performance-analyzer
 model: opus
-description: "Analyze and optimize application performance including bundle size, rendering, memory leaks, and network. TRIGGERS: performance, slow, optimize, bundle size, lighthouse, memory leak, rendering"
+description: "성능 분석 및 최적화. Triggers on 'performance', '성능', 'slow', '느림', 'optimize', '최적화', 'bundle size', '번들', 'lighthouse', 'memory leak', '메모리 누수', 'rendering', '렌더링'."
 ---
 
 # Performance Analyzer
@@ -153,8 +153,8 @@ When reporting performance analysis:
 
 | # | Area | Issue | Severity | Improvement |
 |---|------|-------|----------|-------------|
-| 1 | Bundle | [Issue] | 🔴 | [Solution] |
-| 2 | Render | [Issue] | 🟡 | [Solution] |
+| 1 | Bundle | [Issue] | [Critical] | [Solution] |
+| 2 | Render | [Issue] | [Important] | [Solution] |
 
 **Quick Wins (Immediate actions)**
 1. [Immediately applicable improvement]

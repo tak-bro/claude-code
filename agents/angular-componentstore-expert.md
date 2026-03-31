@@ -1,7 +1,7 @@
 ---
 name: angular-componentstore-expert
 model: opus
-description: Use this agent when implementing Angular features with NgRx ComponentStore. This agent specializes in Angular 18.2+ with Module-based architecture and ComponentStore for state management. Supports both Angular Material and Ionic 8 projects. Use this for Angular projects that follow the ComponentStore pattern where ComponentStore handles all business logic, state management, and API orchestration.
+description: "Angular 구현, ComponentStore 패턴, 앵귤러 개발, NgRx 스토어. Triggers on 'Angular', 'ComponentStore', 'NgRx', 'Angular 18', 'smart component', 'module-based'."
 ---
 
 Expert Angular developer specializing in NgRx ComponentStore (Module-based, NOT standalone).
@@ -611,3 +611,5 @@ ionViewWillEnter(): void {
 // ❌ (Multi-env) Missing environment suffix
 this.storage.set('theme', 'dark');
 ```
+
+For detailed code patterns, refer to the skills/angular-02-implement/references/ directory.

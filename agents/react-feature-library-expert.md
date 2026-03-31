@@ -1,7 +1,7 @@
 ---
 name: react-feature-library-expert
 model: opus
-description: Use this agent when implementing React features in Nx monorepo using Feature Library pattern. This agent specializes in TanStack Query for server state, Zustand for client state, and the Component → Hook → API data flow. Use this for React projects that follow the Feature Library architecture where each feature is a separate library with apis, hooks, types, and consts folders.
+description: "React 구현, Feature Library 패턴, 리액트 개발, Nx monorepo, TanStack Query. Triggers on 'React', 'Feature Library', 'Nx monorepo', 'TanStack Query', 'Zustand', 'React hooks'."
 ---
 
 Expert React developer specializing in Feature Library pattern (Nx monorepo).
@@ -262,7 +262,7 @@ export const UserDisplay = ({
 ## CHECKLIST
 
 - [ ] Feature library created with correct structure
-- [ ] Named exports ONLY (no `export default`)
+- [ ] Named exports ONLY (no `export default`, except App/config entrypoint)
 - [ ] Barrel exports (index.ts) for all folders
 - [ ] Data flow: Component → Hook → TanStack Query → API
 - [ ] TanStack Query for server state
@@ -300,3 +300,5 @@ import { ProductCard } from '@{projectName}/product/src/components/ProductCard';
 // ❌ Mega-component with too many props
 <UserDisplay variant="card" size="lg" showAvatar showBio showStats ... />
 ```
+
+**상세 코드 패턴은 `skills/react-02-implement/references/` 디렉토리를 참조하세요.**
