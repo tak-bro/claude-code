@@ -55,20 +55,22 @@ Review iOS/Swift code and generate Fix Checklist for next phase.
 5. Completion handler in new async code (should be async/await)?
 6. Retain cycle (missing [weak self] in escaping closure)?
 7. Mutable published state that should be private(set)?
+8. Missing `@MainActor` on ViewModel (state mutations from background)?
+9. Untracked `Task {}` in ViewModel (never cancelled, concurrent duplicates)?
 
 ### [Important]
-8. Missing ViewState/Action pattern?
-9. View vs Component separation violated?
-10. Repository not using protocol (concrete class in domain)?
-11. Task not cancelled on view disappear?
-12. Missing error handling (unhandled throws)?
-13. Hardcoded strings in UI (no localization)?
-14. Missing accessibility labels?
+10. Missing ViewState/Action pattern?
+11. View vs Component separation violated?
+12. Repository not using protocol (concrete class in domain)?
+13. Task not cancelled on view disappear?
+14. Missing error handling (unhandled throws)?
+15. Hardcoded strings in UI (no localization)?
+16. Missing accessibility labels?
 
 ### [Nice-to-have]
-15. Could state be simplified?
-16. Naming could be clearer?
-17. View body too complex (should extract subviews)?
+17. Could state be simplified?
+18. Naming could be clearer?
+19. View body too complex (should extract subviews)?
 
 ---
 
@@ -82,6 +84,8 @@ Missing DI protocol? -> [Critical] Create protocol, inject
 Completion handler? -> [Critical] Convert to async/await
 Retain cycle? -> [Critical] Add [weak self]
 Public mutable state? -> [Critical] Use private(set)
+Missing @MainActor? -> [Critical] Add @MainActor to ViewModel
+Untracked Task? -> [Critical] Store task ref, cancel on deinit/new request
 Missing ViewState? -> [Important] Add state enum/struct
 No View/Component separation? -> [Important] Extract components
 No Repository protocol? -> [Important] Create protocol

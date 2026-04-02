@@ -102,7 +102,36 @@ const Dashboard = lazy(() => import('./Dashboard'));
 - Prefetch/Preload strategy
 - Compression (gzip/brotli)
 
-### 5. Android (Kotlin) Performance
+### 5. Node.js Backend Performance
+
+#### Database Queries
+- Use `EXPLAIN ANALYZE` for slow SQL queries
+- Add indexes for frequent query patterns
+- Avoid N+1 queries (use joins, `$lookup`, `include`)
+- Connection pooling configured correctly
+
+#### Memory & CPU
+```typescript
+// Leak: Unbounded cache
+const cache = new Map(); // Grows forever
+// Fix: Use LRU cache with max size
+import { LRUCache } from 'lru-cache';
+const cache = new LRUCache({ max: 1000 });
+
+// Leak: Unremoved event listeners
+emitter.on('data', handler); // Never removed
+// Fix: Remove on cleanup
+emitter.off('data', handler);
+```
+
+#### API Response Time
+- Response compression (gzip/brotli)
+- Pagination on list endpoints
+- Selective field loading (Prisma `select`, MongoDB `projection`)
+- Caching (Redis, HTTP cache headers)
+- Avoid synchronous heavy computation on event loop
+
+### 6. Android (Kotlin) Performance
 
 #### Compose Recomposition
 - Verify `Stable`/`Immutable` annotations
@@ -119,7 +148,7 @@ const Dashboard = lazy(() => import('./Dashboard'));
 // Fix: Use viewModelScope (auto-cancelled)
 ```
 
-### 6. iOS (Swift) Performance
+### 7. iOS (Swift) Performance
 
 #### SwiftUI View Performance
 - Minimize View body complexity
@@ -136,7 +165,7 @@ publisher.sink { [weak self] value in self?.handle(value) }
 weak var delegate: SomeDelegate?
 ```
 
-### 7. Memory Leak Detection
+### 8. Memory Leak Detection
 
 #### Common Causes
 - Missing subscription cleanup (Observable, EventListener)

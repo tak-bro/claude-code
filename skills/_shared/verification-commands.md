@@ -75,6 +75,14 @@ grep -r "IonicRouteStrategy" src/app/app.module.ts
 grep -r "localStorage\|sessionStorage" src/app/ | grep -v "_\${environment"
 ```
 
+### Node.js (Backend)
+```bash
+{pm} run lint                          # Lint
+{pm} test                              # Unit tests
+{pm} run build                         # TypeScript compilation
+{pm} run test:integration              # Integration tests (if configured)
+```
+
 ### Android (Kotlin)
 ```bash
 ./gradlew lint{Variant}                    # Lint check
@@ -107,6 +115,22 @@ grep -r "export default" libs/{feature}/
 
 # any usage
 grep -r ": any" libs/{feature}/ --include="*.ts" --include="*.tsx"
+```
+
+## Node.js Backend Grep Checks
+
+```bash
+# DB queries in route handlers (should be in repository)
+grep -rn "prisma\.\|\.findOne\|\.findMany\|\.aggregate\|\.insertOne" --include="*.route.ts" --include="*.controller.ts"
+
+# Scattered process.env access (should be centralized in config)
+grep -rn "process\.env\." --include="*.ts" | grep -v "config\|\.test\.\|\.spec\.\|node_modules"
+
+# Hardcoded secrets patterns
+grep -rn "password.*=.*['\"]" --include="*.ts" | grep -v "\.test\.\|\.spec\.\|schema\|type\|interface"
+
+# Missing error propagation (next not called)
+grep -rn "catch.*err" --include="*.route.ts" | grep -v "next(err)"
 ```
 
 ## Android-Specific Grep Checks

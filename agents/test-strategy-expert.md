@@ -40,6 +40,14 @@ Expert agent for test strategy design and test code writing.
 - **Utilities/Services:** Vitest or Jest
 - **Type testing:** `expectTypeOf` (vitest), `tsd`
 
+### Node.js (Backend)
+- **Unit/Integration:** Vitest or Jest
+- **HTTP testing:** Supertest
+- **External API mocking:** MSW (Mock Service Worker)
+- **DB testing:** In-memory DB (SQLite for Prisma, mongodb-memory-server) or Testcontainers
+- **Validation testing:** Direct schema testing (Zod safeParse)
+- **E2E:** Playwright or Supertest against running server
+
 ### Android (Kotlin)
 - **Unit/Integration:** JUnit 5 + MockK
 - **Flow testing:** Turbine

@@ -55,20 +55,22 @@ Review Android/Kotlin code and generate Fix Checklist for next phase.
 5. Blocking call on Main thread (no withContext/IO)?
 6. Mutable data class used for UiState?
 7. var used for observable state?
+8. Activity/Context reference held in ViewModel (memory leak)?
 
 ### [Important]
-8. Missing UiState/UiEvent/UiEffect pattern?
-9. Screen vs Component separation violated?
-10. Repository not using interface (concrete class in domain)?
-11. Coroutine scope misuse (GlobalScope, no cancellation)?
-12. Missing error handling in Repository/ViewModel?
-13. Hardcoded strings in UI (no string resources)?
-14. Missing `remember` / `derivedStateOf` for expensive computation in Compose?
+9. Missing UiState/UiEvent/UiEffect pattern?
+10. Screen vs Component separation violated?
+11. Repository not using interface (concrete class in domain)?
+12. Coroutine scope misuse (GlobalScope, no cancellation)?
+13. Missing error handling in Repository/ViewModel?
+14. Hardcoded strings in UI (no string resources)?
+15. Missing `remember` / `derivedStateOf` for expensive computation in Compose?
+16. Effect Channel using default capacity (should be BUFFERED)?
 
 ### [Nice-to-have]
-15. Could state be simplified?
-16. Naming could be clearer?
-17. Unnecessary recomposition?
+17. Could state be simplified?
+18. Naming could be clearer?
+19. Unnecessary recomposition?
 
 ---
 
@@ -82,6 +84,7 @@ Missing Hilt? -> [Critical] Add @Inject/@Module
 Blocking Main thread? -> [Critical] Use withContext(Dispatchers.IO)
 Mutable UiState? -> [Critical] Use immutable data class
 var for state? -> [Critical] Use val + StateFlow
+Context in ViewModel? -> [Critical] Never hold Activity/Context ref
 Missing UiState pattern? -> [Important] Add sealed interface
 No Screen/Component separation? -> [Important] Extract composables
 No Repository interface? -> [Important] Create interface in domain

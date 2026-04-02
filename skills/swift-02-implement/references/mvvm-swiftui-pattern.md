@@ -53,13 +53,18 @@ final class FeatureViewModel {
         self.repository = repository
     }
 
+    // Track tasks for cancellation
+    private var loadTask: Task<Void, Never>?
+
     // Action handler
     func send(_ action: FeatureAction) {
         switch action {
         case .loadItems:
-            Task { await loadItems() }
+            loadTask?.cancel()
+            loadTask = Task { await loadItems() }
         case .refresh:
-            Task { await refresh() }
+            loadTask?.cancel()
+            loadTask = Task { await refresh() }
         case .selectItem(let id):
             selectItem(id: id)
         case .deleteItem(let id):

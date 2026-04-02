@@ -103,13 +103,13 @@ final class FeatureViewModelTests: XCTestCase {
 ### Swift Testing Framework (Xcode 16+ / Swift 6)
 
 ```swift
-@Suite("FeatureViewModel Tests")
+@Suite("FeatureViewModel Tests", .serialized)
 @MainActor
 struct FeatureViewModelTests {
-    let mockRepository = MockFeatureRepository()
-
+    // Each test creates its own mock to avoid data races
     @Test("loads items successfully")
     func loadItems_success() async {
+        let mockRepository = MockFeatureRepository()
         let viewModel = FeatureViewModel(repository: mockRepository)
         mockRepository.getItemsResult = .success([FeatureItem(id: "1", name: "Test")])
 
@@ -121,6 +121,7 @@ struct FeatureViewModelTests {
 
     @Test("handles load error")
     func loadItems_failure() async {
+        let mockRepository = MockFeatureRepository()
         let viewModel = FeatureViewModel(repository: mockRepository)
         mockRepository.getItemsResult = .failure(NetworkError.noConnection)
 

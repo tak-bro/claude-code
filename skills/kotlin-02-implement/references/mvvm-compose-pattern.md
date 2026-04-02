@@ -57,8 +57,8 @@ class FeatureViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(FeatureUiState())
     val uiState: StateFlow<FeatureUiState> = _uiState.asStateFlow()
 
-    // One-shot effects via Channel
-    private val _effect = Channel<FeatureEffect>()
+    // One-shot effects via Channel (BUFFERED to prevent event dropping)
+    private val _effect = Channel<FeatureEffect>(Channel.BUFFERED)
     val effect: Flow<FeatureEffect> = _effect.receiveAsFlow()
 
     init {
