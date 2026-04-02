@@ -75,6 +75,30 @@ grep -r "IonicRouteStrategy" src/app/app.module.ts
 grep -r "localStorage\|sessionStorage" src/app/ | grep -v "_\${environment"
 ```
 
+### Android (Kotlin)
+```bash
+./gradlew lint{Variant}                    # Lint check
+./gradlew test{Variant}UnitTest            # Unit tests
+./gradlew assembleDebug                    # Build check
+./gradlew detekt                           # Static analysis (if configured)
+./gradlew ktlintCheck                      # Code style (if configured)
+```
+
+### iOS (Swift)
+```bash
+# Xcode project
+xcodebuild -workspace {Name}.xcworkspace -scheme {Scheme} -sdk iphonesimulator build
+xcodebuild test -workspace {Name}.xcworkspace -scheme {Scheme} -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16'
+
+# Swift Package
+swift build
+swift test
+
+# Linting
+swiftlint lint --strict                    # if configured
+swiftformat --lint .                        # if configured
+```
+
 ## React-Specific Grep Checks
 
 ```bash
@@ -83,4 +107,33 @@ grep -r "export default" libs/{feature}/
 
 # any usage
 grep -r ": any" libs/{feature}/ --include="*.ts" --include="*.tsx"
+```
+
+## Android-Specific Grep Checks
+
+```bash
+# MutableStateFlow exposed publicly (should be private)
+grep -r "val.*MutableStateFlow" --include="*.kt" | grep -v "private"
+
+# GlobalScope usage (should use viewModelScope)
+grep -r "GlobalScope" --include="*.kt"
+
+# Force unwrap equivalent (should use safe calls)
+grep -r "\.first()" --include="*.kt" | grep -v "firstOrNull"
+
+# Missing @Inject (ViewModel without injection)
+grep -r "class.*ViewModel" --include="*.kt" | grep -v "@Inject\|@HiltViewModel"
+```
+
+## iOS-Specific Grep Checks
+
+```bash
+# Force unwrapping (should be 0 in new code)
+grep -rn '!' --include="*.swift" | grep -v '//' | grep -v 'IBOutlet\|IBAction\|#if\|import\|!=\|Protocol'
+
+# Completion handler in new code (should use async/await)
+grep -rn 'completion:.*@escaping' --include="*.swift"
+
+# Missing weak self in closures
+grep -rn '{ self\.' --include="*.swift" | grep -v '\[weak self\]\|\[unowned self\]'
 ```

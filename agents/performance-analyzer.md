@@ -102,7 +102,41 @@ const Dashboard = lazy(() => import('./Dashboard'));
 - Prefetch/Preload strategy
 - Compression (gzip/brotli)
 
-### 5. Memory Leak Detection
+### 5. Android (Kotlin) Performance
+
+#### Compose Recomposition
+- Verify `Stable`/`Immutable` annotations
+- Use `remember` / `derivedStateOf` for expensive computations
+- Avoid allocations in Composable functions
+- Use `key()` in `LazyColumn` for stable identity
+
+#### Android Memory
+```kotlin
+// Leak: Activity/Fragment reference in ViewModel
+// Fix: Never hold Context/View references in ViewModel
+
+// Leak: Missing coroutine cancellation
+// Fix: Use viewModelScope (auto-cancelled)
+```
+
+### 6. iOS (Swift) Performance
+
+#### SwiftUI View Performance
+- Minimize View body complexity
+- Use `EquatableView` or `Equatable` conformance
+- Extract subviews to avoid unnecessary recomposition
+- Use `.task` over `.onAppear + Task { }` for auto-cancellation
+
+#### iOS Memory
+```swift
+// Leak: Missing [weak self] in closures
+publisher.sink { [weak self] value in self?.handle(value) }
+
+// Leak: Strong reference cycles in delegates
+weak var delegate: SomeDelegate?
+```
+
+### 7. Memory Leak Detection
 
 #### Common Causes
 - Missing subscription cleanup (Observable, EventListener)
