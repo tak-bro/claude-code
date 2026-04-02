@@ -159,6 +159,53 @@ router.delete('/users/:id', authenticate, authorize('admin'), async (req, res, n
 });
 ```
 
+## [Critical] Mass Assignment
+
+```typescript
+// Before (BAD)
+router.patch('/users/:id', async (req, res) => {
+  const user = await userService.update(req.params.id, req.body); // req.body could contain { role: 'admin' }!
+  res.json(user);
+});
+
+// After (GOOD) - Explicit schema validates allowed fields only
+const updateUserSchema = z.object({
+  name: z.string().min(1).optional(),
+  email: z.string().email().optional(),
+  // role NOT included -- cannot be set by user
+});
+
+router.patch('/users/:id', validate({ body: updateUserSchema }), asyncHandler(async (req, res) => {
+  const user = await userService.update(req.params.id, req.body); // Only validated fields
+  res.json({ data: user });
+}));
+```
+
+## [Critical] SSRF (Server-Side Request Forgery)
+
+```typescript
+// Before (BAD) - User controls URL
+router.post('/fetch', async (req, res) => {
+  const response = await fetch(req.body.url); // Could hit internal services!
+  res.json(await response.json());
+});
+
+// After (GOOD) - Validate and allowlist
+const ALLOWED_HOSTS = ['api.example.com', 'webhook.service.com'];
+
+router.post('/fetch', validate({ body: fetchSchema }), asyncHandler(async (req, res) => {
+  const url = new URL(req.body.url);
+  if (!ALLOWED_HOSTS.includes(url.hostname)) {
+    throw new ForbiddenError('URL host not allowed');
+  }
+  if (url.protocol !== 'https:') {
+    throw new ValidationError('Only HTTPS URLs allowed');
+  }
+  const response = await fetch(url.toString());
+  res.json({ data: await response.json() });
+}));
+```
+
 ## [Important] Scattered process.env
 
 ```typescript

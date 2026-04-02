@@ -59,6 +59,7 @@ Fix issues found in review, prioritized by severity.
     |-- Blocking Main -> withContext(Dispatchers.IO)
     |-- Mutable UiState -> immutable data class
     |-- var for state -> val + StateFlow
+    |-- Activity/Context ref in ViewModel -> never hold, use Application context
     |
     v
 [Important] (SHOULD fix)

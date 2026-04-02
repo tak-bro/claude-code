@@ -150,6 +150,60 @@ final class FeatureViewModel {
 }
 ```
 
+## [Critical] Missing @MainActor on ViewModel
+
+```swift
+// Before (BAD)
+@Observable
+final class FeatureViewModel { // State mutations from background task -- runtime warning in Swift 6
+    private(set) var state = FeatureViewState()
+
+    func loadItems() async {
+        state.isLoading = true // May not be on main thread!
+    }
+}
+
+// After (GOOD)
+@Observable
+@MainActor
+final class FeatureViewModel {
+    private(set) var state = FeatureViewState()
+
+    func loadItems() async {
+        state.isLoading = true // Guaranteed main thread
+    }
+}
+```
+
+## [Critical] Untracked Task in ViewModel
+
+```swift
+// Before (BAD) -- Tasks never cancelled, can duplicate on rapid taps
+@Observable @MainActor
+final class FeatureViewModel {
+    func send(_ action: FeatureAction) {
+        switch action {
+        case .loadItems:
+            Task { await loadItems() } // Untracked! Never cancelled!
+        }
+    }
+}
+
+// After (GOOD) -- Track and cancel
+@Observable @MainActor
+final class FeatureViewModel {
+    private var loadTask: Task<Void, Never>?
+
+    func send(_ action: FeatureAction) {
+        switch action {
+        case .loadItems:
+            loadTask?.cancel()
+            loadTask = Task { await loadItems() }
+        }
+    }
+}
+```
+
 ## [Important] Missing Task Cancellation
 
 ```swift

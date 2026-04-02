@@ -59,6 +59,8 @@ Fix issues found in review, prioritized by severity.
     |-- Missing error handling -> add AppError + global handler
     |-- Injection risk -> parameterized queries
     |-- Missing auth -> add middleware
+    |-- Mass assignment -> use explicit schema, don't spread req.body
+    |-- SSRF risk -> validate/allowlist URLs
     |
     v
 [Important] (SHOULD fix)

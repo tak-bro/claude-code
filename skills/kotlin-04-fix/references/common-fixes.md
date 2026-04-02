@@ -120,6 +120,39 @@ data class FeatureUiState(
 )
 ```
 
+## [Critical] Activity/Context Reference in ViewModel
+
+```kotlin
+// Before (BAD)
+@HiltViewModel
+class FeatureViewModel @Inject constructor(
+    private val context: Context, // Holds Activity context -- memory leak!
+) : ViewModel() {
+    fun showToast(message: String) {
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+}
+
+// After (GOOD)
+@HiltViewModel
+class FeatureViewModel @Inject constructor(
+    @ApplicationContext private val context: Context, // Application context -- safe
+) : ViewModel()
+
+// After (BETTER) -- Use UiEffect instead
+@HiltViewModel
+class FeatureViewModel @Inject constructor() : ViewModel() {
+    private val _effect = Channel<FeatureEffect>(Channel.BUFFERED)
+    val effect: Flow<FeatureEffect> = _effect.receiveAsFlow()
+
+    fun onAction() {
+        viewModelScope.launch {
+            _effect.send(FeatureEffect.ShowSnackbar("Done"))
+        }
+    }
+}
+```
+
 ## [Important] Missing Error Handling
 
 ```kotlin

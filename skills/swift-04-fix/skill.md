@@ -59,6 +59,8 @@ Fix issues found in review, prioritized by severity.
     |-- Completion handler -> async/await
     |-- Retain cycle -> [weak self]
     |-- Public mutable state -> private(set)
+    |-- Missing @MainActor -> add @MainActor to ViewModel
+    |-- Untracked Task -> store task ref, cancel on deinit/new request
     |
     v
 [Important] (SHOULD fix)

@@ -285,6 +285,7 @@ export const validate = (schemas: ValidateSchemas): RequestHandler =>
   (req, _res, next) => {
     try {
       if (schemas.body) req.body = schemas.body.parse(req.body);
+      // as any: Express params/query types are string-indexed, Zod parse returns validated shape
       if (schemas.params) req.params = schemas.params.parse(req.params) as any;
       if (schemas.query) req.query = schemas.query.parse(req.query) as any;
       next();

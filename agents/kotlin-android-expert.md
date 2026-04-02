@@ -29,7 +29,7 @@ Screen (Smart Composable - observes state, dispatches events)
 ViewModel (State holder + Business Logic orchestration)
     |-- UiState (StateFlow<UiState>)
     |-- UiEvent handling (onEvent)
-    |-- UiEffect (Channel<UiEffect> for one-shot events)
+    |-- UiEffect (Channel<UiEffect>(BUFFERED) for one-shot events)
         |
 UseCase / Interactor (optional, for complex business logic)
         |

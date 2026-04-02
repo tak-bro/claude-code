@@ -78,3 +78,5 @@ When the user corrects or points out Claude's mistakes, automatically log them i
 ## Error Log
 
 <!-- Claude will automatically add entries below -->
+
+@RTK.md

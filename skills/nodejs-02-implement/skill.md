@@ -131,6 +131,9 @@ $pm run test:integration          # Integration tests (if configured)
 - [ ] Async errors propagated (not swallowed)
 - [ ] DB migrations created (if schema changed)
 - [ ] Request/response types defined
+- [ ] Parameterized queries (no string interpolation in SQL/NoSQL)
+- [ ] Protected endpoints have auth middleware
+- [ ] Mass assignment prevented (validation schemas define allowed fields)
 - [ ] Named exports only
 - [ ] const + arrow functions
 - [ ] Verification commands pass
