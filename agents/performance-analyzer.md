@@ -102,7 +102,70 @@ const Dashboard = lazy(() => import('./Dashboard'));
 - Prefetch/Preload strategy
 - Compression (gzip/brotli)
 
-### 5. Memory Leak Detection
+### 5. Node.js Backend Performance
+
+#### Database Queries
+- Use `EXPLAIN ANALYZE` for slow SQL queries
+- Add indexes for frequent query patterns
+- Avoid N+1 queries (use joins, `$lookup`, `include`)
+- Connection pooling configured correctly
+
+#### Memory & CPU
+```typescript
+// Leak: Unbounded cache
+const cache = new Map(); // Grows forever
+// Fix: Use LRU cache with max size
+import { LRUCache } from 'lru-cache';
+const cache = new LRUCache({ max: 1000 });
+
+// Leak: Unremoved event listeners
+emitter.on('data', handler); // Never removed
+// Fix: Remove on cleanup
+emitter.off('data', handler);
+```
+
+#### API Response Time
+- Response compression (gzip/brotli)
+- Pagination on list endpoints
+- Selective field loading (Prisma `select`, MongoDB `projection`)
+- Caching (Redis, HTTP cache headers)
+- Avoid synchronous heavy computation on event loop
+
+### 6. Android (Kotlin) Performance
+
+#### Compose Recomposition
+- Verify `Stable`/`Immutable` annotations
+- Use `remember` / `derivedStateOf` for expensive computations
+- Avoid allocations in Composable functions
+- Use `key()` in `LazyColumn` for stable identity
+
+#### Android Memory
+```kotlin
+// Leak: Activity/Fragment reference in ViewModel
+// Fix: Never hold Context/View references in ViewModel
+
+// Leak: Missing coroutine cancellation
+// Fix: Use viewModelScope (auto-cancelled)
+```
+
+### 7. iOS (Swift) Performance
+
+#### SwiftUI View Performance
+- Minimize View body complexity
+- Use `EquatableView` or `Equatable` conformance
+- Extract subviews to avoid unnecessary recomposition
+- Use `.task` over `.onAppear + Task { }` for auto-cancellation
+
+#### iOS Memory
+```swift
+// Leak: Missing [weak self] in closures
+publisher.sink { [weak self] value in self?.handle(value) }
+
+// Leak: Strong reference cycles in delegates
+weak var delegate: SomeDelegate?
+```
+
+### 8. Memory Leak Detection
 
 #### Common Causes
 - Missing subscription cleanup (Observable, EventListener)

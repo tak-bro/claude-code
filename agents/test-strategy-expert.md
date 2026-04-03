@@ -40,6 +40,31 @@ Expert agent for test strategy design and test code writing.
 - **Utilities/Services:** Vitest or Jest
 - **Type testing:** `expectTypeOf` (vitest), `tsd`
 
+### Node.js (Backend)
+- **Unit/Integration:** Vitest or Jest
+- **HTTP testing:** Supertest
+- **External API mocking:** MSW (Mock Service Worker)
+- **DB testing:** In-memory DB (SQLite for Prisma, mongodb-memory-server) or Testcontainers
+- **Validation testing:** Direct schema testing (Zod safeParse)
+- **E2E:** Playwright or Supertest against running server
+
+### Android (Kotlin)
+- **Unit/Integration:** JUnit 5 + MockK
+- **Flow testing:** Turbine
+- **Coroutine testing:** kotlinx-coroutines-test (`runTest`, `TestDispatcher`)
+- **Compose UI testing:** `createComposeRule`, `ComposeTestRule`
+- **HTTP mocking:** MockWebServer (OkHttp)
+- **Room testing:** In-memory Room database
+- **E2E:** Espresso or Compose UI Test
+
+### iOS (Swift)
+- **Unit/Integration:** XCTest or Swift Testing (`@Test`)
+- **Async testing:** async/await in XCTest
+- **Mocking:** Protocol-based mocks (no third-party needed)
+- **Network mocking:** URLProtocol subclass
+- **SwiftUI testing:** ViewInspector (optional), Preview testing
+- **E2E:** XCUITest
+
 ---
 
 ## Test Coverage Criteria

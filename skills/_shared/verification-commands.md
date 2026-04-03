@@ -75,6 +75,38 @@ grep -r "IonicRouteStrategy" src/app/app.module.ts
 grep -r "localStorage\|sessionStorage" src/app/ | grep -v "_\${environment"
 ```
 
+### Node.js (Backend)
+```bash
+{pm} run lint                          # Lint
+{pm} test                              # Unit tests
+{pm} run build                         # TypeScript compilation
+{pm} run test:integration              # Integration tests (if configured)
+```
+
+### Android (Kotlin)
+```bash
+./gradlew lint{Variant}                    # Lint check
+./gradlew test{Variant}UnitTest            # Unit tests
+./gradlew assembleDebug                    # Build check
+./gradlew detekt                           # Static analysis (if configured)
+./gradlew ktlintCheck                      # Code style (if configured)
+```
+
+### iOS (Swift)
+```bash
+# Xcode project
+xcodebuild -workspace {Name}.xcworkspace -scheme {Scheme} -sdk iphonesimulator build
+xcodebuild test -workspace {Name}.xcworkspace -scheme {Scheme} -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16'
+
+# Swift Package
+swift build
+swift test
+
+# Linting
+swiftlint lint --strict                    # if configured
+swiftformat --lint .                        # if configured
+```
+
 ## React-Specific Grep Checks
 
 ```bash
@@ -83,4 +115,49 @@ grep -r "export default" libs/{feature}/
 
 # any usage
 grep -r ": any" libs/{feature}/ --include="*.ts" --include="*.tsx"
+```
+
+## Node.js Backend Grep Checks
+
+```bash
+# DB queries in route handlers (should be in repository)
+grep -rn "prisma\.\|\.findOne\|\.findMany\|\.aggregate\|\.insertOne" --include="*.route.ts" --include="*.controller.ts"
+
+# Scattered process.env access (should be centralized in config)
+grep -rn "process\.env\." --include="*.ts" | grep -v "config\|\.test\.\|\.spec\.\|node_modules"
+
+# Hardcoded secrets patterns
+grep -rn "password.*=.*['\"]" --include="*.ts" | grep -v "\.test\.\|\.spec\.\|schema\|type\|interface"
+
+# Missing error propagation (next not called)
+grep -rn "catch.*err" --include="*.route.ts" | grep -v "next(err)"
+```
+
+## Android-Specific Grep Checks
+
+```bash
+# MutableStateFlow exposed publicly (should be private)
+grep -r "val.*MutableStateFlow" --include="*.kt" | grep -v "private"
+
+# GlobalScope usage (should use viewModelScope)
+grep -r "GlobalScope" --include="*.kt"
+
+# Force unwrap equivalent (should use safe calls)
+grep -r "\.first()" --include="*.kt" | grep -v "firstOrNull"
+
+# Missing @Inject (ViewModel without injection)
+grep -r "class.*ViewModel" --include="*.kt" | grep -v "@Inject\|@HiltViewModel"
+```
+
+## iOS-Specific Grep Checks
+
+```bash
+# Force unwrapping (should be 0 in new code)
+grep -rn '!' --include="*.swift" | grep -v '//' | grep -v 'IBOutlet\|IBAction\|#if\|import\|!=\|Protocol'
+
+# Completion handler in new code (should use async/await)
+grep -rn 'completion:.*@escaping' --include="*.swift"
+
+# Missing weak self in closures
+grep -rn '{ self\.' --include="*.swift" | grep -v '\[weak self\]\|\[unowned self\]'
 ```

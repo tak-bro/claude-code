@@ -86,6 +86,7 @@ libs/{feature}/
 - [ ] cn() for Tailwind
 - [ ] Component → Hook → TanStack Query → API
 - [ ] Zustand (global) | TanStack Query (server) | useState (local)
+- [ ] No `any` without justification comment
 - [ ] ~200 lines guideline, ~5 business props
 - [ ] Verification commands pass
 
