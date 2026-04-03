@@ -20,6 +20,16 @@
         "lastUpdated": "2026-03-30T04:56:23.953Z",
         "gitCommitSha": "d06882126fe24f6ebcbe433385daeb8322ba8009"
       }
+    ],
+    "frontend-design@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/tak/.claude/plugins/cache/claude-plugins-official/frontend-design/183a6ca35d5f",
+        "version": "183a6ca35d5f",
+        "installedAt": "2026-04-02T07:24:56.353Z",
+        "lastUpdated": "2026-04-02T07:24:56.353Z",
+        "gitCommitSha": "183a6ca35d5f6b4ba99bf89777bd0aa432fa3d2e"
+      }
     ]
   }
 }
