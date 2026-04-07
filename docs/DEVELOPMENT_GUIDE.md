@@ -1,5 +1,5 @@
 # Claude Code 개발 환경 가이드
-> AI-Native 개발 파이프라인 — 30개 스킬, 13개 에이전트, 자동화 훅 기반
+> AI-Native 개발 파이프라인 — 44개 스킬, 16개 에이전트, 자동화 훅 기반
 
 ---
 
@@ -52,12 +52,12 @@ CLAUDE.md에 "절대 하지마"라고 써도 Claude는 까먹을 수 있다.
 │   ├── context-management.md          ← 세션 분리, compact 타이밍
 │   ├── task-sizing.md                 ← S/M/L 스킵 가이드
 │   └── thinking-guide.md             ← think ~ ultrathink 매핑
-├── skills/                            ← 30개 스킬 (슬래시 커맨드)
+├── skills/                            ← 44개 스킬 (슬래시 커맨드)
 │   ├── _shared/                       ← 공통 템플릿 (4개)
 │   ├── plan/                          ← base plan
-│   ├── {fw}-{01~05}-{phase}/         ← 프레임워크별 5단계 x 3
-│   └── (10개 확장 스킬)
-├── agents/                            ← 13개 전문 에이전트
+│   ├── {fw}-{01~05}-{phase}/         ← 프레임워크별 5단계 x 6
+│   └── (14개 범용 스킬)
+├── agents/                            ← 16개 전문 에이전트
 └── docs/                              ← 가이드 문서
 ```
 
@@ -68,10 +68,10 @@ CLAUDE.md에 "절대 하지마"라고 써도 Claude는 까먹을 수 있다.
 ### 전체 흐름
 
 ```
- 아이디어          온보딩           기능 개발                    배포      회고
-────────── ──────────── ──────────────────────────── ────── ──────
-/office    /generate    /explore → /{fw}-01-plan     /ship  /retro
--hours     -codebase     → /{fw}-02-implement                → /insights
+ 아이디어          온보딩           기능 개발                              검증         배포      회고
+────────── ──────────── ──────────────────────────────── ──────────── ────── ──────
+/office    /generate    /explore → /{fw}-01-plan         /verify      /ship  /retro
+-hours     -codebase     → /{fw}-02-implement            /tech-debt
            -context      → /{fw}-03-review
 /plan-ceo              → /{fw}-04-fix
 -review                → /{fw}-05-test → /qa
@@ -81,17 +81,17 @@ CLAUDE.md에 "절대 하지마"라고 써도 Claude는 까먹을 수 있다.
 
 | 규모 | 기준 | 워크플로우 |
 |------|------|-----------|
-| **S** | 1-2 파일 | `/debug` → `/{fw}-04-fix` → `/ship` |
-| **M** | 3-10 파일 | `/explore` → `01-plan` → `02-implement` → `03-review` → `/ship` |
-| **L** | 10+ 파일 | 전체 파이프라인 + `--team` 모드 (에이전트 병렬) |
+| **S** | 1-2 파일 | `/debug` → `/{fw}-04-fix` → `/verify` → `/ship` |
+| **M** | 3-10 파일 | `/explore` → `01-plan` → `02-implement` → `03-review` → `/verify` → `/tech-debt` → `/ship` |
+| **L** | 10+ 파일 | 전체 파이프라인 + `/batch` (에이전트 병렬) |
 
 ---
 
-## 스킬 카탈로그 (30개)
+## 스킬 카탈로그 (44개)
 
-### 기본 파이프라인 (18개)
+### 플랫폼 파이프라인 (30개)
 
-**Plan → Implement → Review → Fix → Test** 의 5단계를 Angular, React, TypeScript 3개 프레임워크에 적용.
+**Plan → Implement → Review → Fix → Test** 의 5단계를 6개 프레임워크에 적용.
 
 | 단계 | 역할 | 핵심 동작 |
 |------|------|----------|
@@ -101,6 +101,8 @@ CLAUDE.md에 "절대 하지마"라고 써도 Claude는 까먹을 수 있다.
 | `/{fw}-04-fix` | 이슈 수정 | references/common-fixes.md의 Before/After 패턴 참조 |
 | `/{fw}-05-test` | 테스트 보강 | 행위 기반 네이밍 + AAA 패턴 |
 
+지원 프레임워크: **Angular, React, TypeScript, Kotlin, Swift, Node.js**
+
 공통 스킬:
 | 스킬 | 역할 |
 |------|------|
@@ -108,22 +110,22 @@ CLAUDE.md에 "절대 하지마"라고 써도 Claude는 까먹을 수 있다.
 | `/debug` | 증상→원인→수정 디버깅 |
 | `/generate-codebase-context` | `.claude/llms.txt` 생성. 온보딩 첫 단계 |
 
-### 확장 스킬 (10개)
+### 범용 스킬 (14개)
 
 | 스킬 | 역할 | 언제 쓰나 |
 |------|------|----------|
 | `/explore` | 읽기 전용 코드 분석 | plan 전, 모듈 파악할 때 |
 | `/plan-ceo-review` | 10-star 제품 사고 | 기능 스코프 재정의할 때 |
 | `/office-hours` | 아이디어 정제 | 코드 전, 니즈 파악할 때 |
-| `/design-consultation` | UI/UX 리서치 → DESIGN.md | 디자인 결정 필요할 때 |
-| `/qa` | diff → 브라우저 테스트 | 웹 프로젝트 배포 전 |
-| `/browse` | Playwright 브라우저 자동화 | 수동 UI 테스트 대체 |
+| `/batch` | 격리된 work tree에서 병렬 실행 | 마이그레이션, 일괄 리팩토링 |
+| `/simplify` | 코드 단순화 + 품질 체크 | 복잡도 감소, 중복 제거 |
+| `/verify` | Playwright MCP + Chrome 검증 + 자동 수정 | 구현 후, ship 전 |
+| `/security-scan` | 7-앵글 보안 취약점 스캔 | 보안 민감 코드 작성 후 |
+| `/tech-debt` | 세션 중 생긴 부채 정리 | 세션 종료 시 (ship 전) |
+| `/qa` | diff 기반 영향도 분석 → 테스트 | 배포 전 최종 확인 |
 | `/ship` | 테스트→린트→push→PR | 배포 준비 완료 시 |
-| `/cso` | OWASP + STRIDE 보안 감사 | 보안 민감 코드 작성 후 |
 | `/retro` | git log 기반 주간 회고 | 매주 금요일 |
-| `/insights` | 워크플로우 개선 분석 | retro 후, 반복 패턴 발견 시 |
 | `/review-pr` | GitHub PR 코드 리뷰 | 남의 PR 리뷰할 때 |
-| `/dependencies` | 의존성 점검 + 업데이트 | outdated/audit 관리 |
 
 ---
 
@@ -144,7 +146,7 @@ CLAUDE.md에 "절대 하지마"라고 써도 Claude는 까먹을 수 있다.
 
 ---
 
-## 에이전트 (13개)
+## 에이전트 (16개)
 
 스킬이 **프로세스**(어떤 순서로 할지)라면, 에이전트는 **전문성**(누가 할지)이다.
 
@@ -152,6 +154,9 @@ CLAUDE.md에 "절대 하지마"라고 써도 Claude는 까먹을 수 있다.
 |---------|----------|
 | `angular-componentstore-expert` | ComponentStore, Module-based, Ionic 패턴 |
 | `react-feature-library-expert` | Feature Library, TanStack Query, Zustand, Nx |
+| `kotlin-android-expert` | Kotlin, Jetpack Compose, Hilt, Room |
+| `swift-ios-expert` | Swift, SwiftUI, Combine, SPM |
+| `nodejs-backend-expert` | Node.js, Express, NestJS, Prisma |
 | `tak-typescript-expert` | tak 컨벤션 TypeScript 구현 |
 | `tak-typescript-reviewer` | 타입 안전성, export 규칙, 컨벤션 준수 |
 | `code-simplicity-reviewer` | YAGNI, 복잡도 감소, 불필요한 추상화 제거 |
@@ -190,8 +195,9 @@ Claude에게 생각의 깊이를 지시할 수 있다.
 
 ---
 
-## 병렬 개발 (Worktree)
+## 병렬 개발
 
+### Worktree (수동)
 ```bash
 # 터미널 1: 환불 기능
 git worktree add ../project-refund feature/refund
@@ -206,6 +212,14 @@ claude -p "Run full test suite and fix failures" &
 # → Notification hook이 완료 알림
 ```
 
+### Batch (자동화)
+```
+You: /batch
+     모든 API 서비스의 에러 핸들링을 통일해줘.
+
+Claude: [plan] 8개 서비스 파일 → 8개 work tree → 병렬 실행 → 머지
+```
+
 ---
 
 ## 빠른 참조
@@ -213,15 +227,18 @@ claude -p "Run full test suite and fix failures" &
 | 하고 싶은 것 | 명령 |
 |-------------|------|
 | 처음 보는 프로젝트 | `/generate-codebase-context` → `/explore` |
-| Angular 새 기능 | `/explore` → `/angular-01-plan` → `02-implement` → `03-review` → `04-fix` → `05-test` → `/ship` |
-| React 새 기능 | `/explore` → `/react-01-plan` → `02-implement` → `03-review` → `04-fix` → `05-test` → `/ship` |
-| TypeScript 유틸리티 | `/typescript-01-plan` → `02-implement` → `03-review` → `/ship` |
-| 버그 수정 (S) | `/debug` → `/{fw}-04-fix` → `/ship` |
+| Angular 새 기능 | `/explore` → `/angular-01-plan` → `02` → `03` → `04` → `05` → `/verify` → `/tech-debt` → `/ship` |
+| React 새 기능 | `/explore` → `/react-01-plan` → `02` → `03` → `04` → `05` → `/verify` → `/tech-debt` → `/ship` |
+| Kotlin 새 기능 | `/explore` → `/kotlin-01-plan` → `02` → `03` → `04` → `05` → `/verify` → `/tech-debt` → `/ship` |
+| Swift 새 기능 | `/explore` → `/swift-01-plan` → `02` → `03` → `04` → `05` → `/verify` → `/tech-debt` → `/ship` |
+| Node.js 새 기능 | `/explore` → `/nodejs-01-plan` → `02` → `03` → `04` → `05` → `/verify` → `/tech-debt` → `/ship` |
+| TypeScript 유틸리티 | `/typescript-01-plan` → `02` → `03` → `/verify` → `/ship` |
+| 버그 수정 (S) | `/debug` → `/{fw}-04-fix` → `/verify` → `/ship` |
+| 병렬 마이그레이션 | `/batch` |
+| 코드 정리 | `/simplify` |
 | 새 제품 아이디어 | `/office-hours` → `/plan-ceo-review` → `/{fw}-01-plan` |
-| 디자인 결정 | `/design-consultation` |
-| 보안 점검 | `/cso` |
-| 브라우저 QA | `/qa` |
-| 주간 회고 | `/retro` → `/insights` |
+| 보안 점검 | `/security-scan` |
+| 주간 회고 | `/retro` |
 
 ---
 
@@ -229,11 +246,11 @@ claude -p "Run full test suite and fix failures" &
 
 | 항목 | 수량 |
 |------|------|
-| 스킬 (slash commands) | 30개 |
-| 전문 에이전트 | 13개 |
+| 스킬 (slash commands) | 44개 |
+| 전문 에이전트 | 16개 |
 | 자동화 훅 | 8개 (PreToolUse 2, PostToolUse 1, SessionStart 2, Stop 1, Notification 1) |
 | deny 룰 | 13개 (destructive 5 + credential 8) |
 | 자동 로드 규칙 (rules/) | 4개 |
 | 공유 리소스 (_shared/) | 4개 |
-| context: fork 스킬 | 7개 (explore, 3 review, cso, plan-ceo-review, review-pr) |
-| 지원 프레임워크 | 3개 (Angular, React, TypeScript) |
+| context: fork 스킬 | 9개 (explore, 6 review, security-scan, plan-ceo-review, review-pr) |
+| 지원 프레임워크 | 6개 (Angular, React, TypeScript, Kotlin, Swift, Node.js) |

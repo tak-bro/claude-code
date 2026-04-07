@@ -30,6 +30,16 @@
         "lastUpdated": "2026-04-02T07:24:56.353Z",
         "gitCommitSha": "183a6ca35d5f6b4ba99bf89777bd0aa432fa3d2e"
       }
+    ],
+    "code-simplifier@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/tak/.claude/plugins/cache/claude-plugins-official/code-simplifier/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-04-07T04:47:54.786Z",
+        "lastUpdated": "2026-04-07T04:47:54.786Z",
+        "gitCommitSha": "183a6ca35d5f6b4ba99bf89777bd0aa432fa3d2e"
+      }
     ]
   }
 }

@@ -84,15 +84,12 @@ Claude: [TDD-First]
         → 다음: /angular-03-review
 ```
 
-대규모면 `--team` 추가:
+대규모면 `/batch` 사용:
 ```
-You: /angular-02-implement --team
+You: /batch
+     3개 모듈(auth, payment, profile)에 동일한 에러 핸들링 패턴 적용해줘.
 
-Claude: [에이전트 4개 병렬]
-        Store Agent → stores/
-        Page Agent → pages/
-        Service Agent → services/
-        Component Agent → components/
+Claude: [plan] 3개 work tree → 병렬 실행 → 머지 → 검증
 ```
 
 ### Step 3: 리뷰
@@ -126,15 +123,34 @@ Claude: - [x] C1: message 타입 추가 (SocialAuthStoreMessage)
         Score: 8/10 → 10/10
 ```
 
-### Step 5: 배포
+### Step 5: 검증 + 정리 + 배포
+
+```
+You: /verify
+
+Claude: ✅ Lint PASS | Types PASS | Build PASS
+        ✅ Tests: 62 pass, 0 fail
+        ✅ Visual: Playwright로 소셜 로그인 화면 확인
+        ✅ Console: 에러 없음
+
+        Verdict: ALL PASS ✅
+```
+
+```
+You: /tech-debt
+
+Claude: 세션 정리:
+        - 중복: GoogleAuthService, AppleAuthService에 동일 토큰 검증 → shared/auth-validator.ts 추출
+        - Dead code: 없음
+        - TODO: 1개 (에러 리트라이 로직)
+
+        Auto-fix 적용 → 검증 PASS ✅
+```
 
 ```
 You: /ship
 
-Claude: 1. 테스트 통과 (62 tests)
-        2. 린트 통과
-        3. Doc Sync 확인
-        4. git push origin feat/social-login
+Claude: git push origin feat/social-login
 
         ## What
         인증 모듈에 Google/Apple 소셜 로그인 추가
@@ -151,7 +167,7 @@ You: 올려.
 
 ## 3. 버그 수정 (S 사이즈)
 
-전체 파이프라인 필요 없음. 3단계로 끝.
+전체 파이프라인 필요 없음. 4단계로 끝.
 
 ```
 You: /debug
@@ -170,6 +186,12 @@ You: /angular-04-fix
 Claude: - [x] isFetching = false 추가 (payment.store.ts:87)
         - [x] 회귀 테스트: "should set isFetching to false after finalize"
         ng build | lint | test 통과
+```
+
+```
+You: /verify
+
+Claude: ✅ ALL PASS
 ```
 
 ```
@@ -211,24 +233,28 @@ Claude: REDUCTION 모드.
 
 ---
 
-## 5. 디자인 먼저 정하고 싶을 때
+## 5. 코드 정리 (Simplify)
 
 ```
-You: /design-consultation
-     대시보드 알림 센터 UI.
+You: /simplify
+     payment/ 디렉토리 정리해줘.
 
-Claude: [/browse로 Slack, Discord, Linear 알림 패널 조사]
-        A: "Sidebar Panel" — 사이드에서 슬라이드 인
-        B: "Dropdown" — 벨 아이콘 클릭 시 드롭다운
-        C: "Full Page" — 별도 알림 페이지
+Claude: [3개 에이전트 병렬 분석]
 
-You: B.
+        Agent 1 — 중복: calculateFee()가 3곳에 존재
+        Agent 2 — 복잡도: processRefund() 5단 중첩
+        Agent 3 — 구조: unused export 2개
 
-Claude: DESIGN.md 생성
-        - 벨 아이콘 + 뱃지 카운트
-        - 드롭다운 최대 5개 표시
-        - "모두 보기" 링크
-        → /{fw}-01-plan에서 DESIGN.md 참조
+        | # | Category | Impact | Action |
+        | 1 | Duplication | High | Extract to shared/fee.ts |
+        | 2 | Complexity | Medium | Early return 패턴 |
+        | 3 | Dead Code | High | Remove unused exports |
+
+        Proceed with fixes? (y/n)
+
+You: y
+
+Claude: 3건 수정 → 검증 PASS → -47 lines
 ```
 
 ---
@@ -236,16 +262,21 @@ Claude: DESIGN.md 생성
 ## 6. 보안 점검
 
 ```
-You: /cso
+You: /security-scan
      이번 PR만.
 
-Claude: [OWASP + STRIDE 분석]
+Claude: [7-앵글 스캔]
 
-        [Critical] auth.service.ts:45 — 토큰을 localStorage에 평문 저장
-        [Critical] payment.controller.ts:23 — SQL injection 가능
-        [Important] cors.config.ts:12 — origin이 * 로 설정됨
+        | # | Angle | Severity | Finding |
+        | 1 | Secrets | 🔴 Critical | .env 파일 git 추적 중 |
+        | 2 | Input | 🔴 Critical | payment.controller.ts:23 SQL injection |
+        | 3 | Endpoint | 🟡 Medium | CORS origin이 * |
 
-        → /{fw}-04-fix로 수정
+        Fix all? (y/n)
+
+You: y
+
+Claude: 3건 수정 → 검증 PASS
 ```
 
 ---
@@ -265,15 +296,6 @@ Claude: 이번 주 요약:
         Actions:
         1. Store는 message type부터 설계하기
         2. 다음 주 test ratio 50% → 60%
-```
-
-```
-You: /insights
-
-Claude: 반복 패턴 발견:
-        - ComponentStore 3번 새로 만듦 → 스캐폴딩 스킬 추가?
-        - S 사이즈에서 /explore 실행 2번 → task-sizing 따르기
-        - CLAUDE.md 제안: "Store 설계 시 Message type 먼저"
 ```
 
 ---
@@ -297,28 +319,35 @@ Claude: [PR #456 분석]
 
 ---
 
-## 9. 의존성 관리
+## 9. 병렬 마이그레이션 (Batch)
 
 ```
-You: /dependencies
+You: /batch
+     모든 API 서비스에서 axios를 ky로 마이그레이션해줘.
 
-Claude: [현황 파악]
-        outdated: 12개 (patch 8, minor 3, major 1)
-        audit: high 1건 (lodash prototype pollution)
+Claude: ## Plan
+        8개 서비스 파일 식별
+        각각 독립적 — 병렬 가능
 
-        Security Fix:
-        - lodash 4.17.20 → 4.17.21 (high severity)
+        | Unit | File | Task |
+        | 1 | user.service.ts | axios → ky |
+        | 2 | payment.service.ts | axios → ky |
+        | ... | ... | ... |
 
-        Safe Updates (patch+minor):
-        | Package | Before | After | Type |
-        | rxjs | 7.8.0 | 7.8.1 | patch |
-        | @angular/core | 18.1.0 | 18.2.0 | minor |
-        ...
+        Approve? (y/n)
 
-        Major (별도 PR 권장):
-        - typescript 5.3 → 5.7 (breaking: decorator metadata)
+You: y
 
-        lint PASS | test PASS | build PASS
+Claude: [8개 work tree 생성 → 8개 에이전트 병렬 실행]
+
+        | # | Unit | Status | Changes |
+        | 1 | user.service.ts | ✅ DONE | +12/-18 |
+        | 2 | payment.service.ts | ✅ DONE | +8/-14 |
+        | ... | ... | ... | ... |
+
+        Merge: CLEAN
+        Verification: PASS ✅
+        Total: 8 files, +87/-134 lines
 ```
 
 ---
@@ -363,6 +392,22 @@ You: /angular-03-review
      이번 커밋 리뷰해줘.
 ```
 
+### "코드가 복잡해졌어"
+```
+You: /simplify
+     이번 세션에서 수정한 파일들 정리해줘.
+```
+
+### "구현이 제대로 동작하는지 확인"
+```
+You: /verify
+```
+
+### "세션 마무리"
+```
+You: /tech-debt
+```
+
 ### "타입 안전성만 체크"
 ```
 You: tak-typescript-reviewer로 이번 PR 타입 체크해줘.
@@ -381,11 +426,6 @@ You: best-practices-researcher로 TanStack Query v5 migration 방법 찾아줘.
 ### "남의 PR 리뷰해야 해"
 ```
 You: /review-pr 123
-```
-
-### "패키지 업데이트 해야 하는데"
-```
-You: /dependencies
 ```
 
 ---
@@ -413,7 +453,7 @@ You: /dependencies
 
 ### "에이전트가 MCP를 못 찾아"
 Context7 MCP 미설치 시 → WebSearch/WebFetch로 자동 fallback
-Puppeteer MCP 미설치 시 → Playwright MCP 또는 스크린샷 요청
+Playwright MCP 미설치 시 → `/verify`에서 시각 검증 스킵
 
 ### "hook 에러가 뜨는데?"
 ```
