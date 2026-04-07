@@ -36,8 +36,18 @@
         "scope": "user",
         "installPath": "/Users/tak/.claude/plugins/cache/claude-plugins-official/code-simplifier/1.0.0",
         "version": "1.0.0",
-        "installedAt": "2026-04-07T04:47:54.786Z",
-        "lastUpdated": "2026-04-07T04:47:54.786Z",
+        "installedAt": "2026-04-07T05:57:46.048Z",
+        "lastUpdated": "2026-04-07T05:57:46.048Z",
+        "gitCommitSha": "183a6ca35d5f6b4ba99bf89777bd0aa432fa3d2e"
+      }
+    ],
+    "code-review@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/tak/.claude/plugins/cache/claude-plugins-official/code-review/183a6ca35d5f",
+        "version": "183a6ca35d5f",
+        "installedAt": "2026-04-07T05:57:46.036Z",
+        "lastUpdated": "2026-04-07T05:57:46.036Z",
         "gitCommitSha": "183a6ca35d5f6b4ba99bf89777bd0aa432fa3d2e"
       }
     ]
