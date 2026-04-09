@@ -110,4 +110,4 @@ libs/{feature}/
 ## Output
 (see `_shared/output-templates.md`)
 
-→ Next: `/react-03-review`
+→ Next: `/simplify` → `/react-03-review`

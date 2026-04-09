@@ -195,4 +195,4 @@ fi
 ## Output
 (see `_shared/output-templates.md`)
 
--> Next: `/kotlin-03-review`
+-> Next: `/simplify` → `/kotlin-03-review`

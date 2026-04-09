@@ -110,4 +110,4 @@ if (isEligible) { /* ... */ }
 ## Output
 (see `_shared/output-templates.md`)
 
-→ Next: `/ts-03-review`
+→ Next: `/simplify` → `/ts-03-review`

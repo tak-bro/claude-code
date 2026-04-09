@@ -157,4 +157,4 @@ $pm run test:integration          # Integration tests (if configured)
 ## Output
 (see `_shared/output-templates.md`)
 
--> Next: `/nodejs-03-review`
+-> Next: `/simplify` → `/nodejs-03-review`

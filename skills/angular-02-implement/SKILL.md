@@ -166,4 +166,4 @@ src/app/modules/
 ## Output
 (see `_shared/output-templates.md`)
 
-→ Next: `/angular-03-review`
+→ Next: `/simplify` → `/angular-03-review`
