@@ -1,7 +1,6 @@
 ---
 name: ship
 model: sonnet
-effort: medium
 description: "Prepare for deployment. Test → lint → doc sync → push → create PR. Triggers on 'ship', 'deploy', 'deploy', 'push', 'PR', 'pull request', 'merge ready'."
 tools: Read, Bash, Glob, Grep, Write, Edit
 ---

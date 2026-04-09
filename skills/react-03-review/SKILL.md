@@ -1,7 +1,6 @@
 ---
 name: react-03-review
 model: sonnet
-effort: medium
 description: "React 코드 리뷰. Triggers on 'react review', '리액트 리뷰', 'react code review', 'react 검토'."
 context: fork
 tools: Read, Bash, Glob, Grep

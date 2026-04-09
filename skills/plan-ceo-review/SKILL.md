@@ -1,7 +1,6 @@
 ---
 name: plan-ceo-review
 model: sonnet
-effort: low
 description: "Product-level rethinking. 10-star product perspective. Triggers on 'ceo review', 'product review', '제품 리뷰', 'plan review', '계획 리뷰', '10-star', 'rethink'."
 context: fork
 tools: Read, Bash, Glob, Grep
