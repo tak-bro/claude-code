@@ -1,6 +1,5 @@
 ---
 name: nodejs-05-test
-model: sonnet
 description: "Node.js 백엔드 테스트 작성 및 실행. Triggers on 'nodejs test', 'node test', 'backend test', 'server test', '서버 테스트', '백엔드 테스트', 'api test', 'supertest'."
 tools: Read, Bash, Glob, Grep, Write, Edit
 ---

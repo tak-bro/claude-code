@@ -1,6 +1,5 @@
 ---
 name: qa
-model: sonnet
 description: "QA testing. Impact analysis based on diff → testing. Triggers on 'qa', 'QA', 'quality assurance', 'quality assurance', 'integration test', 'integration test', 'regression test'."
 tools: Read, Bash, Glob, Grep, Agent
 ---

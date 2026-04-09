@@ -1,6 +1,5 @@
 ---
 name: angular-01-plan
-model: sonnet
 description: "Angular project implementation planning. Triggers on 'angular plan', '앵귤러 계획', 'angular 기능 추가', 'angular feature', 'ng plan'. ComponentStore, Module-based architecture."
 tools: Read, Bash, Glob, Grep, Agent
 ---

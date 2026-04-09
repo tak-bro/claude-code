@@ -1,6 +1,5 @@
 ---
 name: batch
-model: sonnet
 description: "Parallelize tasks across isolated work trees. Triggers on 'batch', '배치', 'parallel', '병렬', 'migrate', '마이그레이션', 'bulk update', '일괄'."
 context: fork
 tools: Read, Bash, Glob, Grep, Write, Edit, Agent

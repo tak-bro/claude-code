@@ -1,6 +1,5 @@
 ---
 name: explore
-model: haiku
 description: "Read-only code analysis. Explore before plan. Triggers on 'explore', '탐색', 'analyze code', '코드 분석', 'read code', 'understand code', '코드 이해'."
 context: fork
 tools: Read, Bash, Glob, Grep

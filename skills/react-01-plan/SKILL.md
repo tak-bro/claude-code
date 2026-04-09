@@ -1,6 +1,5 @@
 ---
 name: react-01-plan
-model: sonnet
 description: "React 프로젝트 구현 계획 수립. Triggers on 'react plan', '리액트 계획', 'react feature', 'react 기능 추가'. Feature Library, TanStack Query, Zustand, Nx monorepo."
 tools: Read, Bash, Glob, Grep, Agent
 ---
