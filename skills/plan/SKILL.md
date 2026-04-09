@@ -7,7 +7,7 @@ tools: Read, Bash, Glob, Grep, Agent
 
 # Implementation Plan (Base)
 
-All framework-specific plan skills (`/angular-01-plan`, `/react-01-plan`, `/typescript-01-plan`) reference this base.
+All framework-specific plan skills (`/angular-01-plan`, `/react-01-plan`, `/ts-01-plan`) reference this base.
 
 ## ⛔ CRITICAL: STOP AFTER PLAN
 **Stop after planning is complete. Wait for the user's next command.**

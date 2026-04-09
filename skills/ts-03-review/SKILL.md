@@ -1,5 +1,5 @@
 ---
-name: typescript-03-review
+name: ts-03-review
 model: sonnet
 description: "TypeScript 코드 리뷰. Triggers on 'typescript review', 'ts review', '타입스크립트 리뷰', 'ts 검토'."
 context: fork
@@ -18,7 +18,7 @@ Review TypeScript code and generate actionable fix checklist for next phase.
 
 ## Pre-Review
 
-**From /plan and /typescript-02-implement outputs:**
+**From /plan and /ts-02-implement outputs:**
 1. Review Focus items from plan
 2. Implementation notes from implement
 3. Files created/modified list
@@ -132,4 +132,4 @@ grep -r "^function " src/ --include="*.ts"
 ## Output
 (see `_shared/output-templates.md` -- Review Output)
 
--> If issues: `/typescript-04-fix`, if no issues: `/qa` or `/ship`
+-> If issues: `/ts-04-fix`, if no issues: `/qa` or `/ship`

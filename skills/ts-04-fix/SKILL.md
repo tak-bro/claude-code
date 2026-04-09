@@ -1,5 +1,5 @@
 ---
-name: typescript-04-fix
+name: ts-04-fix
 description: "TypeScript 리뷰 이슈 수정. Triggers on 'typescript fix', 'ts fix', '타입스크립트 수정'."
 tools: Read, Bash, Glob, Grep, Write, Edit
 ---
@@ -103,14 +103,14 @@ Before completion, verify:
 
 | Condition | Action |
 |-----------|--------|
-| Had Critical issues | -> Run `/typescript-03-review` again (required) |
+| Had Critical issues | -> Run `/ts-03-review` again (required) |
 | Had only Important issues | -> Self-check and complete |
 | Final score 8/10 or higher | -> Complete |
-| Final score below 8/10 | -> Run `/typescript-03-review` again |
+| Final score below 8/10 | -> Run `/ts-03-review` again |
 
 ---
 
 ## Output
 (see `_shared/output-templates.md` -- Fix Output)
 
--> Next: `/typescript-03-review` (re-review) or `/qa` or `/ship`
+-> Next: `/ts-03-review` (re-review) or `/qa` or `/ship`
