@@ -1,6 +1,5 @@
 ---
 name: verify
-model: sonnet
 description: "Verify code changes by running, testing, and visually checking. Auto-fix failures. Triggers on 'verify', '검증', 'check changes', '변경 확인', 'does it work', '동작 확인', 'test this'."
 tools: Read, Bash, Glob, Grep, Write, Edit, Agent, mcp__playwright
 ---

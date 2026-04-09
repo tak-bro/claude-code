@@ -1,6 +1,5 @@
 ---
 name: security-scan
-model: sonnet
 description: "Deep security scan. Multi-angle vulnerability detection with auto-fix suggestions. Triggers on 'security scan', '보안 스캔', 'security', '보안', 'vulnerability', '취약점', 'cso', 'security audit', 'OWASP', 'STRIDE'."
 context: fork
 tools: Read, Bash, Glob, Grep, Write, Agent

@@ -1,6 +1,5 @@
 ---
 name: angular-05-test
-model: sonnet
 description: "Angular test writing and execution. Triggers on 'angular test', '앵귤러 테스트', 'ng test', 'angular spec', 'angular 유닛 테스트'."
 tools: Read, Bash, Glob, Grep, Write, Edit
 ---
