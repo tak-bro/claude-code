@@ -8,62 +8,64 @@ tools: Read, Bash, Glob, Grep
 
 # Plan CEO Review
 
-Re-evaluate implementation plan from a product perspective. Use "10-star product" thinking to maximize user value.
+구현 계획을 제품 관점에서 재평가한다. "10-star product" 사고로 사용자 가치를 극대화한다.
+
+**모든 출력은 반드시 한국어로 작성한다.**
 
 ---
 
 ## Pre-Review
-1. Load plan file (`.claude/{date}/PLAN-*.md`)
-2. Verify related requirements/issues
+1. 계획 파일 로드 (`.claude/{date}/PLAN-*.md`)
+2. 관련 요구사항/이슈 확인
 
 ---
 
 ## Review Framework
 
-### 1. User Value Check
-- Does this feature actually solve a real user problem?
-- Does the user want this, or do we want this?
-- What is the MVP? (Can scope be reduced?)
+### 1. 사용자 가치 점검
+- 이 기능이 실제 사용자 문제를 해결하는가?
+- 사용자가 원하는 건가, 우리가 원하는 건가?
+- MVP는 무엇인가? (스코프를 줄일 수 있는가?)
 
-### 2. 10-Star Experience
-- 1-star: User cannot do what they want at all
-- 5-star: Meets basic expectations
-- 10-star: "Wow, it even does this?" (doesn't need to be realistic)
-- Goal: Realistically implement 7-8 stars
+### 2. 10-Star 경험
+- 1-star: 사용자가 원하는 것을 전혀 할 수 없음
+- 5-star: 기본 기대 충족
+- 10-star: "이것까지 되네?" (비현실적이어도 됨)
+- 목표: 현실적으로 7-8 star 구현
 
-### 3. Scope Sanity Check
-- What should we remove from this PR?
-- Review "What's NOT in This PR" list
-- Check for over-engineering signals
+### 3. 스코프 건전성 점검
+- 이 PR에서 제거해야 할 것은?
+- "이 PR에 포함되지 않는 것" 목록 검토
+- 과잉 엔지니어링 신호 확인
 
-### 4. Risk Assessment
-- Technical risks
-- Schedule risks
-- Dependency risks
+### 4. 리스크 평가
+- 기술적 리스크
+- 일정 리스크
+- 의존성 리스크
 
 ---
 
 ## Output
 
 ```markdown
-### [Target] CEO Review: [Feature]
+### [대상] CEO 리뷰: [기능명]
 
-**User Value:** [High/Medium/Low]
-**10-Star Rating:** [Current plan = X-star, possible = Y-star]
+**사용자 가치:** [높음/보통/낮음]
+**10-Star 평가:** 현재 계획 = X-star, 가능 = Y-star
 
-**Keep:**
-- [Good decisions]
+**유지:**
+- [좋은 결정들]
 
-**Cut:**
-- [Things to remove from scope]
+**제거:**
+- [스코프에서 빼야 할 것들]
 
-**Add:**
-- [Missing user value]
+**추가:**
+- [빠진 사용자 가치]
 
-**Risk:**
-- [Key risks and mitigation]
+**리스크:**
+- [주요 리스크와 대응 방안]
 
-**Verdict:** [GO / REVISE / RETHINK]
+**판정:** [GO / REVISE / RETHINK]
 ```
 
-→ GO: `/{framework}-implement`, REVISE: modify plan, RETHINK: `/office-hours`
+→ GO: `/{framework}-implement`, REVISE: 계획 수정, RETHINK: `/office-hours`
