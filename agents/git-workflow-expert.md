@@ -1,6 +1,6 @@
 ---
 name: git-workflow-expert
-model: opus
+model: sonnet
 description: "Git 워크플로우 — 커밋, PR, 브랜치 전략. Triggers on 'commit', '커밋', 'PR', 'pull request', 'branch', '브랜치', 'merge', 'rebase', 'git workflow', 'conventional commits'."
 ---
 

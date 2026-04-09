@@ -1,5 +1,5 @@
 ---
-name: typescript-02-implement
+name: ts-02-implement
 description: "TypeScript 기능 구현. tak 컨벤션. Triggers on 'typescript implement', 'ts implement', '타입스크립트 구현', 'ts coding'."
 tools: Read, Bash, Glob, Grep, Write, Edit, Agent
 ---
@@ -110,4 +110,4 @@ if (isEligible) { /* ... */ }
 ## Output
 (see `_shared/output-templates.md`)
 
-→ Next: `/typescript-03-review`
+→ Next: `/simplify` → `/ts-03-review`

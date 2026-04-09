@@ -15,7 +15,7 @@
 
 ### Feature Development
 ```
-/{framework}-01-plan → /{framework}-02-implement → /{framework}-03-review → /{framework}-04-fix → /qa → /ship
+/{framework}-01-plan → /{framework}-02-implement → /simplify → /{framework}-03-review → /{framework}-04-fix → /qa → /ship
 ```
 
 ### Periodic

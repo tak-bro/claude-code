@@ -1,5 +1,6 @@
 ---
 name: swift-05-test
+model: sonnet
 description: "iOS/Swift test writing and execution. Triggers on 'swift test', '스위프트 테스트', 'ios test', 'iOS 테스트', 'swiftui test', 'xctest'."
 tools: Read, Bash, Glob, Grep, Write, Edit
 ---

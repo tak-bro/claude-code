@@ -13,7 +13,7 @@ Don't run the full pipeline for every task. Skip stages based on task size.
 
 ### M (3-10 files) — General feature development
 ```
-/explore → /{framework}-01-plan → 02-implement → 03-review → /ship
+/explore → /{framework}-01-plan → 02-implement → /simplify → 03-review → /ship
 ```
 - Standard pipeline
 - Skip fix if no issues after review

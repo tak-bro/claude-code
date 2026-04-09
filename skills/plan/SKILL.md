@@ -1,12 +1,13 @@
 ---
 name: plan
+model: sonnet
 description: "Project implementation planning (Base). Referenced by all framework plans. Triggers on 'plan', '계획', '구현 계획', 'implementation plan', '설계'. Issue analysis → parallel research → plan creation."
 tools: Read, Bash, Glob, Grep, Agent
 ---
 
 # Implementation Plan (Base)
 
-All framework-specific plan skills (`/angular-01-plan`, `/react-01-plan`, `/typescript-01-plan`) reference this base.
+All framework-specific plan skills (`/angular-01-plan`, `/react-01-plan`, `/ts-01-plan`) reference this base.
 
 ## ⛔ CRITICAL: STOP AFTER PLAN
 **Stop after planning is complete. Wait for the user's next command.**

@@ -1,5 +1,6 @@
 ---
 name: nodejs-01-plan
+model: sonnet
 description: "Node.js 백엔드 구현 계획. Triggers on 'nodejs plan', 'node plan', 'backend plan', 'server plan', '서버 계획', '백엔드 계획', 'api plan'. Express, Fastify."
 tools: Read, Bash, Glob, Grep, Agent
 ---

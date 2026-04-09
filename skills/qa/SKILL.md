@@ -1,5 +1,6 @@
 ---
 name: qa
+model: sonnet
 description: "QA testing. Impact analysis based on diff → testing. Triggers on 'qa', 'QA', 'quality assurance', 'quality assurance', 'integration test', 'integration test', 'regression test'."
 tools: Read, Bash, Glob, Grep, Agent
 ---
@@ -33,7 +34,7 @@ git diff --stat HEAD~1
 - Execute full test suite (if possible)
 
 ### Phase 5: Browser Test (Optional)
-- Coordinate with `/browse` skill for UI verification
+- Coordinate with `/verify` skill for UI verification
 - Test key user flows
 
 ---

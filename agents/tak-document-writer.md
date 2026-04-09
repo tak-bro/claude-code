@@ -1,6 +1,6 @@
 ---
 name: tak-document-writer
-model: opus
+model: sonnet
 description: "문서 스타일 리뷰, Tak 스타일 가이드 적용. Triggers on 'style guide', '스타일 가이드', 'copy edit', '교정', 'editorial', 'writing review', '문서 리뷰', 'tak style'."
 ---
 

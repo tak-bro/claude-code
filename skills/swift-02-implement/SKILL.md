@@ -191,4 +191,4 @@ swiftformat --lint .
 ## Output
 (see `_shared/output-templates.md`)
 
--> Next: `/swift-03-review`
+-> Next: `/simplify` → `/swift-03-review`

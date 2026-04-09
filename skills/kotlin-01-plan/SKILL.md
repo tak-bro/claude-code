@@ -1,5 +1,6 @@
 ---
 name: kotlin-01-plan
+model: sonnet
 description: "Android/Kotlin project implementation planning. Triggers on 'kotlin plan', 'android plan', '코틀린 계획', '안드로이드 계획', 'android feature', 'kt plan'. MVVM, Jetpack Compose, Hilt."
 tools: Read, Bash, Glob, Grep, Agent
 ---
