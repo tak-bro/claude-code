@@ -1,5 +1,6 @@
 ---
 name: angular-03-review
+model: sonnet
 description: "Angular code review. Triggers on 'angular review', '앵귤러 리뷰', 'angular code review', 'ng review', 'angular 검토'."
 context: fork
 tools: Read, Bash, Glob, Grep

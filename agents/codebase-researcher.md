@@ -1,6 +1,6 @@
 ---
 name: codebase-researcher
-model: opus
+model: sonnet
 description: "코드베이스 분석, 아키텍처 리버스 엔지니어링. Triggers on 'analyze codebase', '코드베이스 분석', 'how does it work', '어떻게 동작', 'extract patterns', '패턴 추출', 'architecture analysis', '아키텍처 분석', 'reverse engineer'."
 ---
 

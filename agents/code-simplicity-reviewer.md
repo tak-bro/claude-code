@@ -1,6 +1,6 @@
 ---
 name: code-simplicity-reviewer
-model: opus
+model: sonnet
 description: "코드 단순화 리뷰 — 구조적 복잡도 감소, LOC 절감, 불필요한 추상화 제거 전문. Triggers on 'simplify', '단순화', 'YAGNI', 'over-engineering', '과잉 엔지니어링', 'complexity', '복잡도', 'simplification'."
 ---
 

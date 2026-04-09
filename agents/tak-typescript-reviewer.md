@@ -1,6 +1,6 @@
 ---
 name: tak-typescript-reviewer
-model: opus
+model: sonnet
 description: "TypeScript 코드 리뷰 — 타입 안전성, export 규칙, 프로젝트 컨벤션 전문. Triggers on 'type review', 'typescript review', '타입 리뷰', 'ts review', 'code quality', '코드 품질', 'convention check', '컨벤션 체크'."
 ---
 

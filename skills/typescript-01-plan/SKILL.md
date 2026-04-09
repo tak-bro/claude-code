@@ -1,5 +1,6 @@
 ---
 name: typescript-01-plan
+model: sonnet
 description: "TypeScript 프로젝트 구현 계획. Triggers on 'typescript plan', 'ts plan', '타입스크립트 계획', 'ts 기능 추가'."
 tools: Read, Bash, Glob, Grep, Agent
 ---

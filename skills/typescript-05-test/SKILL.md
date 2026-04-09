@@ -1,5 +1,6 @@
 ---
 name: typescript-05-test
+model: sonnet
 description: "TypeScript 테스트 작성 및 실행. Triggers on 'typescript test', 'ts test', '타입스크립트 테스트', 'ts spec'."
 tools: Read, Bash, Glob, Grep, Write, Edit
 ---

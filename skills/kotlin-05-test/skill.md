@@ -1,5 +1,6 @@
 ---
 name: kotlin-05-test
+model: sonnet
 description: "Android/Kotlin test writing and execution. Triggers on 'kotlin test', '코틀린 테스트', 'android test', '안드로이드 테스트', 'kt test', 'android unit test'."
 tools: Read, Bash, Glob, Grep, Write, Edit
 ---

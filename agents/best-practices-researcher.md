@@ -1,6 +1,6 @@
 ---
 name: best-practices-researcher
-model: opus
+model: sonnet
 description: "기술 베스트 프랙티스 및 프레임워크 문서 리서치. Triggers on 'best practices', '베스트 프랙티스', 'how should I', '어떻게 해야', 'recommended approach', '권장 방법', 'industry standard', 'conventions', 'style guide', 'documentation', '문서', 'how to use', '사용법', 'library', 'framework', 'API reference', 'version', 'migration', '마이그레이션'."
 ---
 

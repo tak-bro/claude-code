@@ -1,5 +1,6 @@
 ---
 name: retro
+model: sonnet
 description: "Weekly retrospective. Commit-based analysis. Triggers on 'retro', 'retrospective', 'weekly review', 'what did I do'."
 tools: Read, Bash, Glob, Grep
 ---

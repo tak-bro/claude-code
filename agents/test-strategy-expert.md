@@ -1,6 +1,6 @@
 ---
 name: test-strategy-expert
-model: opus
+model: sonnet
 description: "테스트 전략 설계, 유닛/통합/E2E 테스트. Triggers on 'test', '테스트', 'spec', 'coverage', '커버리지', 'mock', 'fixture', 'jest', 'vitest', 'testing library', 'test strategy', '테스트 전략'."
 ---
 

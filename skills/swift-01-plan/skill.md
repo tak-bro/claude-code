@@ -1,5 +1,6 @@
 ---
 name: swift-01-plan
+model: sonnet
 description: "iOS/Swift project implementation planning. Triggers on 'swift plan', 'ios plan', '스위프트 계획', 'iOS 계획', 'ios feature', 'swiftui plan'. MVVM, SwiftUI, Swift Concurrency."
 tools: Read, Bash, Glob, Grep, Agent
 ---

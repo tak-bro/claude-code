@@ -1,5 +1,6 @@
 ---
 name: tech-debt
+model: sonnet
 description: "Session-end cleanup. Find duplicates, dead code, and tech debt introduced during the session. Triggers on 'tech debt', '기술 부채', 'cleanup', '정리', 'end of session', '세션 종료', 'wrap up', 'session cleanup'."
 tools: Read, Bash, Glob, Grep, Write, Edit, Agent
 ---
