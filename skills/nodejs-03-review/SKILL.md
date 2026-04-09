@@ -1,6 +1,7 @@
 ---
 name: nodejs-03-review
 model: sonnet
+effort: medium
 description: "Node.js 백엔드 코드 리뷰. Triggers on 'nodejs review', 'node review', 'backend review', 'server review', '서버 리뷰', '백엔드 리뷰', 'api review'."
 context: fork
 tools: Read, Bash, Glob, Grep

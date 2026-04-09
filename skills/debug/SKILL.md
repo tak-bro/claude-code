@@ -1,6 +1,7 @@
 ---
 name: debug
 model: sonnet
+effort: medium
 description: "Error analysis and debugging. Triggers on 'debug', '디버그', 'error', '에러', 'bug', '버그', 'stack trace', '오류 분석', 'fix error', 'troubleshoot'."
 tools: Read, Bash, Glob, Grep, Agent
 ---

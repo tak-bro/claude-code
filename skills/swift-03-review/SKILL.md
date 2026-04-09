@@ -1,6 +1,7 @@
 ---
 name: swift-03-review
 model: sonnet
+effort: medium
 description: "iOS/Swift code review. Triggers on 'swift review', '스위프트 리뷰', 'ios review', 'iOS 리뷰', 'ios code review', 'swiftui review'."
 context: fork
 tools: Read, Bash, Glob, Grep

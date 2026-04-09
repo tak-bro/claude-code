@@ -1,6 +1,7 @@
 ---
 name: ts-03-review
 model: sonnet
+effort: medium
 description: "TypeScript 코드 리뷰. Triggers on 'typescript review', 'ts review', '타입스크립트 리뷰', 'ts 검토'."
 context: fork
 tools: Read, Bash, Glob, Grep

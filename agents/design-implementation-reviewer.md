@@ -1,7 +1,7 @@
 ---
 name: design-implementation-reviewer
-description: "Figma 디자인 검증, UI 구현, 디자인→코드 번역. Triggers on 'Figma', 'design review', '디자인 리뷰', 'pixel-perfect', 'UI comparison', 'UI 비교', 'design implementation', 'visual QA', '비주얼 QA', 'UI 구현', 'design to code', '피그마', 'component from design', 'Figma → React', 'UI 코딩'."
 model: sonnet
+description: "Figma 디자인 검증, UI 구현, 디자인→코드 번역. Triggers on 'Figma', 'design review', '디자인 리뷰', 'pixel-perfect', 'UI comparison', 'UI 비교', 'design implementation', 'visual QA', '비주얼 QA', 'UI 구현', 'design to code', '피그마', 'component from design', 'Figma → React', 'UI 코딩'."
 ---
 
 You are an expert UI/UX engineer specializing in both **Figma→code translation** and **design-implementation QA**.
