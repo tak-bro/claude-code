@@ -3,7 +3,7 @@ name: review-pr
 description: "GitHub PR 코드 리뷰. Triggers on 'review pr', 'PR 리뷰', 'pull request review', 'pr review', 'PR 검토', 'code review pr'."
 context: fork
 tools: Read, Bash, Glob, Grep
----
+model: sonnet
 
 # Review PR
 

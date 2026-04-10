@@ -2,7 +2,7 @@
 name: swift-04-fix
 description: "iOS/Swift review issue fixes. Triggers on 'swift fix', '스위프트 수정', 'ios fix', 'iOS 수정', 'ios 이슈 해결'."
 tools: Read, Bash, Glob, Grep, Write, Edit
----
+model: sonnet
 
 # Swift Fix
 

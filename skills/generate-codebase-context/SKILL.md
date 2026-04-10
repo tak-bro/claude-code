@@ -2,7 +2,7 @@
 name: generate-codebase-context
 description: "Generate codebase context. Create .claude/llms.txt file. Triggers on 'generate context', 'codebase context', 'llms.txt', '코드베이스 분석', '프로젝트 분석', 'onboarding', '온보딩'."
 tools: Read, Bash, Glob, Grep, Write
----
+model: sonnet
 
 # Generate Codebase Context
 

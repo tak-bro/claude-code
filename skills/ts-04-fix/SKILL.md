@@ -2,7 +2,7 @@
 name: ts-04-fix
 description: "TypeScript 리뷰 이슈 수정. Triggers on 'typescript fix', 'ts fix', '타입스크립트 수정'."
 tools: Read, Bash, Glob, Grep, Write, Edit
----
+model: sonnet
 
 # TypeScript Fix
 

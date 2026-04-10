@@ -2,7 +2,7 @@
 name: react-04-fix
 description: "React 리뷰 이슈 수정. Triggers on 'react fix', '리액트 수정', 'react 이슈 해결'."
 tools: Read, Bash, Glob, Grep, Write, Edit
----
+model: sonnet
 
 # React Fix
 
