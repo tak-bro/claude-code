@@ -9,6 +9,9 @@ tools: Read, Bash, Glob, Grep
 
 Review React code and generate Fix Checklist.
 
+## Scope
+Review ONLY changed files. Run `git diff --name-only` first to identify targets.
+Do NOT scan or review the entire codebase.
 **Agents:** tak-typescript-reviewer, code-simplicity-reviewer, design-implementation-reviewer (if UI)
 
 **Context: fork** — Review in separate context from implementation (Claude philosophy).

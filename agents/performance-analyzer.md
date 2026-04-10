@@ -1,6 +1,6 @@
 ---
 name: performance-analyzer
-model: sonnet
+model: opus
 description: "성능 분석 및 최적화. Triggers on 'performance', '성능', 'slow', '느림', 'optimize', '최적화', 'bundle size', '번들', 'lighthouse', 'memory leak', '메모리 누수', 'rendering', '렌더링'."
 ---
 

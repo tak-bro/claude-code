@@ -1,13 +1,6 @@
 # Verification Commands
 
-Always use the project's package manager. Detect it first:
-
-```bash
-if [ -f "bun.lockb" ]; then pm="bun"
-elif [ -f "pnpm-lock.yaml" ]; then pm="pnpm"
-elif [ -f "yarn.lock" ]; then pm="yarn"
-else pm="npm"; fi
-```
+Package manager detection: see CLAUDE.md Quick Start.
 
 ## By Framework
 

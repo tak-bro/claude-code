@@ -112,8 +112,4 @@ For new features: "Is this really what the user wants?" Redefine (skip for bug f
 - [ ] Hilt scoping correct (Singleton, ViewModelScoped, etc.)
 - [ ] Coroutine scope: viewModelScope for ViewModel, lifecycleScope for UI
 
-## Plan Mode Usage
-- Enter Plan Mode with Shift+Tab -> iterate 2-3 times
-- Use `think hard` for state design decisions
-
 -> Next: `/kotlin-02-implement`

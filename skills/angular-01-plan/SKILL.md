@@ -99,8 +99,4 @@ For new features: "Is this really what the user wants?" Redefine (skip for bug f
 - [ ] No Store injection in presentational components
 - [ ] (Ionic) ionViewWillEnter lifecycle usage
 
-## Plan Mode Usage
-- Enter Plan Mode with Shift+Tab → iterate 2-3 times
-- Use `think hard` for state design decisions
-
 → Next: `/angular-02-implement`

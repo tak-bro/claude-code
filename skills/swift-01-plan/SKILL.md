@@ -114,8 +114,4 @@ For new features: "Is this really what the user wants?" Redefine (skip for bug f
 - [ ] Task cancellation handled
 - [ ] Memory management: no retain cycles (weak self in closures)
 
-## Plan Mode Usage
-- Enter Plan Mode with Shift+Tab -> iterate 2-3 times
-- Use `think hard` for state design decisions
-
 -> Next: `/swift-02-implement`

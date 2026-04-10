@@ -9,6 +9,9 @@ tools: Read, Bash, Glob, Grep
 
 Review Angular code and generate Fix Checklist for next phase.
 
+## Scope
+Review ONLY changed files. Run `git diff --name-only` first to identify targets.
+Do NOT scan or review the entire codebase.
 **Agents:** angular-componentstore-expert, tak-typescript-reviewer, code-simplicity-reviewer
 
 **Context: fork** — Review in a separate context from implementation (Test-Time Compute: same model but separated context = better results).

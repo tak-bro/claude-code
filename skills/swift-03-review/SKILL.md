@@ -9,6 +9,9 @@ tools: Read, Bash, Glob, Grep
 
 Review iOS/Swift code and generate Fix Checklist for next phase.
 
+## Scope
+Review ONLY changed files. Run `git diff --name-only` first to identify targets.
+Do NOT scan or review the entire codebase.
 **Agents:** swift-ios-expert, code-simplicity-reviewer
 
 **Context: fork** -- Review in a separate context from implementation (Test-Time Compute: same model but separated context = better results).

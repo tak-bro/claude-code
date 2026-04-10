@@ -124,8 +124,4 @@ For new features: "Is this really what the user wants?" Redefine (skip for bug f
 - [ ] Config centralized (no scattered process.env)
 - [ ] DI used for testability
 
-## Plan Mode Usage
-- Enter Plan Mode with Shift+Tab -> iterate 2-3 times
-- Use `think hard` for API design and data modeling decisions
-
 -> Next: `/nodejs-02-implement`
