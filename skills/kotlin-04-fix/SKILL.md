@@ -2,7 +2,7 @@
 name: kotlin-04-fix
 description: "Android/Kotlin review issue fixes. Triggers on 'kotlin fix', '코틀린 수정', 'android fix', '안드로이드 수정', 'android 이슈 해결', 'kt fix'."
 tools: Read, Bash, Glob, Grep, Write, Edit
----
+model: sonnet
 
 # Kotlin Fix
 

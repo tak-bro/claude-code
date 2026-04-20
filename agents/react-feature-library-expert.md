@@ -51,207 +51,37 @@ npx nx g @nx/js:lib {feature} --directory=libs/{feature}
 ## ABSOLUTE RULES
 
 ### 1. Named Exports ONLY
-```typescript
-// ✅ REQUIRED
-export const ProductCard = () => { };
-export const useProducts = () => { };
-export const fetchProducts = async () => { };
-
-// ❌ FORBIDDEN
-export default ProductCard;
-```
+No `export default` (except App/config entrypoint). All functions, components, hooks use named exports.
 
 ### 2. Barrel Exports (index.ts)
-```typescript
-// libs/product/src/index.ts (REQUIRED)
-export * from './apis';
-export * from './hooks';
-export * from './types';
-export * from './consts';
-```
+Every feature library MUST have `index.ts` re-exporting from `./apis`, `./hooks`, `./types`, `./consts`.
 
 ### 3. Data Flow: Component → Hook → TanStack Query → API
-```typescript
-// ❌ FORBIDDEN: Component calling API directly
-const ProductList = () => {
-  const [products, setProducts] = useState([]);
-  useEffect(() => {
-    fetchProducts().then(setProducts);  // ❌ Direct API call
-  }, []);
-};
-
-// ✅ REQUIRED: Through hooks
-const ProductList = () => {
-  const { data: products, isLoading } = useProducts();  // ✅ Hook
-};
-```
+Components NEVER call API functions directly. Always go through hooks.
 
 ### 4. State Management Rules
-```typescript
-// ❌ FORBIDDEN: useState for shared state
-const [user, setUser] = useState<User>();  // Shared across components
-
-// ✅ REQUIRED: Zustand for shared state
-export const useUserStore = create<UserStore>((set) => ({
-  user: null,
-  setUser: (user) => set({ user }),
-}));
-
-// ✅ OK: useState for local state only
-const [isOpen, setIsOpen] = useState(false);  // Modal open state
-```
+- **Shared state** → Zustand store (never useState)
+- **Server state** → TanStack Query (never manual fetch + useState)
+- **Local UI state** → useState (modal open, form input, etc.)
 
 ---
 
-## PATTERNS
+## KEY PATTERNS
 
-### API Function
-```typescript
-// libs/product/src/apis/index.ts
-export const fetchProducts = async (): Promise<Product[]> => {
-  const { data } = await webCore.buildSignedRequest({
-    method: 'GET',
-    baseURL: '/products',
-  }).execute();
-  return data;
-};
+- **API functions**: Use `webCore.buildSignedRequest()` with `.execute()`, return `data`
+- **Query keys**: Use `createQueryKeys` from `@lukemorales/query-key-factory`
+- **Query hooks**: Wrap `useQuery`/`useMutation` with proper query keys, `enabled` guards
+- **Mutations**: Invalidate related queries in `onSuccess`
+- **Components**: Use `@{projectName}/*` aliases, `cn()` for Tailwind classes, early returns for loading/error states
 
-export const createProduct = async (body: CreateProductBody): Promise<Product> => {
-  const { data } = await webCore.buildSignedRequest({
-    method: 'POST',
-    baseURL: '/products',
-    data: body,
-  }).execute();
-  return data;
-};
-```
-
-### Query Keys
-```typescript
-// libs/product/src/consts/index.ts
-import { createQueryKeys } from '@lukemorales/query-key-factory';
-
-export const productKeys = createQueryKeys('products', {
-  all: null,
-  detail: (id: string) => [id],
-  byCategory: (category: string) => [category],
-});
-```
-
-### TanStack Query Hook
-```typescript
-// libs/product/src/hooks/index.ts
-export const useProducts = () => {
-  return useQuery({
-    queryKey: productKeys.all,
-    queryFn: fetchProducts,
-  });
-};
-
-export const useProduct = (id: string) => {
-  return useQuery({
-    queryKey: productKeys.detail(id),
-    queryFn: () => fetchProduct(id),
-    enabled: !!id,
-  });
-};
-
-export const useCreateProduct = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: createProduct,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: productKeys.all });
-    },
-  });
-};
-```
-
-### Component
-```typescript
-// apps/web/src/pages/ProductListPage.tsx
-import { useProducts, useCreateProduct } from '@{projectName}/product';
-
-export const ProductListPage = () => {
-  const { data: products, isLoading, error } = useProducts();
-  const createProduct = useCreateProduct();
-
-  if (isLoading) return <LoadingSpinner />;
-  if (error) return <ErrorMessage error={error} />;
-
-  return (
-    <div className={cn('flex flex-col gap-4')}>
-      {products?.map(product => (
-        <ProductCard key={product.id} product={product} />
-      ))}
-    </div>
-  );
-};
-```
-
-### Zustand Store (Global State)
-```typescript
-// libs/auth/src/stores/auth.store.ts
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-
-interface AuthState {
-  user: User | null;
-  token: string | null;
-  setUser: (user: User | null) => void;
-  setToken: (token: string | null) => void;
-  logout: () => void;
-}
-
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set) => ({
-      user: null,
-      token: null,
-      setUser: (user) => set({ user }),
-      setToken: (token) => set({ token }),
-      logout: () => set({ user: null, token: null }),
-    }),
-    { name: 'auth-storage' }
-  )
-);
-```
+**상세 코드 패턴은 `skills/react-02-implement/references/` 디렉토리를 참조하세요.**
 
 ---
 
 ## ANTI-OVER-ENGINEERING (WET > DRY)
 
-### Intentional Duplication OK
-```typescript
-// ✅ GOOD: Two simple components
-export const UserCard = ({ user }: { user: User }) => (
-  <Card>
-    <Avatar src={user.avatar} />
-    <Text>{user.name}</Text>
-  </Card>
-);
+Prefer two simple components over one complex conditional component with many props.
 
-export const UserListItem = ({ user }: { user: User }) => (
-  <ListItem>
-    <Avatar src={user.avatar} size="sm" />
-    <Text>{user.name}</Text>
-  </ListItem>
-);
-
-// ❌ BAD: One complex conditional component
-export const UserDisplay = ({
-  user,
-  variant,
-  showAvatar,
-  avatarSize,
-  ...props
-}: UserDisplayProps) => {
-  // 100 lines of conditional logic
-};
-```
-
-### Guidelines
 - **~200 lines per component**: Consider splitting if exceeded
 - **~5 business props healthy**: 10+ props is a smell
 - **No mega-components**: Avoid 500-line components with conditional branches
@@ -278,27 +108,9 @@ export const UserDisplay = ({
 
 ## ANTI-PATTERNS
 
-```typescript
-// ❌ Component calling API directly
-useEffect(() => { fetchData().then(setData); }, []);
-
-// ❌ useState for shared state
-const [user, setUser] = useState<User>();
-
-// ❌ Passing setState as props
-<Child setData={setData} />
-
-// ❌ export default
-export default ProductCard;
-
-// ❌ Bypassing barrel exports
-import { ProductCard } from '@{projectName}/product/src/components/ProductCard';
-
-// ❌ Bypassing barrel exports
-import { ProductCard } from '@{projectName}/product/src/components/ProductCard';
-
-// ❌ Mega-component with too many props
-<UserDisplay variant="card" size="lg" showAvatar showBio showStats ... />
-```
-
-**상세 코드 패턴은 `skills/react-02-implement/references/` 디렉토리를 참조하세요.**
+- Component calling API directly (`useEffect` + `fetchData`)
+- `useState` for shared/server state
+- Passing `setState` as props
+- `export default`
+- Bypassing barrel exports (importing from internal paths)
+- Mega-component with too many props/conditional branches

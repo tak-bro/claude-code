@@ -104,8 +104,4 @@ For new features: "Is this really what the user wants?" Redefine the requirement
 - [ ] No query key conflicts
 - [ ] Tailwind classes organized with cn()
 
-## Plan Mode Usage
-- Shift+Tab → Plan Mode → Review 2-3 times
-- `think hard` for state management decisions
-
 → Next: `/react-02-implement`

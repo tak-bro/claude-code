@@ -2,7 +2,7 @@
 name: nodejs-04-fix
 description: "Node.js 백엔드 리뷰 이슈 수정. Triggers on 'nodejs fix', 'node fix', 'backend fix', 'server fix', '서버 수정', '백엔드 수정', 'api fix'."
 tools: Read, Bash, Glob, Grep, Write, Edit
----
+model: sonnet
 
 # Node.js Fix
 

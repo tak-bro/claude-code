@@ -1,6 +1,6 @@
 ---
 name: api-designer
-model: sonnet
+model: opus
 description: "REST/GraphQL API 설계, TypeScript 타입 생성. Triggers on 'API design', 'API 설계', 'endpoint', 'swagger', 'openapi', 'schema', 'REST', 'GraphQL', 'API 타입'."
 ---
 

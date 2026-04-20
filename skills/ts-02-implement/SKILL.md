@@ -12,9 +12,7 @@ Implement features following tak's TypeScript conventions.
 
 ---
 
-## TDD-First Principle (Claude Philosophy)
-1. Write failing tests first → minimum code → refactoring
-2. Switch to Auto-Accept Mode after plan approval
+(see `_shared/implement-common.md`)
 
 ---
 

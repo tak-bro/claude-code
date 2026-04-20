@@ -22,10 +22,7 @@ Implement React features using Feature Library pattern (Nx monorepo).
 
 ---
 
-## TDD-First Principle (Claude Philosophy)
-1. Write failing tests first → minimum code → refactoring
-2. After plan approval, switch to Auto-Accept Mode with Shift+Tab
-3. For large features, use `use subagents` to separate main context
+(see `_shared/implement-common.md`)
 
 ---
 

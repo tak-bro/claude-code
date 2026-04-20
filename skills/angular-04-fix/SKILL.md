@@ -2,7 +2,7 @@
 name: angular-04-fix
 description: "Angular review issue fixes. Triggers on 'angular fix', '앵귤러 수정', 'angular 이슈 해결', 'ng fix'."
 tools: Read, Bash, Glob, Grep, Write, Edit
----
+model: sonnet
 
 # Angular Fix
 

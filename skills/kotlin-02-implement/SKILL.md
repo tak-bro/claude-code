@@ -24,12 +24,7 @@ Implement Android features using MVVM + Jetpack Compose + Hilt.
 
 ---
 
-## TDD-First Principle (Claude Philosophy)
-1. Write failing tests first
-2. Write minimal code to pass tests
-3. Refactor
-- Switch to Auto-Accept Mode with Shift+Tab after plan approval
-- For large features, use `use subagents` to separate main context
+(see `_shared/implement-common.md`)
 
 ---
 

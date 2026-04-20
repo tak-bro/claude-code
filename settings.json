@@ -1,7 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "MAX_THINKING_TOKENS": "10000"
   },
   "permissions": {
     "allow": [
@@ -83,7 +84,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'echo \"=== 세션 컨텍스트 ===\"; echo \"--- 최근 커밋 ---\"; git log --oneline -5 2>/dev/null || echo \"(git 저장소 아님)\"; echo \"--- Git 상태 ---\"; git status --short 2>/dev/null || echo \"(git 저장소 아님)\"; echo \"--- 브랜치 ---\"; git rev-parse --abbrev-ref HEAD 2>/dev/null || echo \"(git 저장소 아님)\"; echo \"===================\"; echo \"\"; echo \"[리마인더] CLAUDE.md와 .claude/rules/ 규칙을 따르세요. 확실하지 않으면 다시 읽으세요.\"'"
+            "command": "bash -c 'echo \"=== 세션 컨텍스트 ===\"; echo \"--- 최근 커밋 ---\"; git log --oneline -5 2>/dev/null || echo \"(git 저장소 아님)\"; echo \"--- Git 상태 ---\"; git status --short 2>/dev/null || echo \"(git 저장소 아님)\"; echo \"--- 브랜치 ---\"; git rev-parse --abbrev-ref HEAD 2>/dev/null || echo \"(git 저장소 아님)\"; echo \"===================\"; echo \"\"; echo \"[핵심 규칙] 1) 보호 브랜치(main/develop) 직접 push 금지 2) named export only 3) const + arrow function 4) 80줄 초과 함수 분리 5) 작업 완료 전 테스트 실행\"'"
           }
         ]
       }

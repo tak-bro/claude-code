@@ -2,7 +2,7 @@
 name: office-hours
 description: "Refine new ideas. Brainstorming stage before code. Triggers on 'office hours', 'brainstorm', 'idea', 'discuss'."
 tools: Read, Bash, Glob, Grep
----
+model: sonnet
 
 # Office Hours
 

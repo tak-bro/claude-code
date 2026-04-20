@@ -2,7 +2,7 @@
 name: react-05-test
 description: "React 테스트 작성 및 실행. Triggers on 'react test', '리액트 테스트', 'react spec', 'react 유닛 테스트'."
 tools: Read, Bash, Glob, Grep, Write, Edit
----
+model: sonnet
 
 # React Test
 

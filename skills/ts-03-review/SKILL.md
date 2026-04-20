@@ -9,6 +9,9 @@ tools: Read, Bash, Glob, Grep
 
 Review TypeScript code and generate actionable fix checklist for next phase.
 
+## Scope
+Review ONLY changed files. Run `git diff --name-only` first to identify targets.
+Do NOT scan or review the entire codebase.
 **Agents:** tak-typescript-reviewer, code-simplicity-reviewer
 
 **Context: fork** — Review in separate context (Test-Time Compute: separated context = better results).
