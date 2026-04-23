@@ -28,7 +28,7 @@ MCP 서버 설정은 `settings.json`에 포함되어 클론 시 자동 적용.
 ├── skills/                      ← 56개 스킬
 │   ├── _shared/                 ← 공통 템플릿
 │   ├── {fw}-{01~05}-{phase}/   ← 프레임워크별 5단계 x 6
-│   └── 28개 범용 스킬
+│   └── 26개 범용 스킬
 ├── agents/                      ← 16개 전문 에이전트
 └── docs/                        ← 가이드 문서
 ```
@@ -41,7 +41,7 @@ MCP 서버 설정은 `settings.json`에 포함되어 클론 시 자동 적용.
 | **M** (3-10 파일) | `/explore` → `/{fw}-01-plan` → `02-implement` → `/simplify` → `03-review` → `/ship` |
 | **L** (10+ 파일) | 전체 파이프라인 + `/batch` |
 
-## 스킬 (58개)
+## 스킬 (56개)
 
 ### 프레임워크 파이프라인 (30개)
 
@@ -49,18 +49,71 @@ MCP 서버 설정은 `settings.json`에 포함되어 클론 시 자동 적용.
 
 지원: Angular, React, TypeScript, Kotlin, Swift, Node.js
 
-### 범용 스킬 (28개)
+### 공통 스킬 (3개)
 
-| 카테고리 | 스킬 |
-|---------|------|
-| 아이디어/계획 | `/office-hours`, `/plan-ceo-review`, `/plan-eng-review`, `/plan-design-review` |
-| 코드 리뷰/QA | `/review`, `/review-pr`, `/qa`, `/qa-only`, `/design-review` |
-| 디버깅/보안 | `/investigate`, `/investigate`, `/security-scan` |
-| 디자인 | `/design-consultation` |
-| 구현 지원 | `/explore`, `/plan`, `/batch`, `/simplify` |
-| 배포/문서 | `/ship`, `/document-release`, `/retro` |
-| 품질/성능 | `/health`, `/benchmark`, `/tech-debt` |
-| 유틸리티 | `/learn`, `/context-save`, `/context-restore`, `/make-pdf`, `/generate-codebase-context` |
+| 스킬 | 설명 |
+|------|------|
+| `/plan` | 모든 프레임워크 plan이 참조하는 베이스 계획 스킬 |
+| `/investigate` | 근본 원인 디버깅. 4단계: investigate → analyze → hypothesize → implement |
+| `/generate-codebase-context` | `.claude/llms.txt` 생성. 프로젝트 온보딩 첫 단계 |
+
+### 아이디어/계획 (4개)
+
+| 스킬 | 설명 |
+|------|------|
+| `/office-hours` | 아이디어 정제. 코드 전 니즈 파악 |
+| `/plan-ceo-review` | 10-star 제품 관점. 기능 스코프 재정의 |
+| `/plan-eng-review` | 엔지니어링 아키텍처 리뷰. 설계 검증 |
+| `/plan-design-review` | 디자이너 관점 계획 리뷰. 0-10 스코어링 |
+
+### 코드 리뷰/QA (5개)
+
+| 스킬 | 설명 |
+|------|------|
+| `/review` | 프리랜딩 PR 코드 리뷰. fix-first 접근 |
+| `/review-pr` | GitHub PR 코드 리뷰. 남의 PR 리뷰 |
+| `/qa` | 영향도 분석 + 정적 검증 + 테스트 + 브라우저 검증 + 자동 수정 |
+| `/qa-only` | 리포트 전용 QA. 수정 없이 버그 리포트만 |
+| `/design-review` | 라이브 사이트 디자인 감사 + 수정 |
+
+### 구현 지원 (4개)
+
+| 스킬 | 설명 |
+|------|------|
+| `/explore` | 읽기 전용 코드 분석. plan 전 모듈 파악 |
+| `/batch` | 격리된 work tree에서 병렬 실행 |
+| `/simplify` | 코드 단순화 + 품질 체크 (플러그인) |
+| `/design-consultation` | 디자인 시스템 구축. DESIGN.md 생성 |
+
+### 보안 (1개)
+
+| 스킬 | 설명 |
+|------|------|
+| `/security-scan` | 7-앵글 보안 취약점 스캔 |
+
+### 배포/문서/회고 (3개)
+
+| 스킬 | 설명 |
+|------|------|
+| `/ship` | 테스트 → 린트 → push → PR 설명 생성 |
+| `/document-release` | 배포 후 문서 동기화 |
+| `/retro` | git log 기반 주간 회고 |
+
+### 품질/성능 (3개)
+
+| 스킬 | 설명 |
+|------|------|
+| `/health` | 코드 품질 대시보드. 0-10 점수 |
+| `/benchmark` | 성능 회귀 탐지 |
+| `/tech-debt` | 세션 중 생긴 부채 정리 |
+
+### 유틸리티 (3개)
+
+| 스킬 | 설명 |
+|------|------|
+| `/learn` | 프로젝트 학습 관리. 세션 간 학습 조회/정리 |
+| `/context-save` / `/context-restore` | 작업 컨텍스트 저장/복원 |
+| `/make-pdf` | 마크다운 → PDF 변환 |
 
 ## 에이전트 (16개)
 
@@ -95,4 +148,4 @@ MCP 서버 설정은 `settings.json`에 포함되어 클론 시 자동 적용.
 
 - [docs/USAGE_GUIDE.md](docs/USAGE_GUIDE.md) — 시나리오별 사용 예시
 - [docs/DEVELOPMENT_GUIDE.md](docs/DEVELOPMENT_GUIDE.md) — 전체 개발 환경 상세 가이드
-- 14개 스킬은 [garrytan/gstack](https://github.com/garrytan/gstack)에서 핵심 워크플로우만 추출
+- 일부 스킬은 [garrytan/gstack](https://github.com/garrytan/gstack)에서 핵심 워크플로우 추출
