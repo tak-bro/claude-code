@@ -137,4 +137,4 @@ When duplications are found across modules:
 **Post-cleanup verification:** [PASS ✅ / FAIL ❌]
 ```
 
-→ After cleanup, proceed to `/ship` or `/verify`
+→ After cleanup, proceed to `/ship` or `/qa`

@@ -15,13 +15,13 @@
 
 ### Feature Development
 ```
-/{framework}-01-plan → /{framework}-02-implement → /simplify → /{framework}-03-review → /{framework}-04-fix → /qa → /ship
+/{framework}-01-plan → /{framework}-02-implement → /simplify → /{framework}-03-review → /{framework}-04-fix → /qa → /tech-debt → /ship
 ```
 
 ### Periodic
 ```
 /retro     → Weekly retrospective
-/insights  → Workflow improvement analysis
+/health    → Code quality dashboard
 ```
 
 ## Quick Start (Build/Test)

@@ -126,7 +126,7 @@ Claude: - [x] C1: message 타입 추가 (SocialAuthStoreMessage)
 ### Step 5: 검증 + 정리 + 배포
 
 ```
-You: /verify
+You: /qa
 
 Claude: ✅ Lint PASS | Types PASS | Build PASS
         ✅ Tests: 62 pass, 0 fail
@@ -170,10 +170,10 @@ You: 올려.
 전체 파이프라인 필요 없음. 4단계로 끝.
 
 ```
-You: /debug
+You: /investigate
      결제 완료 후 스피너가 안 사라져.
 
-Claude: [에러 분석]
+Claude: [근본 원인 분석]
         PaymentStore.finalize() 에서 isFetching = false 누락
         payment.store.ts:87
 
@@ -189,7 +189,7 @@ Claude: - [x] isFetching = false 추가 (payment.store.ts:87)
 ```
 
 ```
-You: /verify
+You: /qa
 
 Claude: ✅ ALL PASS
 ```
@@ -400,7 +400,7 @@ You: /simplify
 
 ### "구현이 제대로 동작하는지 확인"
 ```
-You: /verify
+You: /qa
 ```
 
 ### "세션 마무리"
@@ -453,7 +453,7 @@ You: /review-pr 123
 
 ### "에이전트가 MCP를 못 찾아"
 Context7 MCP 미설치 시 → WebSearch/WebFetch로 자동 fallback
-Playwright MCP 미설치 시 → `/verify`에서 시각 검증 스킵
+Playwright MCP 미설치 시 → `/qa`에서 시각 검증 스킵
 
 ### "hook 에러가 뜨는데?"
 ```

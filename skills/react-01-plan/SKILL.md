@@ -85,7 +85,7 @@ For new features: "Is this really what the user wants?" Redefine the requirement
 
 ## React-Specific Checklist Items
 
-- [ ] Create/verify Feature Library
+- [ ] Create/qa Feature Library
 - [ ] Define API functions (apis/)
 - [ ] Define Query keys factory (hooks/)
 - [ ] Define TanStack Query hooks (hooks/)

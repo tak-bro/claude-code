@@ -64,4 +64,4 @@ git log --since="1 week ago" --name-only --pretty=format: | sort | uniq -c | sor
 - [ ] [Refactoring target]
 ```
 
-→ If there are improvement suggestions, go to `/insights`
+→ If code quality issues found, go to `/health`
