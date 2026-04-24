@@ -109,14 +109,26 @@ MCP 서버 설정은 `settings.json`에 포함되어 클론 시 자동 적용.
 
 ### 디자인 (6개)
 
-| 스킬 | 설명 |
-|------|------|
-| `/gpt-taste` | Awwwards급 프리미엄 디자인 + GSAP 모션. Python RNG로 레이아웃 랜덤화 |
-| `/design-taste-frontend` | React/Next.js 시니어 UI/UX 엔지니어링. 컴포넌트 아키텍처 + CSS 하드웨어 가속 |
-| `/redesign-existing-projects` | 기존 사이트 프리미엄 업그레이드. AI 슬롭 패턴 제거 |
-| `/minimalist-ui` | 미니멀 에디토리얼 스타일. 따뜻한 모노크롬, 타이포 대비, 벤토 그리드 |
-| `/industrial-brutalist-ui` | 스위스 타이포 + 밀리터리 터미널 미학. 데이터 대시보드, 포트폴리오용 |
-| `/full-output-enforcement` | LLM 코드 잘림 방지. 완전한 코드 생성 강제 |
+| 스킬 | 설명 | 예제 |
+|------|------|------|
+| `/gpt-taste` | Awwwards급 프리미엄 디자인 + GSAP 모션. 랜딩 페이지, 마케팅, 포트폴리오 | `/gpt-taste` 랜딩 페이지 만들어줘 |
+| `/design-taste-frontend` | React/Next.js 프론트엔드 엔지니어링. 대시보드, SaaS, 앱 UI | `/design-taste-frontend` 어드민 대시보드 리디자인해줘 |
+| `/redesign-existing-projects` | 기존 사이트 프리미엄 업그레이드. AI 슬롭 패턴 제거 | `/redesign-existing-projects` src/pages/ 전체 UI 멋지게 개선해줘 |
+| `/minimalist-ui` | 미니멀 에디토리얼 스타일. 따뜻한 모노크롬, 타이포 대비, 벤토 그리드 | `/minimalist-ui` 블로그 레이아웃 만들어줘 |
+| `/industrial-brutalist-ui` | 스위스 타이포 + 밀리터리 터미널 미학. 데이터 대시보드, 포트폴리오용 | `/industrial-brutalist-ui` 모니터링 대시보드 만들어줘 |
+| `/full-output-enforcement` | LLM 코드 잘림 방지. 완전한 코드 생성 강제 | 다른 디자인 스킬과 함께 사용 |
+
+> **gpt-taste vs design-taste-frontend:** gpt-taste는 디자인 감각 (비주얼 임팩트, 스크롤 애니메이션, AIDA 구조), design-taste-frontend는 프론트엔드 엔지니어링 (컴포넌트 아키텍처, CSS 하드웨어 가속, 접근성). 같이 쓸 수 있음: gpt-taste로 방향 잡고 → design-taste-frontend로 구현 품질 다듬기.
+>
+> **design-taste-frontend vs frontend-design (플러그인):** design-taste-frontend는 React/Next.js 전용, 구체적 수치/금지 규칙 (Inter 금지, 보라색 금지, Tailwind 필수 등 20K+ 규칙). frontend-design 플러그인은 스택 무관 범용 가이드 (4K, 방향성만 제시). React/Next.js면 design-taste-frontend, Vue/바닐라 등 기타 스택이면 frontend-design 플러그인.
+
+**디자인 워크플로우:**
+
+| 목적 | 플로우 |
+|------|--------|
+| 기존 UI 리디자인 | `/explore` → `/redesign-existing-projects` → `/design-review` → `/qa` → `/ship` |
+| 새 페이지 제작 | `/gpt-taste` (or `/design-taste-frontend`) → `/design-review` → `/qa` → `/ship` |
+| 스타일 프리셋 적용 | `/minimalist-ui` 또는 `/industrial-brutalist-ui`를 제작 스킬과 함께 사용 |
 
 ### 유틸리티 (3개)
 
