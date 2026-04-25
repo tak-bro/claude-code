@@ -38,8 +38,8 @@ MCP 서버 설정은 `settings.json`에 포함되어 클론 시 자동 적용.
 | 규모 | 흐름 |
 |------|------|
 | **S** (1-2 파일) | `/investigate` → `/{fw}-04-fix` → `/ship` |
-| **M** (3-10 파일) | `/explore` → `/{fw}-01-plan` → `02-implement` → `/simplify` → `03-review` → `/ship` |
-| **L** (10+ 파일) | 전체 파이프라인 + `/batch` |
+| **M** (3-10 파일) | `/explore` → `/{fw}-01-plan` → `/plan-ceo-review` → `/plan-eng-review` → `02-implement` → `/simplify` → `03-review` → `/ship` |
+| **L** (10+ 파일) | `/explore` → `/{fw}-01-plan` → `/plan-ceo-review` → `/plan-eng-review` → `02-implement` → `/batch` → `03-review` → `/qa` → `/ship` |
 
 ## 스킬 (62개)
 
