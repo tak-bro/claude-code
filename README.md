@@ -130,6 +130,18 @@ MCP 서버 설정은 `settings.json`에 포함되어 클론 시 자동 적용.
 | 새 페이지 제작 | `/gpt-taste` (or `/design-taste-frontend`) → `/design-review` → `/qa` → `/ship` |
 | 스타일 프리셋 적용 | `/minimalist-ui` 또는 `/industrial-brutalist-ui`를 제작 스킬과 함께 사용 |
 
+> **gpt-taste vs design-taste-frontend:** gpt-taste는 디자인 감각 (비주얼 임팩트, 스크롤 애니메이션, AIDA 구조), design-taste-frontend는 프론트엔드 엔지니어링 (컴포넌트 아키텍처, CSS 하드웨어 가속, 접근성). 같이 쓸 수 있음: gpt-taste로 방향 잡고 → design-taste-frontend로 구현 품질 다듬기.
+>
+> **design-taste-frontend vs frontend-design (플러그인):** design-taste-frontend는 React/Next.js 전용, 구체적 수치/금지 규칙 (Inter 금지, 보라색 금지, Tailwind 필수 등 20K+ 규칙). frontend-design 플러그인은 스택 무관 범용 가이드 (4K, 방향성만 제시). React/Next.js면 design-taste-frontend, Vue/바닐라 등 기타 스택이면 frontend-design 플러그인.
+
+**디자인 워크플로우:**
+
+| 목적 | 플로우 |
+|------|--------|
+| 기존 UI 리디자인 | `/explore` → `/redesign-existing-projects` → `/design-review` → `/qa` → `/ship` |
+| 새 페이지 제작 | `/gpt-taste` (or `/design-taste-frontend`) → `/design-review` → `/qa` → `/ship` |
+| 스타일 프리셋 적용 | `/minimalist-ui` 또는 `/industrial-brutalist-ui`를 제작 스킬과 함께 사용 |
+
 ### 유틸리티 (3개)
 
 | 스킬 | 설명 |

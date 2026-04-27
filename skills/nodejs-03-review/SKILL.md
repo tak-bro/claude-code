@@ -1,7 +1,7 @@
 ---
 name: nodejs-03-review
 description: "Node.js 백엔드 코드 리뷰. Triggers on 'nodejs review', 'node review', 'backend review', 'server review', '서버 리뷰', '백엔드 리뷰', 'api review'."
-context: fork
+
 tools: Read, Bash, Glob, Grep
 ---
 
@@ -14,7 +14,6 @@ Review ONLY changed files. Run `git diff --name-only` first to identify targets.
 Do NOT scan or review the entire codebase.
 **Agents:** nodejs-backend-expert, code-simplicity-reviewer
 
-**Context: fork** -- Review in a separate context from implementation (Test-Time Compute: same model but separated context = better results).
 
 **Smart Review Routing:** Security-related -> `/cso`, API design -> `api-designer`
 

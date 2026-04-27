@@ -11,6 +11,8 @@ Scan the codebase for vulnerabilities from multiple angles. Identifies issues, s
 
 ---
 
+**모든 출력은 반드시 한국어로 작성한다.**
+
 ## Scan Angles
 
 ### 1. Input Validation

@@ -4,7 +4,10 @@ description: |
   Design audit of a live site. Review with exacting visual standards, then fix
   what you find. Covers visual hierarchy, typography, color, spacing, interaction
   states, accessibility, and responsiveness.
+context: fork
 ---
+
+**모든 출력은 반드시 한국어로 작성한다.**
 
 # Design Audit: Review, Fix, Verify
 

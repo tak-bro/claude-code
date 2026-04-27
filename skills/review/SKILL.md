@@ -5,6 +5,7 @@ description: |
   race conditions, LLM trust boundary violations, conditional side effects,
   and other structural issues. Fix-first approach: auto-fixes mechanical issues,
   asks about judgment calls.
+context: fork
 ---
 
 # Pre-Landing PR Review

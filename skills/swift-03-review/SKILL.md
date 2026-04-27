@@ -1,7 +1,7 @@
 ---
 name: swift-03-review
 description: "iOS/Swift code review. Triggers on 'swift review', '스위프트 리뷰', 'ios review', 'iOS 리뷰', 'ios code review', 'swiftui review'."
-context: fork
+
 tools: Read, Bash, Glob, Grep
 ---
 
@@ -14,7 +14,6 @@ Review ONLY changed files. Run `git diff --name-only` first to identify targets.
 Do NOT scan or review the entire codebase.
 **Agents:** swift-ios-expert, code-simplicity-reviewer
 
-**Context: fork** -- Review in a separate context from implementation (Test-Time Compute: same model but separated context = better results).
 
 **Smart Review Routing:** UI code -> design-reviewer, security-related -> `/cso`
 

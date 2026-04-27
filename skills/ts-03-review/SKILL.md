@@ -1,7 +1,7 @@
 ---
 name: ts-03-review
 description: "TypeScript 코드 리뷰. Triggers on 'typescript review', 'ts review', '타입스크립트 리뷰', 'ts 검토'."
-context: fork
+
 tools: Read, Bash, Glob, Grep
 ---
 
@@ -14,7 +14,6 @@ Review ONLY changed files. Run `git diff --name-only` first to identify targets.
 Do NOT scan or review the entire codebase.
 **Agents:** tak-typescript-reviewer, code-simplicity-reviewer
 
-**Context: fork** — Review in separate context (Test-Time Compute: separated context = better results).
 
 ---
 
