@@ -1,7 +1,7 @@
 ---
 name: react-03-review
 description: "React 코드 리뷰. Triggers on 'react review', '리액트 리뷰', 'react code review', 'react 검토'."
-context: fork
+
 tools: Read, Bash, Glob, Grep
 ---
 
@@ -14,7 +14,6 @@ Review ONLY changed files. Run `git diff --name-only` first to identify targets.
 Do NOT scan or review the entire codebase.
 **Agents:** tak-typescript-reviewer, code-simplicity-reviewer, design-implementation-reviewer (if UI)
 
-**Context: fork** — Review in separate context from implementation (Claude philosophy).
 
 **Smart Review Routing:** UI → design-implementation-reviewer, security → `/cso`
 

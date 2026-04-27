@@ -1,7 +1,7 @@
 ---
 name: angular-03-review
 description: "Angular code review. Triggers on 'angular review', '앵귤러 리뷰', 'angular code review', 'ng review', 'angular 검토'."
-context: fork
+
 tools: Read, Bash, Glob, Grep
 ---
 
@@ -14,7 +14,6 @@ Review ONLY changed files. Run `git diff --name-only` first to identify targets.
 Do NOT scan or review the entire codebase.
 **Agents:** angular-componentstore-expert, tak-typescript-reviewer, code-simplicity-reviewer
 
-**Context: fork** — Review in a separate context from implementation (Test-Time Compute: same model but separated context = better results).
 
 **Smart Review Routing:** Backend code → code-reviewer, UI code → design-reviewer, security-related → `/cso`
 

@@ -4,8 +4,11 @@ description: |
   Eng manager-mode plan review. Lock in the execution plan: architecture,
   data flow, diagrams, edge cases, test coverage, performance. Walks through
   issues interactively with opinionated recommendations.
+context: fork
 ---
 
+
+**모든 출력은 반드시 한국어로 작성한다.**
 # Plan Review Mode
 
 Review this plan thoroughly before making any code changes. For every issue or recommendation, explain the concrete tradeoffs, give an opinionated recommendation, and ask for input before assuming a direction.
