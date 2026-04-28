@@ -22,5 +22,13 @@
     },
     "installLocation": "/Users/tak/.claude/plugins/marketplaces/claude-code-plugins",
     "lastUpdated": "2026-04-02T07:24:53.728Z"
+  },
+  "ui-ux-pro-max-skill": {
+    "source": {
+      "source": "github",
+      "repo": "nextlevelbuilder/ui-ux-pro-max-skill"
+    },
+    "installLocation": "/Users/tak/.claude/plugins/marketplaces/ui-ux-pro-max-skill",
+    "lastUpdated": "2026-04-28T05:38:22.002Z"
   }
 }

@@ -6,18 +6,27 @@ tools: Read, Bash, Glob, Grep, Agent
 
 # TypeScript Plan
 
-TypeScript-specific implementation planning. **Base: Reference `/plan` skill.**
+TypeScript-specific implementation planning. **Base: Reference `/plan` skill for same output structure.**
 
 ## ⛔ CRITICAL: STOP AFTER PLAN
+Stop after planning. Wait for user's next command.
+- **Plan file path:** `.claude/{YYYYMMDD}/PLAN-{HHMMSS}.md`
 - Output: `Plan complete → Next: /ts-02-implement`
 
 ---
 
-## Phase 0: Explore First + Phase 0.5: Rethink
-(see `/plan` base skill)
+## Phase 0: Explore First
+- `codebase-researcher`: Analyze existing type patterns, module structure, conventions
+- `best-practices-researcher`: TypeScript official docs, utility type patterns
+- `tak-typescript-expert`: Verify existing tak convention compliance
+
+## Phase 0.5: Rethink
+For new features: "Is this really what the user wants?" Redefine the requirement.
+
+---
 
 ## Knowledge Sources
-- `.claude/llms.txt`: [Must reference if exists]
+- `.claude/llms.txt`: [Project architecture — must reference if exists]
 - `./CLAUDE.md`: [patterns found]
 
 ---
@@ -56,6 +65,11 @@ TypeScript-specific implementation planning. **Base: Reference `/plan` skill.**
 - Named exports only
 - Early returns for flat structure
 - Complex conditions → named variables
+
+### [Warning] Ask First
+- Creating new shared type definitions
+- Modifying existing barrel exports
+- New utility type abstractions
 
 ### 🚫 Don't
 - `export default` (except App entrypoint, config)
