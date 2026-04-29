@@ -10,7 +10,7 @@ Angular-specific implementation planning. **Base: Reference `/plan` skill for sa
 
 ## ⛔ CRITICAL: STOP AFTER PLAN
 Stop after planning is complete. Wait for the user's next command.
-- **Plan file path:** `.claude/{YYYYMMDD}/PLAN-{HHMMSS}.md`
+- **Plan file path:** `.claude/{YYYYMMDD}/PLAN-{HH-MM-SS}.md` (run `date` command for exact time with seconds)
 - Output: `Plan complete → Next: /angular-02-implement`
 
 ---

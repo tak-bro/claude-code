@@ -13,7 +13,7 @@ All framework-specific plan skills (`/angular-01-plan`, `/react-01-plan`, `/ts-0
 - Never automatically start implementation
 - After creating the plan file, output:
   ```
-  Plan complete: `.claude/{YYYYMMDD}/PLAN-{HHMMSS}.md`
+  Plan complete: `.claude/{YYYYMMDD}/PLAN-{HH-MM-SS}.md`
   → Next: `/{framework}-implement`
   ```
 
@@ -52,9 +52,12 @@ Run sub-agents simultaneously:
 ## Phase 3: Plan Creation
 1. Create plan file in `.claude/{date}/` folder (don't overwrite existing files):
    ```bash
-   DATE_DIR=".claude/$(date +%Y%m%d)"
+   # MUST run `date` command to get real current time. Never hardcode or guess.
+   NOW=$(date +%Y%m%d-%H-%M-%S)
+   DATE_DIR=".claude/${NOW%%-*}"
    mkdir -p "$DATE_DIR"
-   PLAN_FILE="$DATE_DIR/PLAN-$(date +%H%M%S).md"
+   PLAN_FILE="$DATE_DIR/PLAN-${NOW#*-}.md"
+   # Example: .claude/20260429/PLAN-14-30-52.md
    ```
 2. Extract patterns from reference files
 3. Define boundaries (Do/Don't)
@@ -78,7 +81,7 @@ Run sub-agents simultaneously:
 
 ## Output Structure
 
-> [Warning] Always write to `.claude/{YYYYMMDD}/PLAN-{HHMMSS}.md`. Never overwrite existing plan files.
+> [Warning] Always run `date` command in bash to get exact current time (seconds included). Write to `.claude/{YYYYMMDD}/PLAN-{HH-MM-SS}.md`. Never hardcode timestamps or reuse previous values.
 
 ```markdown
 # [Plan] Implementation Plan: [Feature]

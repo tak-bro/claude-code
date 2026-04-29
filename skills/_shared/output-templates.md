@@ -2,7 +2,7 @@
 
 ## Plan Output
 ```
-Plan complete: `.claude/{YYYYMMDD}/PLAN-{HHMMSS}.md`
+Plan complete: `.claude/{YYYYMMDD}/PLAN-{HH-MM-SS}.md`
 → Next: `/{framework}-02-implement` to start implementation.
 ```
 
